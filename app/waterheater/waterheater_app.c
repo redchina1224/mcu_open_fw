@@ -192,54 +192,6 @@ void leakage_callback(unsigned int a)
 }
 
 
-void app_init(void)
-{
-
-	zd_systemInit();
-
-	zd_softrtcInit();
-	
-	zd_key_init();
-//	
-	zd_buzzer_init();
-//	
-	zd_display_init();
-	
-//进水温度传感器信号
-	zd_adcInit(WATERIN_AIN_Channel,waterin_callback);
-//出水温度传感器信号
-	zd_adcInit(WATEROUT_AIN_Channel,waterout_callback);
-//漏电检测信号
-	zd_adcInit(LEAKAGE_AIN_Channel,leakage_callback);
-
-	
-//以下内容临时使用，暂未标准化	
-	
-	//特殊处理,该脚与WATERIN脚并接需设置为输入
-	//ZD_PORT_INPUT_SET(ZD_PORT1_DIR,BIT3);
-	
-//流量脉冲输入
-	//Counter_IO_Input;
-	//T_Counter1_1sec=&gucv_water_speed;
-	
-//过零信号
-	//ZeroCross_IO_Input;
-	
-
-//可控硅驱动
-	//Triac_IO_Output;
-	//Triac_IO_Ctrl(Triac_IO_OFF);
-	
-	//工作指示灯
-	//WorkLed_IO_Output;
-	//WorkLed_IO_Ctrl(WorkLed_IO_OFF);
-	
-	//倾倒开关
-	//Switch_IO_Input;
-	
-	zd_buzzer_beep(1,10,0);//蜂鸣一声(3x50ms)
-
-}
 
 
 void saveTempSetVal(void)
@@ -490,6 +442,59 @@ void DisplayNavCheck(void)
 	}
 }
 */
+
+
+
+void app_init(void)
+{
+
+	zd_systemInit();
+
+	zd_softrtcInit();
+	
+	zd_key_init();
+//	
+	zd_buzzer_init();
+//	
+	zd_display_init();
+	
+//进水温度传感器信号
+	zd_adcInit(WATERIN_AIN_Channel,waterin_callback);
+//出水温度传感器信号
+	zd_adcInit(WATEROUT_AIN_Channel,waterout_callback);
+//漏电检测信号
+	zd_adcInit(LEAKAGE_AIN_Channel,leakage_callback);
+
+	
+//以下内容临时使用，暂未标准化	
+	
+	//特殊处理,该脚与WATERIN脚并接需设置为输入
+	//ZD_PORT_INPUT_SET(ZD_PORT1_DIR,BIT3);
+	
+//流量脉冲输入
+	Counter_IO_Input;
+	T_Counter1_1sec=&gucv_water_speed;
+	
+//过零信号
+	ZeroCross_IO_Input;
+	
+
+//可控硅驱动
+	Triac_IO_Output;
+	Triac_IO_Ctrl(Triac_IO_OFF);
+	
+	//工作指示灯
+	//WorkLed_IO_Output;
+	//WorkLed_IO_Ctrl(WorkLed_IO_OFF);
+	
+	//倾倒开关
+	//Switch_IO_Input;
+	
+	zd_buzzer_beep(1,10,0);//蜂鸣一声(3x50ms)
+loadUserSetVal();
+}
+
+
 
 /*****************************************************************************
 *函数			: void App_Run(void)	
