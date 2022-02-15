@@ -11,6 +11,7 @@
 
 #elif (AppTypeLib==AppTypeLib_WaterHeater)
 
+#include "waterheater\waterheater_app.h"
 
 
 #endif

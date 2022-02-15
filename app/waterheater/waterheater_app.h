@@ -8,12 +8,21 @@
 //Description:    功能
 //History:
 //******************************************************************************
-#ifndef __FUNCTION_H__
-#define __FUNCTION_H__
-//声明外部函数******************************************************************
-extern	void	function_process(void);				//工作处理
-extern	void	sign_process(void);					//信号采集处理
-extern	void  	InfraredReception(void);			//红外解码
+#ifndef __FUNCTION_WATERHEATER_H__
+#define __FUNCTION_WATERHEATER_H__
+//******************************************************************
+
+
+/*
+#include "teabar_boil_water_app.h"
+#include "teabar_warm_water_app.h"
+#include "teabar_take_water_app.h"
+*/
+
+void app_init(void);
+void App_Run(void);
+void Background_Run(void);
+void app_base_run(void);
 
 #endif 
 
