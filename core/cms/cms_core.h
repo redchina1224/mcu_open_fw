@@ -63,6 +63,9 @@
 	#define ZD_PORTB_2 RB2
 	#define ZD_PORTB_1 RB1
 	#define ZD_PORTB_0 RB0
+
+	#define ZD_PORTB_PHRES WPUB
+	#define ZD_PORT1_PHRES WPUB
 	//#endif
 	
 	//#ifdef PORTC
@@ -80,6 +83,8 @@
 	#define ZD_PORTC_1 RC1
 	#define ZD_PORTC_0 RC0
 
+	#define ZD_PORTC_PHRES WPUC
+	#define ZD_PORT2_PHRES WPUC
 	//#endif
 	
 	//#ifdef PORTD

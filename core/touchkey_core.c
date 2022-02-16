@@ -13,7 +13,7 @@
 
 
 #ifdef KeyType
-#if (KeyType==KeyType_McuTouch)
+#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)
 
 
 

@@ -15,7 +15,6 @@
 
 //声明外部变量******************************************************************
 
-extern bit T_1msCount_bit;
 
 #ifdef BuzzerType
 #if (BuzzerType==BuzzerType_TimerInv)
@@ -26,7 +25,8 @@ extern unsigned char *T_BuzzerEn;
 
 #ifdef RtcType
 #if (RtcType==RtcType_TimerSoftRtc) 
-extern unsigned char *T_msCount;
+extern bit T_1ms_bit;
+extern unsigned int *T_msCount;
 extern unsigned long *T_SecCount;
 #endif
 #endif

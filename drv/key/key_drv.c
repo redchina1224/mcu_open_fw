@@ -65,8 +65,10 @@ void zd_keyRun(void)
 	
 			zd_touchkeyRead(&KeyVal);
 	
-		#elif (KeyType==KeyType_IR)
-		
+		#elif (KeyType==KeyType_RF)
+
+			zd_rfkeyRead(&KeyVal);
+
 		#endif
 	
 

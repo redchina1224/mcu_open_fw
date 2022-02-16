@@ -12,7 +12,7 @@
 
 //extern void __CMS_GetTouchKeyValue(void);
 
-bit T_1msCount_bit=0;
+bit T_1ms_bit=0;
 
 #if (BuzzerType==BuzzerType_TimerInv)
  unsigned char __buzzer_en=0;
@@ -22,10 +22,10 @@ bit T_1msCount_bit=0;
 #ifdef RtcType
 #if (RtcType==RtcType_TimerSoftRtc) 
  unsigned char T_125usCount=0;
- unsigned char __msCount=0;
- unsigned long __SecCount=Ft0Clk;
- unsigned char *T_msCount=&__msCount;
- unsigned long *T_SecCount=&__SecCount;
+ //unsigned char __msCount=0;
+ //unsigned long __SecCount=0;
+ unsigned int *T_msCount;
+ unsigned long *T_SecCount;
 #endif
 #endif
 
@@ -114,10 +114,11 @@ void interrupt interrupt_Isr()
 	//定时器时间系统-定义在TIMER0时	
 	#if (RtcType==RtcType_TimerSoftRtc) 
 		#if(SoftRtcTimer==0)
-			if(++T_125usCount>=80) 
+			if(++T_125usCount>=8) 
 			{ 
 				T_125usCount=0; 
-				if(++(*T_msCount)>=100) 
+				T_1ms_bit=1;
+				if(++(*T_msCount)>=1000) 
 				{
 					(*T_msCount)=0;
 					(*T_SecCount)++;
@@ -130,10 +131,10 @@ void interrupt interrupt_Isr()
 						(*T_Counter1_1sec)=__counter1_val; __counter1_val=0;
 						
 						
-				if((*T_msCount)%25==0)
-				{
-					(*T_Counter1_250msec)=__counter1_2_val; __counter1_2_val=0;
-				}  
+						if((*T_msCount)%25==0)
+						{
+							(*T_Counter1_250msec)=__counter1_2_val; __counter1_2_val=0;
+						}  
 						
 						#endif
 
@@ -144,10 +145,7 @@ void interrupt interrupt_Isr()
 				
 
 			}
-			
-			
-			if(T_125usCount%8==0) T_1msCount_bit=1;
-			
+						
 			
 			#ifdef DisplayType
 				#if (DisplayType==DisplayType_Dig8SoftLed) 
@@ -251,8 +249,18 @@ void interrupt interrupt_Isr()
 
 				#endif
 			#endif
+
+			#ifdef KeyType
+				#if ((KeyType&KeyType_IR)==KeyType_IR)
+
+				#endif
 				
-					
+				#if ((KeyType&KeyType_RF)==KeyType_RF)
+					__ZD_GetRfKeyValue();
+				#endif					
+			#endif	
+			
+								
 			#if (McuType==McuType_CmsSemicon_CMS79F738)
 			__CMS_GetTouchKeyValue();//此函数放在中断，建议中断扫描时间 125us	
 			#endif			
