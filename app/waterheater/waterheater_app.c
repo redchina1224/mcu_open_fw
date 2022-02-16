@@ -91,8 +91,8 @@ unsigned	char	gucv_work_mode;			//工作模式状态
 bit gubv_displaytemp_lock_settemp=0;
 
 bit gubv_setting_blink_disEn=0;//闪烁时是否显示或熄屏的标志
-unsigned long gulv_setting_blinkmsec=0; //设置闪烁时间变量
-unsigned long gulv_setting_exitmsec=0; //设置超时退出时间变量
+unsigned char gulv_setting_blinkmsec=0; //设置闪烁时间变量
+unsigned char gulv_setting_exitmsec=0; //设置超时退出时间变量
 
 unsigned long gulv_heatadj_nexttime_msec=0; //设置超时退出时间变量
 
@@ -100,7 +100,6 @@ unsigned long gulv_heatadj_nexttime_msec=0; //设置超时退出时间变量
 unsigned	char	gucv_error_status=0;				//故障状态
 unsigned	char	gucv_error_delay_cnt=0;				//故障延迟防抖
 
-unsigned	char	gucv_display_nav_delay_cnt=0;				//倾倒显示切换延迟防抖
 
 //----水温控制
 unsigned	char	gucv_water_temp_con_step=0;			//水温控制步骤
@@ -124,7 +123,6 @@ unsigned	int		luiv_temp_adc_data=0;					//需要的ADC值
 unsigned	int		luiv_water_speed_data=0;			//水流大小
 unsigned	char	lucv_water_speed_high_power=0;//判断水流过大的功率数据
 unsigned	char	lucv_power_adj_jiange_time=0;	//根据出水温度调节功率大小间隔时间 设置
-unsigned	int		luiv_E1_buzz_time=0;					//根据出水温度调节功率大小间隔时间 设置
 unsigned	int		luiv_temp_stop_change_time=0;	//温度停止变化时间
 unsigned	int		luiv_old_temp=0;							//上一次的温度
 unsigned	char	lucv_now_adj_power=0;					//已经进入调整温度
@@ -137,10 +135,6 @@ unsigned  int	guiv_set_temp_adc_data;			//
 
 bit gbv_heat_start_working=0;
 
-
-
-
-unsigned char Bsp_timeNow[3]={0,0,0};
 
 
 unsigned int waterin_Temp_ad;
@@ -167,6 +161,66 @@ bit zeroadjdir=0;
 bit Leakage_Error=0;
 bit WaterOutNtc_Error=0;
 bit WaterInNtc_Error=0;
+
+
+
+
+unsigned char KeyQuickPressCount;
+unsigned int KeyLongPressCount;
+
+unsigned long UserKeyVal;
+
+unsigned char UserKeyPressed;
+unsigned char UserKeyLongPressed;
+unsigned char UserKeyPressed_down;
+unsigned char UserKeyPressed_up;
+
+
+
+void zd_key_clear_all(void)
+{
+	zd_key_clear(&mcuTouchKeys);
+	zd_key_clear(&rfKeys);
+	
+	UserKeyPressed=0;
+	UserKeyPressed_down=0;
+	UserKeyPressed_up=0;
+	UserKeyLongPressed=0;
+}
+
+
+void zd_key_refresh_all(void)
+{
+
+	if(mcuTouchKeys.UserKeyPressed_up)//按键按下松开后触发
+	{
+		UserKeyVal=mcuTouchKeys.UserKeyVal;
+		UserKeyPressed_up=1;
+
+	}
+	else if(rfKeys.UserKeyPressed_up)//按键按下松开后触发
+	{
+		UserKeyVal=rfKeys.UserKeyVal;
+		UserKeyPressed_up=1;
+	}
+
+
+	if(mcuTouchKeys.UserKeyLongPressed)//按键按下超过2秒后触发
+	{
+			KeyLongPressCount=mcuTouchKeys.KeyLongPressCount;
+			UserKeyVal=mcuTouchKeys.UserKeyVal;
+			UserKeyLongPressed=1;
+	}
+	else if(rfKeys.UserKeyLongPressed)//按键按下超过2秒后触发
+	{
+			KeyLongPressCount=rfKeys.KeyLongPressCount;
+			UserKeyVal=rfKeys.UserKeyVal;
+			UserKeyLongPressed=1;
+	}
+
+
+}
+
 
 
 
@@ -243,6 +297,7 @@ void goToModeError(void)
 
 void goToModeIdle(void)
 {
+	gucv_machine_status_bak=gucv_machine_status;
 	//设置为待机
 	gucv_machine_status=MACHINE_IDEL;
 	
@@ -261,17 +316,30 @@ void goToModeIdle(void)
 	
 	//如果正在设置温度则进行保存
 	if(setTemp_inSetting!=0)  saveTempSetVal();
-
+	//如果正在设置功率则进行保存
+	if(setPower_inSetting!=0) savePowerSetVal();
 	//清除所有设置标志位
 	cleanAllSetting();
 
 }
 
-void goToModeWorkTemp(void)
+
+void goToModeWork(void)
 {
+	//同步一次显示温度与实际温度
+	gucv_temp_display=gucv_real_temp;
+	
+	//清除所有设置标志位
+	cleanAllSetting();
+}
+
+void setToModeWorkTemp(void)
+{
+	disPowerLevel(0);
+					
 	//设置为工作
 	gucv_machine_status=MACHINE_WORK_TEMP;
-
+	gucv_machine_status_bak=gucv_machine_status;
 	//保存待机或开机状态
 	if(gucv_set_mode!=gucv_machine_status)
 	{
@@ -279,34 +347,19 @@ void goToModeWorkTemp(void)
 		saveModeSetVal();
 	}
 	
-	//同步一次显示温度与实际温度
-	gucv_temp_display=gucv_real_temp;
-
 	//如果正在设置功率则进行保存
-	if(setPower_inSetting!=0) savePowerSetVal();
-	
-	//清除所有设置标志位
-	cleanAllSetting();
-	
-	
-	
-	//清零计时器,工作状态初始化
-//	gucv_work_kkg_drv_data=PEM_DEFAULT_DATA;
-//	triacOnEnable=0;						//可控硅输出关闭
-//	guiv_work_low_temp_count=0;	//水流检测清零
-//	gucv_water_temp_con_step=0;	//加热步骤清零	
-//	gbv_arrive_set_temp=0;			//达到设定温度
-//	guiv_temp_display_time=0;		//清除显示温度补偿计时和数据
-//	guiv_temp_display_data=0;		//清除显示温度补偿计时和数据
-	
-	
-	
+	if(setPower_inSetting!=0) 
+	{
+		savePowerSetVal();
+		setPower_inSetting=0;
+	}
+		
 }
-void goToModeWorkPower(void)
+void setToModeWorkPower(void)
 {
 	//设置为工作
 	gucv_machine_status=MACHINE_WORK_POWER;
-
+	gucv_machine_status_bak=gucv_machine_status;
 	//保存待机或开机状态
 	if(gucv_set_mode!=gucv_machine_status)
 	{
@@ -314,14 +367,13 @@ void goToModeWorkPower(void)
 		saveModeSetVal();
 	}
 	
-	//同步一次显示温度与实际温度
-	gucv_temp_display=gucv_real_temp;
+	//如果正在设置温度则进行保存
+	if(setTemp_inSetting!=0)
+	{
+		  saveTempSetVal();
+		  setTemp_inSetting=0;
+	}
 
-	//如果正在设置功率则进行保存
-	if(setPower_inSetting!=0) savePowerSetVal();
-	
-	//清除所有设置标志位
-	cleanAllSetting();
 		
 }
 
@@ -365,16 +417,15 @@ void loadUserSetVal(void)
 	//取回设置模式
 	gucv_set_mode=IapReadByte(0x02);//取回设置模式
 	CheckSetMode(&gucv_set_mode);//设置模式合规检查
-
 }
 
 
 
 void DisplayBlink(unsigned char disnum)
 {
-		if(gulv_setting_blinkmsec<=(zd_getUtc_100mSec()))//当前时间大于前次设置的闪烁结束时间后触发一次切换
+		if(gulv_setting_blinkmsec>4)//当前时间大于前次设置的闪烁结束时间后触发一次切换
 		{
-			gulv_setting_blinkmsec=zd_getUtc_100mSec()+5;//闪烁间隔500ms,在当前时间后500ms后再触发
+			gulv_setting_blinkmsec=0;//闪烁间隔500ms,在当前时间后500ms后再触发
 			if(gubv_setting_blink_disEn==0)//闪烁时是否显示或熄屏的标志
 			{
 				if(disnum>200)
@@ -392,13 +443,17 @@ void DisplayBlink(unsigned char disnum)
 				gubv_setting_blink_disEn=0;//闪烁时是否显示或熄屏的标志,置0后，下次切换为显示
 			}
 		}
+		else if((mSec_x100_workbit)&&gulv_setting_blinkmsec<200)
+		{
+			gulv_setting_blinkmsec++;
+		}
 }
 
 void DisplayBlink_Start(void)
 {
-	gulv_setting_blinkmsec=0;//单次闪烁计时,置0后，立即执行一次切换操作
+	gulv_setting_blinkmsec=200;//单次闪烁计时,置0后，立即执行一次切换操作
 	gubv_setting_blink_disEn=0;//闪烁时是否显示或熄屏的标志,置0后，下次切换为显示
-	gulv_setting_exitmsec=zd_getUtc_100mSec()+48; //闪烁5秒，时间采用4.8秒，使最后一次为熄灭状态，避免最后一次先点亮后再切换;
+	gulv_setting_exitmsec=48; //闪烁5秒，时间采用4.8秒，使最后一次为熄灭状态，避免最后一次先点亮后再切换;
 }
 
 
@@ -504,8 +559,7 @@ loadUserSetVal();
 ******************************************************************************/
 void App_Run(void)
 {
-	//显示方向检查
-	//if(mSec_x10_workbit) DisplayNavCheck();
+	zd_key_refresh_all();
 
 	//机器状态
 	switch(gucv_machine_status)
@@ -529,37 +583,46 @@ void App_Run(void)
 					}
 					else if(gucv_set_mode==MACHINE_WORK_TEMP)
 					{
-						goToModeWorkTemp();//进入恒温工作模式
+						setToModeWorkTemp();
+						goToModeWork();//进入恒温工作模式
 					}
 					else if(gucv_set_mode==MACHINE_WORK_POWER)
 					{
-						goToModeWorkPower();//进入档位工作模式
+						setToModeWorkPower();
+						goToModeWork();//进入档位工作模式
 					}
 			}
 			
 		break;
 		case MACHINE_IDEL:
 
-
 			if(gucv_water_speed==0)
 			{
+				fixTemp(db_G);
 			}
 			else
 				disTemp(gucv_water_speed);
-			
+							
 			//按键处理
 			if(UserKeyPressed_up)//按键按下松开后触发
 			{
-				if(UserKeyVal==KEYS_POWER_VALUE)
+				if(UserKeyVal==KEYS_POWER_VALUE||UserKeyVal==RFKEYS_POWERON_VALUE)
 				{
-					if(1)
-						goToModeWorkTemp();//切换进入工作模式
+					if(gucv_machine_status_bak==MACHINE_WORK_TEMP)
+					{
+						setToModeWorkTemp();
+						goToModeWork();//进入恒温工作模式
+					}
 					else
-						goToModeWorkPower();
+					{
+						setToModeWorkPower();
+						goToModeWork();//进入档位工作模式
+					}
 						
 					zd_buzzer_beep(1,3,0);//蜂鸣一声(3x50ms)
 				}
-				else if(UserKeyVal==KEYS_ADJUP_VALUE)
+				/*
+				else if(UserKeyVal==KEYS_ADJUP_VALUE||UserKeyVal==RFKEYS_ADJUP_VALUE)
 				{
 					if(setPower_inSetting!=0)//当功率设置正在进行时有效,否则按键无效
 					{
@@ -572,7 +635,7 @@ void App_Run(void)
 					}
 
 				}
-				else if(UserKeyVal==KEYS_ADJDOWN_VALUE)
+				else if(UserKeyVal==KEYS_ADJDOWN_VALUE||UserKeyVal==RFKEYS_ADJDOWN_VALUE)
 				{
 					if(setPower_inSetting!=0)//当功率设置正在进行时有效,否则按键无效
 					{
@@ -584,49 +647,75 @@ void App_Run(void)
 						zd_buzzer_beep(1,3,0);//蜂鸣一声(3x50ms)
 					}
 
-				}
-				zd_key_clear();//清除所有按键标志位
+				}*/
+				zd_key_clear_all();//清除所有按键标志位
 			}
 		
-
+/*
 			if(UserKeyLongPressed)//按键按下超过2秒后触发
 			{
 				if(KeyLongPressCount>300)//按键按下超过3秒
 				{
 				
-					if(UserKeyVal==KEYS_POWER_VALUE)
+					if(UserKeyVal==KEYS_POWER_VALUE||UserKeyVal==RFKEYS_POWERON_VALUE||UserKeyVal==RFKEYS_POWEROFF_VALUE)
 					{
 						setPower_inSetting=1;//开始进入功率设置状态
 						DisplayBlink_Start();//闪烁初始化处理,每次按下按键后闪烁处理点亮状态，避免按键切换时黑屏
 						zd_buzzer_beep(1,3,0);//蜂鸣一声(3x50ms)
 					}
 					
-					zd_key_clear();//清除所有按键标志位
+					zd_key_clear_all();//清除所有按键标志位
 
 				}
 			}
-			
+*/			
 			//错误检查,如存在错误状态自动转入报警模式
 			ErrorCheck();
 			
 		break;
+
+		case MACHINE_WORK_POWER:
 		
+
+			//档位指示灯
+			if(gucv_set_power==25)
+				disPowerLevel(1);
+			else if(gucv_set_power==34)
+				disPowerLevel(2);
+			else if(gucv_set_power==52)
+				disPowerLevel(3);
+			
+			
+			//
+			
+			if(setPower_inSetting!=0) //在设置状态
+			{
+				if(gulv_setting_exitmsec>0)
+				{
+					 if(mSec_x100_workbit) gulv_setting_exitmsec--;
+				}
+				else//超时自动保存退出
+				{
+					savePowerSetVal();//保存设置值
+					setPower_inSetting=0; //清除设置标志位，停止闪烁显示
+				}
+			}
+			
+				
 		//工作
 		case MACHINE_WORK_TEMP:
 
-/*
-			//工作指示灯
-			if(gbv_heat_start_working)
-				WorkLed_IO_Ctrl(WorkLed_IO_ON);//开工作指示灯
-			else		
-				WorkLed_IO_Ctrl(WorkLed_IO_OFF);//关工作指示灯
-*/		
+
 			//温度设定显示与保存
 			if(setTemp_inSetting!=0) //在设置状态
 			{
 				gubv_displaytemp_lock_settemp=0;
 				DisplayBlink(gucv_set_temp);//闪烁显示温度值
-				if(gulv_setting_exitmsec<zd_getUtc_100mSec())//超时自动保存退出
+				if(gulv_setting_exitmsec>0)
+				{
+					 if(mSec_x100_workbit) gulv_setting_exitmsec--;
+				}
+				else//超时自动保存退出
 				{
 					saveTempSetVal();//保存设置温度值
 					setTemp_inSetting=0; //清除设置标志位，停止闪烁显示
@@ -685,12 +774,12 @@ void App_Run(void)
 			//按键处理
 			if(UserKeyPressed_up)//按键按下松开后触发
 			{
-				if(UserKeyVal==KEYS_POWER_VALUE)
+				if(UserKeyVal==KEYS_POWER_VALUE||UserKeyVal==RFKEYS_POWEROFF_VALUE)
 				{
 					goToModeIdle();//切换进入待机模式
 					zd_buzzer_beep(1,3,0);//蜂鸣一声(3x50ms)
 				}
-				else if(UserKeyVal==KEYS_ADJUP_VALUE)
+				else if(UserKeyVal==KEYS_ADJUP_VALUE||UserKeyVal==RFKEYS_ADJUP_VALUE)
 				{
 					if(setTemp_inSetting!=0)//当温度设置正在进行时有效
 					{
@@ -704,10 +793,12 @@ void App_Run(void)
 						DisplayBlink_Start();//闪烁初始化处理,每次按下按键后闪烁处理点亮状态，避免按键切换时黑屏
 					}
 					
+					setToModeWorkTemp();
+					
 					zd_buzzer_beep(1,3,0);//蜂鸣一声(3x50ms)
 					
 				}
-				else if(UserKeyVal==KEYS_ADJDOWN_VALUE)
+				else if(UserKeyVal==KEYS_ADJDOWN_VALUE||UserKeyVal==RFKEYS_ADJDOWN_VALUE)
 				{
 					if(setTemp_inSetting!=0)//当温度设置正在进行时有效
 					{
@@ -721,22 +812,33 @@ void App_Run(void)
 						DisplayBlink_Start();//闪烁初始化处理,每次按下按键后闪烁处理点亮状态，避免按键切换时黑屏
 					}
 					
+					setToModeWorkTemp();
+					
+					zd_buzzer_beep(1,3,0);//蜂鸣一声(3x50ms)
+				}
+				else if(UserKeyVal==KEYS_LEVEL_VALUE||UserKeyVal==RFKEYS_LEVEL_VALUE)
+				{
+					if(gucv_machine_status==MACHINE_WORK_POWER)
+					{
+						setPower_inSetting=1;
+						gulv_setting_exitmsec=48;//设置超时自动保存
+						
+						if(gucv_set_power>=34) 
+							gucv_set_power+=18;//功率
+						else
+							gucv_set_power+=9;//功率
+							
+						CheckSetPower(&gucv_set_power);//设置值合规性检查
+					}
+					else
+						setToModeWorkPower();
+						
 					zd_buzzer_beep(1,3,0);//蜂鸣一声(3x50ms)
 				}
 				
 
 				
-				zd_key_clear();//清除所有按键标志位
-			}
-			
-			
-			
-			if(UserKeyLongPressed)//按键按下超过2秒后触发
-			{
-				if(KeyLongPressCount>300)//按键按下超过3秒
-				{
-				zd_key_clear();//清除所有按键标志位
-				}
+				zd_key_clear_all();//清除所有按键标志位
 			}
 
 			
@@ -745,92 +847,7 @@ void App_Run(void)
 
 			
 		break;
-
-
-
-		case MACHINE_WORK_POWER:
 		
-		
-		
-		
-			//功率设置状态显示与保存
-			if(setPower_inSetting!=0)//在设置状态
-			{
-					DisplayBlink(gucv_set_power);//闪烁显示当前功率设置值
-				
-					if(gulv_setting_exitmsec<zd_getUtc_100mSec())//超时自动保存退出
-					{
-						savePowerSetVal();//保存功率设置值
-						setPower_inSetting=0;//结束功率设置
-						goToModeIdle();//再初始化待机,简化执行熄屏等操作
-					}
-			}
-			else
-				disTemp(gucv_water_speed);
-				
-				
-			//按键处理
-			if(UserKeyPressed_up)//按键按下松开后触发
-			{
-				if(UserKeyVal==KEYS_POWER_VALUE)
-				{
-					goToModeIdle();//切换进入待机模式
-					zd_buzzer_beep(1,3,0);//蜂鸣一声(3x50ms)
-				}
-				else if(UserKeyVal==KEYS_LEVEL_VALUE)
-				{
-					if(setTemp_inSetting!=0)//当温度设置正在进行时有效
-					{
-						if(gucv_set_temp<SET_TEMP_MAX) gucv_set_temp++;//温度设置值加1
-						CheckSetTemp(&gucv_set_temp);//温度设置值合规检查
-						DisplayBlink_Start();//闪烁初始化处理,每次按下按键后闪烁处理点亮状态，避免按键切换时黑屏
-					}
-					else//当温度设置未触发时
-					{
-						setTemp_inSetting=1;//开始进入温度设置状态
-						DisplayBlink_Start();//闪烁初始化处理,每次按下按键后闪烁处理点亮状态，避免按键切换时黑屏
-					}
-					
-					zd_buzzer_beep(1,3,0);//蜂鸣一声(3x50ms)
-					
-				}
-				else if(UserKeyVal==KEYS_ADJDOWN_VALUE)
-				{
-					if(setTemp_inSetting!=0)//当温度设置正在进行时有效
-					{
-						if(gucv_set_temp>SET_TEMP_MIN) gucv_set_temp--;//温度设置值减1
-						CheckSetTemp(&gucv_set_temp);//温度设置值合规检查
-						DisplayBlink_Start();//闪烁初始化处理,每次按下按键后闪烁处理点亮状态，避免按键切换时黑屏
-					}
-					else//当温度设置未触发时
-					{
-						setTemp_inSetting=1;//开始进入温度设置状态
-						DisplayBlink_Start();//闪烁初始化处理,每次按下按键后闪烁处理点亮状态，避免按键切换时黑屏
-					}
-					
-					zd_buzzer_beep(1,3,0);//蜂鸣一声(3x50ms)
-				}
-				
-
-				
-				zd_key_clear();//清除所有按键标志位
-			}
-			
-			
-			
-			if(UserKeyLongPressed)//按键按下超过2秒后触发
-			{
-				if(KeyLongPressCount>300)//按键按下超过3秒
-				{
-				zd_key_clear();//清除所有按键标志位
-				}
-			}
-
-			
-			//错误检查,如存在错误状态自动转入报警模式
-			ErrorCheck();
-		break;			
-			
 		
 		case MACHINE_ERROR:
 			
@@ -871,11 +888,13 @@ void App_Run(void)
 					}
 					else if(gucv_set_mode==MACHINE_WORK_TEMP)
 					{
-						goToModeWorkTemp();//进入工作模式
+						setToModeWorkTemp();
+						goToModeWork();//进入恒温工作模式
 					}
 					else if(gucv_set_mode==MACHINE_WORK_POWER)
 					{
-						goToModeWorkPower();//进入工作模式
+						setToModeWorkPower();
+						goToModeWork();//进入档位工作模式
 					}
 					
 				}
@@ -884,7 +903,7 @@ void App_Run(void)
 
 					
 		default:
-			if(UserKeyPressed_up||UserKeyLongPressed) zd_key_clear();//清除所有按键标志位
+			if(UserKeyPressed_up||UserKeyLongPressed) zd_key_clear_all();//清除所有按键标志位
 		break;
 	}
 	
@@ -1319,99 +1338,6 @@ void power_limit(void)
 	
 }
 
-
-
-//30秒无法达到设定温度检测
-//void temp_ctrl_30s_fail_check(void)
-//{
-//		//加热开度最大时
-//		if((gucv_kkg_temp_data>=lucv_water_speed_high_power))
-//		{
-//			if(guiv_work_low_temp_count<3000)
-//			{
-//				guiv_work_low_temp_count++;
-//			}
-//		}
-//		
-//		//设定温度到了 清零水流大数据
-//		if(gucv_real_temp>=(gucv_set_temp-2))
-//		{
-//			guiv_work_low_temp_count=0;//清零水流大数据计时
-//		}
-//}
-
-
-//计算标准输出功率
-void PowerStdCalc(void)
-{
-	//计算标准加热比
-	lulv_out_power=(unsigned char)(gucv_set_temp-gucv_in_water_temp); //计算温升需求
-	lulv_out_power=lulv_out_power*(gucv_water_speed);//合并温升与流量数据
-	lulv_out_power=lulv_out_power*20;
-	lulv_out_power=lulv_out_power/220;//合并电压数据
-	
-	//输出标准加热比
-	if(lulv_out_power>255)
-		gucv_kkg_temp_data=255;
-	else
-		gucv_kkg_temp_data=lulv_out_power;	
-}
-
-
-//计算功率调整值
-void PowerAdjCalc(void)
-{
-	if(gulv_heatadj_nexttime_msec<zd_getUtc_100mSec())
-	{
-		guiv_set_temp_adc_data=((unsigned int)GetTempAdcVal(gucv_set_temp))<<4;//取回温度表中的ADC值,因为是8位的所以要左移4位
-			
-		if(guiv_set_temp_adc_data<guiv_out_water_adc_data)//(gucv_set_temp>gucv_real_temp)//低于设定温度
-		{
-			if(luiv_power_adj_data<200) luiv_power_adj_data++;
-
-			if(guiv_out_water_adc_data<guiv_out_water_adc_data_ago)//当前ADC比前一次ADC要小,温度上升,方向正确
-			{
-				if((guiv_out_water_adc_data-guiv_set_temp_adc_data)<100&&(guiv_out_water_adc_data_ago-guiv_out_water_adc_data)>1)//当温度接近，并且上升率过大时时减小功率,防止升温太多
-				{
-					if(triacOn_CrossPass<70) triacOn_CrossPass++;//减小功率
-					gulv_heatadj_nexttime_msec=zd_getUtc_100mSec()+10;
-				}
-			}								
-			else//当前ADC比前一次ADC要大或相等,温度下降或不变化，方向错误
-			{
-				//if((guiv_out_water_adc_data-guiv_out_water_adc_data_ago)>1)
-				{
-					if(triacOn_CrossPass>0) triacOn_CrossPass--;//加大功率
-					gulv_heatadj_nexttime_msec=zd_getUtc_100mSec()+2;
-				}
-			}
-		}
-		else if(guiv_set_temp_adc_data>guiv_out_water_adc_data)//(gucv_set_temp<gucv_real_temp)//高于设定温度
-		{
-			
-			if(luiv_power_adj_data>0) luiv_power_adj_data--;
-										
-			if(guiv_out_water_adc_data>guiv_out_water_adc_data_ago)//当前ADC比前一次ADC要大,温度下降，方向正确
-			{
-				if((guiv_set_temp_adc_data-guiv_out_water_adc_data)<50&&(guiv_out_water_adc_data-guiv_out_water_adc_data_ago)>1)//当温度接近，并且下降率过大时时减小功率,防止下降太多
-				{
-					if(triacOn_CrossPass>0) triacOn_CrossPass--;//加大功率
-					gulv_heatadj_nexttime_msec=zd_getUtc_100mSec()+10;
-				}
-			}								
-			else//当前ADC比前一次ADC要小或相等,温度上升或不变化，方向错误
-			{
-				if(triacOn_CrossPass<70) triacOn_CrossPass++;//减小功率
-				gulv_heatadj_nexttime_msec=zd_getUtc_100mSec()+2;
-			}
-		}
-		
-		guiv_out_water_adc_data_ago=guiv_out_water_adc_data;
-		
-	}
-}
-
-
 /*****************************************************************************
 *函数			: void Background_Run(void)	
 *函数功能描述 	: IO与负载后台自动处理
@@ -1437,52 +1363,6 @@ void Background_Run(void)
 						gbv_heat_start_working=1;
 						guiv_out_water_adc_data_ago=guiv_out_water_adc_data;						
 					}
-////////////////////////////////////////////////////////////////////////////////////////////////////////						
-/*					
-						
-					//计算标准输出功率
-					PowerStdCalc();
-				
-					//计算功率调整值
-					PowerAdjCalc();
-
-					//合并调整量与标准输出
-					if(luiv_power_adj_data>=100)
-					{
-						gucv_kkg_temp_data=gucv_kkg_temp_data+(luiv_power_adj_data-100);
-					}
-					else
-					{
-						if(gucv_kkg_temp_data>(100-luiv_power_adj_data))
-						{
-							gucv_kkg_temp_data=gucv_kkg_temp_data-(100-luiv_power_adj_data);
-						}
-						else
-						{
-							gucv_kkg_temp_data=0;
-						}	
-					}
-					
-					
-					//按功率档位限制功率
-					power_limit();
-					
-					
-					//输出最终加热比,,,
-					if(gucv_kkg_temp_data>0)		//需要加热的时候才输出,,,防止10ms 80个数据的临界点加热一下
-					{	
-						//可控硅输出允许
-						triacOn_CrossPass=(unsigned char)(80-cucv_power_Tab[gucv_kkg_temp_data]);
-						triacOnEnable=1;	
-					}
-					else
-					{
-						triacOnEnable=0;	
-					}	
-	
-					break;
-*/					
-/////////////////////////////////////////////////////////////////////////////////////////
 				}
 				else
 				{
@@ -1510,12 +1390,12 @@ void Background_Run(void)
 				{
 					//判断温度差距是否到达10度
 					case	0:
-						water_temp_con_step0();
+						//water_temp_con_step0();
 					break;
 					
 					//用标准加热比加热  计时X秒后进入微调
 					case	1:
-						water_temp_con_step1();
+						//water_temp_con_step1();
 					break;
 					
 					default:
@@ -1577,34 +1457,24 @@ void app_base_run(void)
 			//蜂鸣器触发与控制
 			zd_buzzerRun();
 		
-			//gucv_real_temp=CalcTmpC(waterout_Temp_ad,gucv_real_temp);
+			gucv_real_temp=CalcTmpC(waterout_Temp_ad,gucv_real_temp);
 		}
 		
-		if(mSec_x100_workbit)//每100ms调用一次
-		{
-
-
-			
-		}
 
 		if(mSec_x10_workbit)//每10ms调用一次
 		{
 			//ad自动化轮询采集与回调执行
-
 			zd_adcRun();
-
 
 						
 			//按键扫描,产生按键触发标志与键值信息
 			zd_keyRun();
 			
-			//步进电机
-			//zd_motorStep_run();
-
 		}
 	
-		if(mSec_x5_workbit)
+		if(mSec_x3_workbit)
 		{
+			
 			//中微触控取值
 			__CMS_CheckTouchKey();	//扫描按键
 			
