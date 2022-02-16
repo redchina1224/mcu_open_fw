@@ -13,5 +13,7 @@
 	#endif
 
 
+	//载入ADC数值计算值
+	#include "ntc_adcval_calc.h"
 
 #endif

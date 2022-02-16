@@ -5,7 +5,7 @@
 		#include "ntc_table.c" //载入NTC参数温度表
 
 
-unsigned char GetTempAdcVal(unsigned char temp)
+TableValueType GetTempAdcVal(unsigned char temp)
 {
 	if(temp<=(TEMPTABLE_BUFFER_LENGTH-1))
 	return cucv_temp_Tab[temp];

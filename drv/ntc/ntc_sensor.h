@@ -1,7 +1,7 @@
 #ifndef __NTC_SENSOR_H_
 #define __NTC_SENSOR_H_
 
-unsigned char GetTempAdcVal(unsigned char temp);
+TableValueType GetTempAdcVal(unsigned char temp);
 
 unsigned char TmpC_to_TmpF(unsigned char tmpc);
 
