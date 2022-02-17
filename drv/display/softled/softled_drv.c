@@ -4,15 +4,13 @@
 #ifdef DisplayType
 #if (DisplayType==DisplayType_Dig8SoftLed) 
 
-//unsigned char Led_WriteBufferLength;
 unsigned char LedDrvCaseSelect;
 unsigned char *Led_WriteSegBuffer;
 unsigned char *Led_WriteComBuffer;
-//unsigned char LedBlinkDir=0;
-unsigned char LedBlinkSet=0;
-unsigned char LedBlinkCnt;
-//unsigned char LedBlinkCnt2;
-unsigned char LedBlinkSegTempVal;
+
+unsigned char LedBrightSet=0;
+unsigned char LedBrightCnt;
+//unsigned char LedBlinkSegTempVal;
 
 
 
@@ -20,9 +18,9 @@ unsigned char LedBlinkSegTempVal;
 void zd_softled_run(void)	
 {
 	
-	if(++LedBlinkCnt>10)
+	if(++LedBrightCnt>10)
 	{
-		LedBlinkCnt=0;
+		LedBrightCnt=0;
 		
 		Led_IO_COM_CTRL_OFF;
 		Led_IO_SEG_CTRL_OFF;
@@ -31,6 +29,11 @@ void zd_softled_run(void)
 		
 		Led_IO_SEG_CTRL(Led_WriteSegBuffer[LedDrvCaseSelect]);
 		Led_IO_COM_CTRL(Led_WriteComBuffer[LedDrvCaseSelect]);
+	}
+	else if(LedBrightCnt==LedBrightSet)
+	{
+		Led_IO_COM_CTRL_OFF;
+		Led_IO_SEG_CTRL_OFF;
 	}
 	
 
@@ -61,5 +64,14 @@ void zd_softled_init(void)
 	
 }
 
+
+
+void zd_softled_set_bright(unsigned char bright)	
+{
+	if(bright>10) bright=10;
+	if(bright<1) bright=1;
+	
+	LedBrightSet=bright;
+}
 #endif
 #endif
