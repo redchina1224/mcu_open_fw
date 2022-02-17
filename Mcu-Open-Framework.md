@@ -1,4 +1,4 @@
-<font size=15>小家电智能控制器开发平台<br/>MCU开源开发框架</font>
+<font size=15>小家电智能控制器开发平台<br/>低端MCU开源开发框架</font>
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 ## **Mcu-Open-Framework     V0.10**
@@ -100,4 +100,86 @@
 - ntc_sensor.h
 
   定义ntc_sensor.c的外部接口函数。
+  
+#### RTC模块：./drv/rtc
 
+- softrtc目录：
+
+  软件RTC时钟实现，rtc时间产生，运行时间标志位产生，依赖 125uS 定时中断来实现
+
+- defineRtc_drv.h
+
+  定义配置参数值，当新增可选RTC实现时必须在此文件同步更新相应的定义值，以便在项目中可通过该定义值配置使用
+
+- loadRtc_drv.h
+
+  根据项目配置中定义的RTC，载入对应的实现函数头文件。
+  
+#### KEY模块：./drv/key
+
+- irkey目录：
+
+  红外遥控协议按键信号接收的实现，依赖 125uS 定时中断来实现
+
+- rfkey目录：
+
+  射频遥控协议按键信号接收的实现，依赖 125uS 定时中断来实现
+
+- mcutouch目录：
+
+  MCU自带的触摸按键接口标准化，依赖相应单片机触摸库及配置文件来实现
+  
+- touch目录：
+
+  其他无法归类为上述触摸按键方案的驱动接口，依赖相应接口方式如IIC,SPI,UART等
+
+
+- defineKey_drv.h
+
+  定义配置参数值，当新增可选KEY实现时必须在此文件同步更新相应的定义值，以便在项目中可通过该定义值配置使用
+
+- loadKey_drv.h
+
+  根据项目配置中定义的Key，载入对应的实现函数头文件。
+  
+- key_drv.c 与 key_drv.h
+
+  单路按键信号检测与触发标志位产生处理，依赖以上的各类按键信号接口方案。
+  
+- key_Multichannel_drv 与 key_Multichannel_drv.h
+
+  单路按键信号检测与触发标志位产生处理，依赖以上的各类按键信号接口方案。
+  
+#### INTERRUPT模块：./drv/inputerrupt
+
+- interrupt_drv.c 与 interrupt_drv.c：
+
+  MCU中断服务函数的集合，很多功能依赖该函数实现其功能。
+  
+#### DISPLAY模块：./drv/display
+
+- softled目录：
+
+  类LED数码管显示驱动的软件实现，推荐依赖 125uS 定时中断来实现，防止闪烁。
+
+- defineDisplay_drv.h
+
+  定义配置参数值，当新增可选Display实现时必须在此文件同步更新相应的定义值，以便在项目中可通过该定义值配置使用
+
+- loadDisplay_drv.h
+
+  根据项目配置中定义的Display，载入对应的实现函数头文件。
+
+#### BUZZER模块：./drv/buzzer
+
+- buzzer目录：
+
+  常规蜂鸣器驱动的软件实现，包含GPIO型、定时中断取反型、PWM输出型，其中定中断取反型依赖 125uS 定时中断来实现，PWM输出型依赖MCU硬件PWM功能。
+
+- defineBuzzer_drv.h
+
+  定义配置参数值，当新增可选Buzzer实现时必须在此文件同步更新相应的定义值，以便在项目中可通过该定义值配置使用
+
+- loadBuzzer_drv.h
+
+  根据项目配置中定义的Buzzer，载入对应的实现函数头文件。
