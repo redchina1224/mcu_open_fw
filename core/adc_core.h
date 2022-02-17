@@ -23,26 +23,32 @@ extern bit adc_working;
 *函数参数 		: adcChannel:采集通道,*callback:采集周期完成后的回调函数
 *函数返回值 	: 无
 ***************************************************/
+#ifdef ADC_COLLECTION_CH_MAX
+#if(ADC_COLLECTION_CH_MAX>0)
 void zd_adcInit(unsigned char adcChannel,void (*callback)(unsigned int));
-
-
-/***************************************************
-*函数名 		: zd_getAdc_sync
-*函数功能描述 	: ADC数据异步轮询采集
-*函数参数 		: adcChannel:采集通道,*adcValue:采集后存放数据的指针
-*函数返回值 	: uchar:当数据更新时返回1，否则返回0
-***************************************************/
-unsigned char zd_getAdc_sync(unsigned char adcChannel,unsigned int *adcValue);
-
+#endif
+#else
+void zd_adcInit(void);
+#endif
 
 
 /***************************************************
 *函数名 		: zd_getAdc_async
-*函数功能描述 	: ADC数据同步等待采集
+*函数功能描述 	: ADC数据异步轮询采集
 *函数参数 		: adcChannel:采集通道,*adcValue:采集后存放数据的指针
 *函数返回值 	: uchar:当数据更新时返回1，否则返回0
 ***************************************************/
 unsigned char zd_getAdc_async(unsigned char adcChannel,unsigned int *adcValue);
+
+
+
+/***************************************************
+*函数名 		: zd_getAdc_sync
+*函数功能描述 	: ADC数据同步等待采集
+*函数参数 		: adcChannel:采集通道,*adcValue:采集后存放数据的指针
+*函数返回值 	: uchar:当数据更新时返回1，否则返回0
+***************************************************/
+unsigned char zd_getAdc_sync(unsigned char adcChannel,unsigned int *adcValue);
 	
 
 /***************************************************
@@ -51,7 +57,11 @@ unsigned char zd_getAdc_async(unsigned char adcChannel,unsigned int *adcValue);
 *函数参数 		: 无
 *函数返回值 	: 无
 ***************************************************/
+#ifdef ADC_COLLECTION_CH_MAX
+#if(ADC_COLLECTION_CH_MAX>0)
 void zd_adcRun(void);
+#endif
+#endif
 
 
 
