@@ -13,57 +13,9 @@
 //extern void __CMS_GetTouchKeyValue(void);
 
 bit T_1ms_bit=0;
-
-#if (BuzzerType==BuzzerType_TimerInv)
- unsigned char __buzzer_en=0;
- unsigned char *T_BuzzerEn=&__buzzer_en;
-#endif
-
-#ifdef RtcType
-#if (RtcType==RtcType_TimerSoftRtc) 
- unsigned char T_125usCount=0;
- //unsigned char __msCount=0;
- //unsigned long __SecCount=0;
- unsigned int *T_msCount;
- unsigned long *T_SecCount;
-#endif
-#endif
+bit T_1s_bit=0;
 
 
-#ifdef CounterType
-#if (CounterType==CounterType_SoftCounter) 
-
-	#ifdef Counter_IO_Channel1
-	bit __counter1_bit_status_ago;
-  unsigned char __counter1_val=0;
-  unsigned char __counter1filter=0;
-  unsigned char __counter1_2_val=0; 
-	unsigned char *T_Counter1_1sec=&__counter1_val;
-	unsigned char *T_Counter1_250msec=&__counter1_2_val;
-	
-	#endif
-
-
-#endif
-#endif
- 
- 
- 
-#ifdef ZeroCrossType
-	#if (ZeroCrossType==ZeroCrossType_Gpio) 
-	bit zeroCrossError=0;
-	bit __zerocross_bit_status_ago;
-	bit triacOnEnable=0;
-	unsigned char __zerocrossfilter=0;
-	unsigned char zeroCrossPassCntMax;
-	unsigned char zeroCrossPassCnt;
-	unsigned char triacOn_CrossPass=40;
-
-	#endif
-#endif 
- 
- 
- 
 #ifdef Ft0Clk
  unsigned char T0_Reload;
 #endif
@@ -86,8 +38,181 @@ void interrupt_SoftRtcConfig(unsigned char *T_ms,unsigned long *T_sec)
 	T_SecCount=T_sec;
 }
 */
+#ifdef BuzzerType
+#if (BuzzerType==BuzzerType_TimerInv)
+
+unsigned char __buzzer_en=0;
+unsigned char *T_BuzzerEn=&__buzzer_en;
 
 
+void buzzer_in_isr(void);
+inline void buzzer_in_isr(void)
+{
+	if((*T_BuzzerEn)!=0) Buzzer_IO_Channel=!Buzzer_IO_Channel; else Buzzer_IO_Ctrl(Buzzer_IO_OFF);
+	//Buzzer_IO_Channel=!Buzzer_IO_Channel;
+}
+
+#endif
+#endif
+
+
+#ifdef RtcType
+#if (RtcType==RtcType_TimerSoftRtc) 
+ unsigned char T_125usCount=0;
+ unsigned char __msCount=0;
+ unsigned long __SecCount=0;
+ unsigned int *T_msCount=&__msCount;
+ unsigned long *T_SecCount=&__SecCount;
+
+
+//void softrtc_in_isr(void);
+inline void softrtc_in_isr(void)
+{
+	if(++T_125usCount>=8) 
+	{ 
+		T_125usCount=0; 
+		T_1ms_bit=1;
+		if(++(*T_msCount)>=1000) 
+		{
+			T_1s_bit=1;
+			(*T_msCount)=0;
+			(*T_SecCount)++;
+		}
+	}
+}
+#endif
+#endif
+
+
+
+
+
+#ifdef CounterType
+#if (CounterType==CounterType_SoftCounter) 
+
+#ifdef Counter_IO_Channel1
+	bit __counter1_bit_status_ago;
+  unsigned char __counter1_val=0;
+  unsigned char __counter1filter=0;
+  //unsigned char __counter1_2_val=0; 
+	unsigned char *T_Counter1_1sec=&__counter1_val;
+	//unsigned char *T_Counter1_250msec=&__counter1_2_val;
+
+//void softcounter1_in_isr(void);
+inline void softcounter1_in_isr(void)
+{
+		if(T_1s_bit)
+		{
+			(*T_Counter1_1sec)=__counter1_val; __counter1_val=0;
+		}
+		
+		/*
+		if((*T_msCount)%250==0)
+		{
+			(*T_Counter1_250msec)=__counter1_2_val; __counter1_2_val=0;
+		}
+		*/
+
+		if(Counter_IO_Channel1==0)
+		{
+			if(__counter1filter<20) __counter1filter++;
+			else
+			{
+				if(__counter1_bit_status_ago==1)
+				{
+					if(__counter1_val<250)	__counter1_val++;
+					//if(__counter1_2_val<250) __counter1_2_val++;
+					__counter1_bit_status_ago=0;
+				}
+			}
+		}
+		else
+		{
+			if(__counter1filter>0) __counter1filter--;
+			else __counter1_bit_status_ago=1;
+		}
+}
+#endif //#ifdef Counter_IO_Channel1
+
+
+#endif //#if (CounterType==CounterType_SoftCounter) 
+#endif //#ifdef CounterType
+			
+
+
+
+
+#ifdef ZeroCrossType
+	#if (ZeroCrossType==ZeroCrossType_Gpio) 
+	bit zeroCrossError=0;
+	bit __zerocross_bit_status_ago;
+	bit triacOnEnable=0;
+	unsigned char __zerocrossfilter=0;
+	unsigned char zeroCrossPassCntMax;
+	unsigned char zeroCrossPassCnt;
+	unsigned char triacOn_CrossPass=40;
+
+
+//void zerocross_in_isr(void);
+inline void zerocross_in_isr(void)
+{
+	//过零检测与清零
+	/*
+	if(ZeroCross_IO_Channel==0)
+	{
+		if(__zerocrossfilter<5) __zerocrossfilter++;
+		else
+		{
+			if(__zerocross_bit_status_ago==1)
+			{
+				zeroCrossPassCntMax=zeroCrossPassCnt;
+				zeroCrossPassCnt=5;
+				//Triac_IO_Ctrl(Triac_IO_OFF);
+				__zerocross_bit_status_ago=0;
+			}
+		
+		}
+	}
+	else
+	{
+		if(__zerocrossfilter>0) __zerocrossfilter--;
+		else
+		{	
+			if(zeroCrossPassCnt<150) zeroCrossPassCnt++; else zeroCrossError=1;
+			//可控硅控制
+			//if(triacOnEnable==1&&zeroCrossPassCnt>triacOn_CrossPass)
+			//Triac_IO_Ctrl(Triac_IO_ON);
+			__zerocross_bit_status_ago=1;
+		}
+	}
+	
+	*/
+	
+	
+	if(__zerocross_bit_status_ago!=ZeroCross_IO_Channel)
+	{
+		if(0==__zerocross_bit_status_ago)
+		{
+			zeroCrossPassCntMax=zeroCrossPassCnt;
+			zeroCrossPassCnt=0;
+			Triac_IO_Ctrl(Triac_IO_OFF);
+		}
+		__zerocross_bit_status_ago=ZeroCross_IO_Channel;
+	}
+	else
+	{
+	if(zeroCrossPassCnt<150) zeroCrossPassCnt++; else zeroCrossError=1;
+	//可控硅控制
+	if(triacOnEnable==1&&zeroCrossPassCnt>triacOn_CrossPass)
+		Triac_IO_Ctrl(Triac_IO_ON);
+	}
+}
+
+	#endif
+#endif 
+
+			
+			
 //按平台定义或载入对应头文件
 #if ((DevPlatform==DevPlatform_CMSIDE_CASD))
 	
@@ -103,152 +228,42 @@ void interrupt interrupt_Isr()
 	//---------------------------------------
 
 
-	//定时器蜂鸣驱动-定义在TIMER0时		
-	#if (BuzzerType==BuzzerType_TimerInv)
-		#if(BuzzeTimer==0)
-			if((*T_BuzzerEn)!=0) Buzzer_IO_Channel=!Buzzer_IO_Channel; else Buzzer_IO_Ctrl(Buzzer_IO_OFF);
-			//Buzzer_IO_Channel=!Buzzer_IO_Channel;
+	//定时器蜂鸣驱动-定义在TIMER0时	
+	#ifdef BuzzerType	
+		#if (BuzzerType==BuzzerType_TimerInv)
+			#if(BuzzeTimer==0)
+				buzzer_in_isr();
+			#endif
 		#endif
-	#endif
+	#endif	//#ifdef BuzzerType	
 	
 	//定时器时间系统-定义在TIMER0时	
 	#if (RtcType==RtcType_TimerSoftRtc) 
 		#if(SoftRtcTimer==0)
-			if(++T_125usCount>=8) 
-			{ 
-				T_125usCount=0; 
-				T_1ms_bit=1;
-				if(++(*T_msCount)>=1000) 
-				{
-					(*T_msCount)=0;
-					(*T_SecCount)++;
-					
-					
-				#ifdef CounterType
-					#if (CounterType==CounterType_SoftCounter) 
-
-						#ifdef Counter_IO_Channel1
-						(*T_Counter1_1sec)=__counter1_val; __counter1_val=0;
+		
+			softrtc_in_isr();//RTC时钟内联函数
 						
-						
-						if((*T_msCount)%25==0)
-						{
-							(*T_Counter1_250msec)=__counter1_2_val; __counter1_2_val=0;
-						}  
-						
-						#endif
-
-					#endif
-				#endif
-
-				}
-				
-
-			}
-						
-			
 			#ifdef DisplayType
 				#if (DisplayType==DisplayType_Dig8SoftLed) 
-				zd_softled_run();
+				zd_softled_run();//软件LED驱动函数
 				#endif
-			#endif
+			#endif //#ifdef DisplayType
 
 			#ifdef CounterType
 				#if (CounterType==CounterType_SoftCounter) 
-
 					#ifdef Counter_IO_Channel1
-					if(Counter_IO_Channel1==0)
-					{
-						if(__counter1filter<20) __counter1filter++;
-						else
-						{
-							if(__counter1_bit_status_ago==1)
-							{
-									 if(__counter1_val<250)	__counter1_val++;
-									 if(__counter1_2_val<250) __counter1_2_val++;
-								__counter1_bit_status_ago=0;
-							}
-						}
-					}
-					else
-					{
-						if(__counter1filter>0) __counter1filter--;
-						else
-						{
-							
-							__counter1_bit_status_ago=1;
-						}
-					}
-					
-					
-
+					softcounter1_in_isr();//softcount1软件计数器内联函数
 					#endif
-
-
 				#endif
-			#endif
+			#endif //#ifdef CounterType
 
 					
 					
 			#ifdef ZeroCrossType
 				#if (ZeroCrossType==ZeroCrossType_Gpio) 
-
-				//过零检测与清零
-				/*
-				if(ZeroCross_IO_Channel==0)
-				{
-					if(__zerocrossfilter<5) __zerocrossfilter++;
-					else
-					{
-						if(__zerocross_bit_status_ago==1)
-						{
-							zeroCrossPassCntMax=zeroCrossPassCnt;
-							zeroCrossPassCnt=5;
-							//Triac_IO_Ctrl(Triac_IO_OFF);
-							__zerocross_bit_status_ago=0;
-						}
-					
-					}
-				}
-				else
-				{
-					if(__zerocrossfilter>0) __zerocrossfilter--;
-					else
-					{	
-						if(zeroCrossPassCnt<150) zeroCrossPassCnt++; else zeroCrossError=1;
-						//可控硅控制
-						//if(triacOnEnable==1&&zeroCrossPassCnt>triacOn_CrossPass)
-						//Triac_IO_Ctrl(Triac_IO_ON);
-						__zerocross_bit_status_ago=1;
-					}
-				}
-				
-				*/
-				
-				
-				if(__zerocross_bit_status_ago!=ZeroCross_IO_Channel)
-				{
-					if(0==__zerocross_bit_status_ago)
-					{
-						zeroCrossPassCntMax=zeroCrossPassCnt;
-						zeroCrossPassCnt=0;
-						Triac_IO_Ctrl(Triac_IO_OFF);
-					}
-					__zerocross_bit_status_ago=ZeroCross_IO_Channel;
-				}
-				else
-				{
-				if(zeroCrossPassCnt<150) zeroCrossPassCnt++; else zeroCrossError=1;
-				//可控硅控制
-				if(triacOnEnable==1&&zeroCrossPassCnt>triacOn_CrossPass)
-					Triac_IO_Ctrl(Triac_IO_ON);
-				}
-				
-
-					
-
+					zerocross_in_isr();//zerocross过零与可控硅驱动内联函数
 				#endif
-			#endif
+			#endif //#ifdef ZeroCrossType
 
 			#ifdef KeyType
 				#if ((KeyType&KeyType_IR)==KeyType_IR)
@@ -256,18 +271,18 @@ void interrupt interrupt_Isr()
 				#endif
 				
 				#if ((KeyType&KeyType_RF)==KeyType_RF)
-					__ZD_GetRfKeyValue();
+					__ZD_GetRfKeyValue();//射频遥控接收函数
 				#endif					
-			#endif	
-			
-								
-			#if (McuType==McuType_CmsSemicon_CMS79F738)
-			__CMS_GetTouchKeyValue();//此函数放在中断，建议中断扫描时间 125us	
-			#endif			
-			
-			
-		#endif
-	#endif
+
+				#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)				
+					#if (McuType==McuType_CmsSemicon_CMS79F738)
+					__CMS_GetTouchKeyValue();//中微单片机触摸库函数,此函数放在中断,建议中断扫描时间 125us	
+					#endif			
+				#endif //#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)		
+			#endif	//#ifdef KeyType		
+			T_1s_bit=0;
+		#endif //#if(SoftRtcTimer==0)
+	#endif //#if (RtcType==RtcType_TimerSoftRtc) 
 			
 
 
@@ -288,28 +303,7 @@ void interrupt interrupt_Isr()
 	//---------------------------------------	
 		
 	
-	//定时器时间系统-定义在TIMER1时	
-	#if (RtcType==RtcType_TimerSoftRtc) 
-		#if(SoftRtcTimer==1)
-			if(++T_125usCount>=80) 
-			{ 
-				T_125usCount=0; 
-				if(++(*T_msCount)>=100) {(*T_msCount)=0;(*T_SecCount)++;}  
-			}
-			#ifdef DisplayType
-				#if (DisplayType==DisplayType_Dig8SoftLed) 
-				zd_softled_run();
-				#endif
-			#endif
-		#endif
-	#endif
-		
-	//定时器蜂鸣驱动-定义在TIMER1时		
-	#if (BuzzerType==BuzzerType_TimerInv)
-		#if(BuzzeTimer==1)
-			if((*T_BuzzerEn)!=0) Buzzer_IO_Channel=!Buzzer_IO_Channel; else Buzzer_IO_Ctrl(Buzzer_IO_OFF);
-		#endif
-	#endif
+
 	TMR1IF = 0;				//清中断标志位
 	}
 #endif
@@ -318,28 +312,10 @@ void interrupt interrupt_Isr()
 #ifdef Ft2Clk	
 	if(TMR2IF)
 	{
-	//定时器时间系统-定义在TIMER2时	
-	#if (RtcType==RtcType_TimerSoftRtc) 
-		#if(SoftRtcTimer==2)
-			if(++T_125usCount>=80) 
-			{ 
-				T_125usCount=0; 
-				if(++(*T_msCount)>=100) {(*T_msCount)=0;(*T_SecCount)++;}  
-			}
-			#ifdef DisplayType
-				#if (DisplayType==DisplayType_Dig8SoftLed) 
-				zd_softled_run();
-				#endif
-			#endif
-		#endif
-	#endif
-		
-	//定时器蜂鸣驱动-定义在TIMER2时		
-	#if (BuzzerType==BuzzerType_TimerInv)
-		#if(BuzzeTimer==2)
-			if((*T_BuzzerEn)!=0) Buzzer_IO_Channel=!Buzzer_IO_Channel; else Buzzer_IO_Ctrl(Buzzer_IO_OFF);
-		#endif
-	#endif
+
+
+
+
 	TMR2IF = 0;	//清中断标志位
 		
 	}
@@ -418,93 +394,59 @@ void timer0_Isr() interrupt 1
 		#endif
 	//---------------------------------------
 
+	//定时器蜂鸣驱动-定义在TIMER0时	
+	#ifdef BuzzerType	
+		#if (BuzzerType==BuzzerType_TimerInv)
+			#if(BuzzeTimer==0)
+				buzzer_in_isr();
+			#endif
+		#endif
+	#endif	//#ifdef BuzzerType	
+	
 	//定时器时间系统-定义在TIMER0时	
 	#if (RtcType==RtcType_TimerSoftRtc) 
 		#if(SoftRtcTimer==0)
-			if(++T_125usCount>=80) 
-			{ 
-				T_125usCount=0; 
-				if(++(*T_msCount)>=100) 
-				{
-					(*T_msCount)=0;
-					(*T_SecCount)++;
-					
-					
-					#ifdef CounterType
-					#if (CounterType==CounterType_SoftCounter) 
-
-						#ifdef Counter_IO_Channel1
-						(*T_Counter1_1sec)=__counter1_val; __counter1_val=0;
-						#endif
-
-					#endif
-				#endif
-
-				}  
-			}
+		
+			softrtc_in_isr();//RTC时钟内联函数
+						
 			#ifdef DisplayType
 				#if (DisplayType==DisplayType_Dig8SoftLed) 
-				zd_softled_run();
+				zd_softled_run();//软件LED驱动函数
 				#endif
-			#endif
+			#endif //#ifdef DisplayType
 
 			#ifdef CounterType
 				#if (CounterType==CounterType_SoftCounter) 
-
 					#ifdef Counter_IO_Channel1
-					if(__counter1_bit_status_ago!=Counter_IO_Channel1)
-					{
-						if(0==__counter1_bit_status_ago&&__counter1_val<250) __counter1_val++;
-						__counter1_bit_status_ago=Counter_IO_Channel1;
-					}
+					softcounter1_in_isr();//softcount1软件计数器内联函数
 					#endif
-
-
 				#endif
-			#endif
+			#endif //#ifdef CounterType
 
 					
 					
 			#ifdef ZeroCrossType
 				#if (ZeroCrossType==ZeroCrossType_Gpio) 
+					zerocross_in_isr();//zerocross过零与可控硅驱动内联函数
+				#endif
+			#endif //#ifdef ZeroCrossType
 
-				//过零检测与清零
-				if(__zerocross_bit_status_ago!=ZeroCross_IO_Channel)
-				{
-					if(0==__zerocross_bit_status_ago)
-					{
-						zeroCrossPassCntMax=zeroCrossPassCnt;
-						zeroCrossPassCnt=0;
-						//Triac_IO_Ctrl(Triac_IO_OFF);
-					}
-					__zerocross_bit_status_ago=ZeroCross_IO_Channel;
-				}
-				else
-				{
-				if(zeroCrossPassCnt<250) zeroCrossPassCnt++; else zeroCrossError=1;
-				//可控硅控制
-				//if(triacOnEnable==1&&zeroCrossPassCnt>triacOn_CrossPass)
-					//Triac_IO_Ctrl(Triac_IO_ON);
-				}
-
-					
+			#ifdef KeyType
+				#if ((KeyType&KeyType_IR)==KeyType_IR)
 
 				#endif
-			#endif
 				
-				
-			
-		#endif
-	#endif
-			
+				#if ((KeyType&KeyType_RF)==KeyType_RF)
+					__ZD_GetRfKeyValue();//射频遥控接收函数
+				#endif					
 
-	//定时器蜂鸣驱动-定义在TIMER0时		
-	#if (BuzzerType==BuzzerType_TimerInv)
-		#if(BuzzeTimer==0)
-			if((*T_BuzzerEn)!=0) Buzzer_IO_Channel=!Buzzer_IO_Channel; else Buzzer_IO_Ctrl(Buzzer_IO_OFF);
-			//Buzzer_IO_Channel=!Buzzer_IO_Channel;
-		#endif
-	#endif
+				#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)				
+
+				#endif //#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)		
+			#endif	//#ifdef KeyType		
+			T_1s_bit=0;
+		#endif //#if(SoftRtcTimer==0)
+	#endif //#if (RtcType==RtcType_TimerSoftRtc) 
 
 	
 		ZD_T0IF_CLEAN;			//清中断标志位
