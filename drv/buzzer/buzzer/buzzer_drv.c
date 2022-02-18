@@ -85,10 +85,12 @@ void zd_buzzerRun(void)//每50ms调用一次
 	else
 	{
 		beepEn=0;
-		Buzzer_IO_Input;
-//		#if (BuzzerType==BuzzerType_Gpio)
-//				Buzzer_IO_Ctrl(Buzzer_IO_OFF);
-//		#endif
+
+		#if (BuzzerType==BuzzerType_Gpio)
+			Buzzer_IO_Ctrl(Buzzer_IO_OFF);
+		#else
+			Buzzer_IO_Input;
+		#endif
 	}
 }
 
