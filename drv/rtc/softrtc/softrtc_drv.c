@@ -17,21 +17,22 @@
 
 //unsigned long secRun_utcsecAgo=0;
 unsigned long utcsec=0;
-unsigned int utcmsec=0;
+unsigned char utc10msec=0;
 //xdata unsigned long localsec=0;
 
-
+//unsigned int softrtctestv=0;
 
 bit mSec_x1000_workbit=0;
 bit mSec_x500_workbit=0;
+bit mSec_x250_workbit=0;
 bit mSec_x100_workbit=0;
 bit mSec_x50_workbit=0;
 bit mSec_x10_workbit=0;
-bit mSec_x5_workbit=0;
-bit mSec_x3_workbit=0;
-bit mSec_x1_workbit=0;
+//bit mSec_x5_workbit=0;
+//bit mSec_x3_workbit=0;
+//bit mSec_x1_workbit=0;
 
-unsigned int mSec_x1_cnt=0;
+unsigned char mSec_x10_cnt=0;
 
 unsigned long mSec_x100_utc=0;
 
@@ -44,7 +45,7 @@ void zd_softrtcInit(void)
 	 ZD_GIE(ZD_GIE_DISABLE);  //中断总允许开关
 	
 	T_SecCount=&utcsec;
-	T_msCount=&utcmsec;
+	T_10msCount=&utc10msec;
 	zd_timerInit(SoftRtcTimer,125); //初始化定时器125us中断`
 
 	 ZD_GIE(ZD_GIE_ENABLE); //中断总允许开关
@@ -63,7 +64,7 @@ unsigned long zd_getUtc_100mSec(void)
 
 bit GetSecHalfBit(void)
 {
-	if(utcmsec<500) return 1; else return 0;
+	if(utc10msec<50) return 1; else return 0;
 }
 
 
@@ -111,44 +112,39 @@ bit mSec_x10_RunOnce(void)
 void zd_basetime_run(void)
 {
 	
-	if(T_1ms_bit)
-	{
-		if(++mSec_x1_cnt>1000)
+	if(T_10ms_bit)
+	{	
+		mSec_x10_workbit=1;	
+				
+		if(++mSec_x10_cnt>100)
 		{
-			 mSec_x1_cnt=0;	
+			 mSec_x10_cnt=0;	
 			 mSec_x1000_workbit=1;
-		}	
+		}
 		
-		if((mSec_x1_cnt%5)==0) 
+		if((mSec_x10_cnt%5)==0)
 		{
-			mSec_x5_workbit=1;
-			if((mSec_x1_cnt%10)==0) 
-			{
-				mSec_x10_workbit=1;	
-				if((mSec_x1_cnt%50)==0)
-				{ 
-					mSec_x50_workbit=1;
-					if((mSec_x1_cnt%100)==0)
-					{ 
-						mSec_x100_workbit=1;
-						if((++mSec_x100_utc)>4294960000) mSec_x100_utc=0;
-						if((mSec_x1_cnt%500)==0)
-						{ 
-							mSec_x500_workbit=1;
-						}
-					}	
+			mSec_x50_workbit=1;
+			if((mSec_x10_cnt%10)==0)
+			{ 
+				mSec_x100_workbit=1;
+				if((++mSec_x100_utc)>4294960000) mSec_x100_utc=0;
+				
+				if(mSec_x10_cnt==0||mSec_x10_cnt==50)
+				{
+					 mSec_x250_workbit=1;
+					 mSec_x500_workbit=1;
 				}
-			}	
+			}
+			
+			if(mSec_x10_cnt==25||mSec_x10_cnt==75) mSec_x250_workbit=1;
 		}
+		
+	
 
 
-		if((mSec_x1_cnt%3)==0) 
-		{
-			mSec_x3_workbit=1;
-		}
-					
-		mSec_x1_workbit=1;			
-		T_1ms_bit=0;
+		
+		T_10ms_bit=0;
 	}
 	
 }
@@ -161,17 +157,14 @@ void zd_basetime_clear(void)
 
 	if(mSec_x500_workbit) mSec_x500_workbit=0;
 
+	if(mSec_x250_workbit) mSec_x250_workbit=0;
+	
 	if(mSec_x100_workbit) mSec_x100_workbit=0;
 	
 	if(mSec_x50_workbit) mSec_x50_workbit=0;
 
 	if(mSec_x10_workbit) mSec_x10_workbit=0;
 	
-	if(mSec_x5_workbit) mSec_x5_workbit=0;
-	
-	if(mSec_x3_workbit) mSec_x3_workbit=0;
-
-	if(mSec_x1_workbit) mSec_x1_workbit=0;
 }
 
 

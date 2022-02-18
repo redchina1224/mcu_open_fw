@@ -3,15 +3,13 @@
 
 
 
-
+//extern unsigned int softrtctestv;
 extern bit mSec_x1000_workbit;
 extern bit mSec_x500_workbit;
+extern bit mSec_x250_workbit;
 extern bit mSec_x100_workbit;
 extern bit mSec_x50_workbit;
 extern bit mSec_x10_workbit;
-extern bit mSec_x5_workbit;
-extern bit mSec_x3_workbit;
-extern bit mSec_x1_workbit;
 
 unsigned long GetUtcSec(void);
 

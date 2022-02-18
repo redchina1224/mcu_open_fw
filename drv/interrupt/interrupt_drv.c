@@ -12,8 +12,8 @@
 
 //extern void __CMS_GetTouchKeyValue(void);
 
-bit T_1ms_bit=0;
-bit T_1s_bit=0;
+
+
 
 
 #ifdef Ft0Clk
@@ -58,24 +58,28 @@ inline void buzzer_in_isr(void)
 
 #ifdef RtcType
 #if (RtcType==RtcType_TimerSoftRtc) 
+
+bit T_10ms_bit=0;
+bit T_1s_bit=0;
+
  unsigned char T_125usCount=0;
- unsigned char __msCount=0;
+ unsigned char __10msCount=0;
  unsigned long __SecCount=0;
- unsigned int *T_msCount=&__msCount;
+ unsigned char *T_10msCount=&__10msCount;
  unsigned long *T_SecCount=&__SecCount;
 
 
 //void softrtc_in_isr(void);
 inline void softrtc_in_isr(void)
 {
-	if(++T_125usCount>=8) 
+	if(++T_125usCount>=80) 
 	{ 
 		T_125usCount=0; 
-		T_1ms_bit=1;
-		if(++(*T_msCount)>=1000) 
+		T_10ms_bit=1;
+		if(++(*T_10msCount)>=100) 
 		{
 			T_1s_bit=1;
-			(*T_msCount)=0;
+			(*T_10msCount)=0;
 			(*T_SecCount)++;
 		}
 	}
@@ -91,37 +95,29 @@ inline void softrtc_in_isr(void)
 #if (CounterType==CounterType_SoftCounter) 
 
 #ifdef Counter_IO_Channel1
-	bit __counter1_bit_status_ago;
-  unsigned char __counter1_val=0;
-  unsigned char __counter1filter=0;
-  //unsigned char __counter1_2_val=0; 
-	unsigned char *T_Counter1_1sec=&__counter1_val;
-	//unsigned char *T_Counter1_250msec=&__counter1_2_val;
+bit __counter1_bit_status_ago;
+unsigned char __counter1_val=0;
+unsigned char __counter1filter=0;
+unsigned char *T_Counter1_1sec=&__counter1_val;
+
 
 //void softcounter1_in_isr(void);
 inline void softcounter1_in_isr(void)
 {
-		if(T_1s_bit)
+		if((*T_10msCount)==0||(*T_10msCount)==50)//半秒周期,上升沿与下降沿都累加，所得累加值等同于1秒的值
 		{
-			(*T_Counter1_1sec)=__counter1_val; __counter1_val=0;
+			(*T_Counter1_1sec)=__counter1_val; 
+			__counter1_val=0;
 		}
-		
-		/*
-		if((*T_msCount)%250==0)
-		{
-			(*T_Counter1_250msec)=__counter1_2_val; __counter1_2_val=0;
-		}
-		*/
 
 		if(Counter_IO_Channel1==0)
 		{
 			if(__counter1filter<20) __counter1filter++;
 			else
 			{
-				if(__counter1_bit_status_ago==1)
+				if(__counter1_bit_status_ago==1)//下降沿
 				{
 					if(__counter1_val<250)	__counter1_val++;
-					//if(__counter1_2_val<250) __counter1_2_val++;
 					__counter1_bit_status_ago=0;
 				}
 			}
@@ -129,7 +125,14 @@ inline void softcounter1_in_isr(void)
 		else
 		{
 			if(__counter1filter>0) __counter1filter--;
-			else __counter1_bit_status_ago=1;
+			else
+			{ 
+				if(__counter1_bit_status_ago==0)//上升沿
+				{
+					if(__counter1_val<250)	__counter1_val++;
+					__counter1_bit_status_ago=1;
+				}
+			}
 		}
 }
 #endif //#ifdef Counter_IO_Channel1
