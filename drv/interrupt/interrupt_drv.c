@@ -45,7 +45,7 @@ unsigned char __buzzer_en=0;
 unsigned char *T_BuzzerEn=&__buzzer_en;
 
 
-void buzzer_in_isr(void);
+//void buzzer_in_isr(void);
 inline void buzzer_in_isr(void)
 {
 	if((*T_BuzzerEn)!=0) Buzzer_IO_Channel=!Buzzer_IO_Channel; else Buzzer_IO_Ctrl(Buzzer_IO_OFF);

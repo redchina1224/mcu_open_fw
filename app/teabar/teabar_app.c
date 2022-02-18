@@ -1054,7 +1054,9 @@ void app_base_run(void)
 			else zd_adcRun();
 
 
-						
+			//中微触控取值
+			__CMS_CheckTouchKey();	//扫描按键
+									
 			//按键扫描,产生按键触发标志与键值信息
 			zd_keyRun();
 			
@@ -1063,11 +1065,5 @@ void app_base_run(void)
 
 		}
 	
-		if(mSec_x5_workbit)
-		{
-			//中微触控取值
-			__CMS_CheckTouchKey();	//扫描按键
-			
-			
-		}
+
 }
