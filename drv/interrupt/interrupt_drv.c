@@ -59,6 +59,7 @@ inline void buzzer_in_isr(void)
 #ifdef RtcType
 #if (RtcType==RtcType_TimerSoftRtc) 
 
+bit T_500ms_bit=0;
 bit T_10ms_bit=0;
 bit T_1s_bit=0;
 
@@ -79,9 +80,12 @@ inline void softrtc_in_isr(void)
 		if(++(*T_10msCount)>=100) 
 		{
 			T_1s_bit=1;
+			T_500ms_bit=1;
 			(*T_10msCount)=0;
 			(*T_SecCount)++;
 		}
+		else if((*T_10msCount)==50) 
+			T_500ms_bit=1;
 	}
 }
 #endif
@@ -100,11 +104,10 @@ unsigned char __counter1_val=0;
 unsigned char __counter1filter=0;
 unsigned char *T_Counter1_1sec=&__counter1_val;
 
-
 //void softcounter1_in_isr(void);
 inline void softcounter1_in_isr(void)
 {
-		if((*T_10msCount)==0||(*T_10msCount)==50)//半秒周期,上升沿与下降沿都累加，所得累加值等同于1秒的值
+		if(T_500ms_bit)//半秒周期,上升沿与下降沿都累加，所得累加值等同于1秒的值
 		{
 			(*T_Counter1_1sec)=__counter1_val; 
 			__counter1_val=0;
@@ -191,24 +194,33 @@ inline void zerocross_in_isr(void)
 	
 	*/
 	
+	//过零检测 100HZ--zeroCrossPassCnt最大值为80
+	if(zeroCrossPassCnt<150) zeroCrossPassCnt++; else zeroCrossError=1;
 	
 	if(__zerocross_bit_status_ago!=ZeroCross_IO_Channel)
 	{
 		if(0==__zerocross_bit_status_ago)
 		{
-			zeroCrossPassCntMax=zeroCrossPassCnt;
-			zeroCrossPassCnt=0;
-			Triac_IO_Ctrl(Triac_IO_OFF);
+			//if(++__zerocrossfilter>4)
+			{
+				zeroCrossPassCntMax=zeroCrossPassCnt;
+				zeroCrossPassCnt=0;
+				Triac_IO_Ctrl(Triac_IO_OFF);
+				__zerocross_bit_status_ago=1;
+				//__zerocrossfilter=0;
+			}
 		}
-		__zerocross_bit_status_ago=ZeroCross_IO_Channel;
+		else
+		{
+			__zerocross_bit_status_ago=0;
+			//__zerocrossfilter=0;
+		}
 	}
-	else
-	{
-	if(zeroCrossPassCnt<150) zeroCrossPassCnt++; else zeroCrossError=1;
+
 	//可控硅控制
 	if(triacOnEnable==1&&zeroCrossPassCnt>triacOn_CrossPass)
 		Triac_IO_Ctrl(Triac_IO_ON);
-	}
+
 }
 
 	#endif
@@ -284,6 +296,7 @@ void interrupt interrupt_Isr()
 				#endif //#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)		
 			#endif	//#ifdef KeyType		
 			T_1s_bit=0;
+			T_500ms_bit=0;
 		#endif //#if(SoftRtcTimer==0)
 	#endif //#if (RtcType==RtcType_TimerSoftRtc) 
 			
