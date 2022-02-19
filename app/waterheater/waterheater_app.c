@@ -164,6 +164,8 @@ bit WaterOutNtc_Error=0;
 bit WaterInNtc_Error=0;
 
 
+unsigned char firsh_run_delay=0;
+
 
 void saveTempSetVal(void)
 {
@@ -345,7 +347,7 @@ void DisplayBlink(unsigned char disnum)
 			gulv_setting_blinkmsec=0;//闪烁间隔500ms,在当前时间后500ms后再触发
 			if(gubv_setting_blink_disEn==0)//闪烁时是否显示或熄屏的标志
 			{
-				if(disnum>200)
+				if(disnum>=200)
 				{
 					disError(disnum%10);
 					zd_buzzer_beep(1,10,0);//蜂鸣一声(3x50ms)
@@ -382,7 +384,7 @@ void ErrorCheck(void)
 	{
 		goToModeError();
 	}
-	else if(WaterInNtc_Error||WaterOutNtc_Error)//||gucv_real_temp>55)
+	else if(WaterInNtc_Error||WaterOutNtc_Error||gucv_real_temp>60)
 	{
 		if(mSec_x50_workbit)
 		{
@@ -602,19 +604,19 @@ void App_Run(void)
 
 
 			//工作指示灯
-			if(mSec_x250_workbit==1)
+
+			if(gbv_heat_start_working==1)
 			{
-				if(gbv_heat_start_working==1)
+				if(mSec_x250_workbit==1)
 				{
 					tempcico_nav=~tempcico_nav;
 					dispC(tempcico_nav);//开工作指示
 				}
-				else
-				{
-					dispC(1);
-				}
 			}
-
+			else
+			{
+				dispC(1);
+			}
 
 
 			//温度设定显示与保存
@@ -673,6 +675,7 @@ void App_Run(void)
 				disTemp(gucv_temp_display);//显示温度值
 				
 				//disTemp(triacOn_CrossPass);
+				//disTemp(zeroCrossPassCntMax);
 				
 				
 //				if(mSec_x100_workbit)
@@ -828,23 +831,27 @@ void App_Run(void)
 			
 			//WorkLed_IO_Ctrl(WorkLed_IO_OFF);//关工作指示灯
 							
-							
+			/*			
 			if(Leakage_Error)//漏电故障
 			{
 				DisplayBlink(201);//闪烁显示E1
 				gucv_error_delay_cnt=10;
 			}
-			else if(WaterInNtc_Error)//进水传感器(水流传感器)故障
+			else */if(WaterInNtc_Error)//进水传感器(水流传感器)故障
 			{
 				DisplayBlink(202);//闪烁显示E2
 				gucv_error_delay_cnt=10;
 			}
 			else if(WaterOutNtc_Error)//出水传感器故障
 			{
-				DisplayBlink(204);//闪烁显示E4
+				if(waterout_Temp_ad>3900)
+					DisplayBlink(201);//闪烁显示E1
+				else if(waterout_Temp_ad<200)
+					DisplayBlink(200);//闪烁显示E0
+					
 				gucv_error_delay_cnt=10;
 			}
-			else if(gucv_real_temp>55)//超温报警
+			else if(gucv_real_temp>60)//超温报警
 			{
 				DisplayBlink(203);//闪烁显示E3
 				gucv_error_delay_cnt=10;
@@ -1339,7 +1346,12 @@ void Background_Run(void)
 				{
 					if(gbv_heat_start_working==0)
 					{
-						gbv_heat_start_working=1;
+						if(firsh_run_delay<5)
+						{
+							if(mSec_x1000_workbit) firsh_run_delay++;
+						}
+						else
+							gbv_heat_start_working=1;
 						//guiv_out_water_adc_data_ago=guiv_out_water_adc_data;						
 					}
 				}
@@ -1440,9 +1452,12 @@ void app_base_run(void)
 	{
 		if(zd_getAdc_async(WATERIN_AIN_Channel,&waterin_Temp_ad))
 		{
-			if(waterin_Temp_ad>3900||waterin_Temp_ad<200) WaterInNtc_Error=1; else WaterInNtc_Error=0;
-			waterin_Temp_ad>>=4;
-			gucv_in_water_temp=CalcTmpC(waterin_Temp_ad,gucv_in_water_temp);
+			if(waterin_Temp_ad>3900||waterin_Temp_ad<200) WaterInNtc_Error=1; else
+			{
+				WaterInNtc_Error=0;
+				waterin_Temp_ad>>=4;
+				gucv_in_water_temp=CalcTmpC(waterin_Temp_ad,gucv_in_water_temp);
+			}
 			adcSelect++;
 		}
 	}
@@ -1450,10 +1465,14 @@ void app_base_run(void)
 	{
 		if(zd_getAdc_async(WATEROUT_AIN_Channel,&waterout_Temp_ad))
 		{
-			if(waterout_Temp_ad>3900||waterout_Temp_ad<200) WaterOutNtc_Error=1; else WaterOutNtc_Error=0;
-			guiv_out_water_adc_data=waterout_Temp_ad;
-			waterout_Temp_ad>>=4;
-			gucv_real_temp=CalcTmpC(waterout_Temp_ad,gucv_real_temp);
+			if(waterout_Temp_ad>3900||waterout_Temp_ad<200) WaterOutNtc_Error=1; 
+			else 
+			{
+				WaterOutNtc_Error=0;
+				guiv_out_water_adc_data=waterout_Temp_ad;
+				waterout_Temp_ad>>=4;
+				gucv_real_temp=CalcTmpC(waterout_Temp_ad,gucv_real_temp);
+			}
 			adcSelect++;
 		}
 	}
