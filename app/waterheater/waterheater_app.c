@@ -70,6 +70,7 @@ const	unsigned char	cucv_power_Tab[81]=
 };
 
 unsigned char	gucv_work_temp;			//控制目标温度
+unsigned char gucv_work_power;		//功率限制设定
 
 unsigned char	gucv_set_temp;			//控制温度设定
 unsigned char gucv_set_power;		//功率限制设定
@@ -1325,6 +1326,41 @@ void power_limit(void)
 }
 
 /*****************************************************************************
+*函数			: void checkFlowForWork(void)
+*函数功能描述 	水流检测与工作启动信号
+*函数参数 		: 无
+*函数返回值 	: 无
+******************************************************************************/
+void checkFlowForWork(void)
+{
+//水流判定,是否开始加热工作判定
+	if(gucv_water_speed>=WATER_SPEED_LOW)
+	{
+		if(gbv_heat_start_working==0)
+		{
+			if(firsh_run_delay<5)
+			{
+				if(mSec_x1000_workbit) firsh_run_delay++;
+			}
+			else
+			{
+				gbv_heat_start_working=1;
+				gucv_work_power=gucv_set_power;
+				//guiv_out_water_adc_data_ago=guiv_out_water_adc_data;	
+			}					
+		}
+	}
+	else
+	{
+		gbv_heat_start_working=0;
+		
+		//关闭可控硅输出
+		triacOnEnable=0;		//可控硅输出使能禁止
+		Triac_IO_Ctrl(Triac_IO_OFF);//可控硅输出关闭
+	}
+}
+
+/*****************************************************************************
 *函数			: void Background_Run(void)	
 *函数功能描述 	: IO与负载后台自动处理
 *函数参数 		: 无
@@ -1337,80 +1373,112 @@ void Background_Run(void)
 	switch(gucv_machine_status)
 	{
 
+		//工作
+		case MACHINE_WORK_POWER:
+			
+			//水流判定,是否开始加热工作判定
+			checkFlowForWork();
 		
+			if(gbv_heat_start_working)
+			{
+				if(mSec_x100_workbit)
+				{
+
+					
+					//按功率档位限制功率
+					//power_limit();
+					
+					
+					if(gucv_work_power==52)
+						gucv_kkg_temp_data=80;
+					else if(gucv_work_power==34)
+						gucv_kkg_temp_data=58;
+					else if(gucv_work_power==25)
+						gucv_kkg_temp_data=41;
+					else
+						gucv_kkg_temp_data=0;					
+					
+					
+					//输出最终加热比,,,
+					if(gucv_kkg_temp_data>0)		//需要加热的时候才输出,,,防止10ms 80个数据的临界点加热一下
+					{	
+						//可控硅输出允许
+						triacOn_CrossPass=(unsigned char)(80-cucv_power_Tab[gucv_kkg_temp_data]);
+						triacOnEnable=1;	
+					}
+					else
+					{
+						triacOnEnable=0;	
+					}
+					
+				}
+			}
+			else
+			{
+				//复位工作变量
+				gucv_kkg_temp_data=0;
+				gucv_water_temp_con_step=0;		//加热步骤清零
+			}
+			
+			
+			
+			break;		
 		//工作
 		case MACHINE_WORK_TEMP:
 			
-//				//水流判定,是否开始加热工作判定
-				if(gucv_water_speed>=WATER_SPEED_LOW)
+			//水流判定,是否开始加热工作判定
+			checkFlowForWork();
+		
+			if(gbv_heat_start_working)
+			{
+				if(mSec_x10_workbit)
 				{
-					if(gbv_heat_start_working==0)
+					//加热比计算
+					switch(gucv_water_temp_con_step)
 					{
-						if(firsh_run_delay<5)
-						{
-							if(mSec_x1000_workbit) firsh_run_delay++;
-						}
-						else
-							gbv_heat_start_working=1;
-						//guiv_out_water_adc_data_ago=guiv_out_water_adc_data;						
+						//判断温度差距是否到达10度
+						case	0:
+							water_temp_con_step0();
+						break;
+						
+						//用标准加热比加热  计时X秒后进入微调
+						case	1:
+							water_temp_con_step1();
+						break;
+						
+						default:
+							gucv_water_temp_con_step=0;
+						break;
+					}
+
+					
+					//按功率档位限制功率
+					//power_limit();
+					if(gucv_kkg_temp_data>=80) gucv_kkg_temp_data=80;
+
+					
+					//输出最终加热比,,,
+					if(gucv_kkg_temp_data>0)		//需要加热的时候才输出,,,防止10ms 80个数据的临界点加热一下
+					{	
+						//可控硅输出允许
+						triacOn_CrossPass=(unsigned char)(80-cucv_power_Tab[gucv_kkg_temp_data]);
+						triacOnEnable=1;	
+					}
+					else
+					{
+						triacOnEnable=0;	
 					}
 				}
-				else
-				{
-					gbv_heat_start_working=0;
-					
-					//关闭可控硅输出
-					triacOnEnable=0;		//可控硅输出使能禁止
-					Triac_IO_Ctrl(Triac_IO_OFF);//可控硅输出关闭
-
-					//复位工作变量
-					gucv_kkg_temp_data=0;
-					gucv_water_temp_con_step=0;		//加热步骤清零
-
-					
-					break;//退出工作循环,不再往下执行
-				}
-		
-		
-		
-			if(mSec_x10_workbit)
-			{
-								
-				//加热比计算
-				switch(gucv_water_temp_con_step)
-				{
-					//判断温度差距是否到达10度
-					case	0:
-						water_temp_con_step0();
-					break;
-					
-					//用标准加热比加热  计时X秒后进入微调
-					case	1:
-						water_temp_con_step1();
-					break;
-					
-					default:
-						gucv_water_temp_con_step=0;
-					break;
-				}
-
-				
-				//按功率档位限制功率
-				power_limit();
-				
-				
-				//输出最终加热比,,,
-				if(gucv_kkg_temp_data>0)		//需要加热的时候才输出,,,防止10ms 80个数据的临界点加热一下
-				{	
-					//可控硅输出允许
-					triacOn_CrossPass=(unsigned char)(80-cucv_power_Tab[gucv_kkg_temp_data]);
-					triacOnEnable=1;	
-				}
-				else
-				{
-					triacOnEnable=0;	
-				}	
 			}
+			else
+			{
+				//复位工作变量
+				gucv_kkg_temp_data=0;
+				gucv_water_temp_con_step=0;		//加热步骤清零
+			}
+			
+			
+			
 			break;
 
 
