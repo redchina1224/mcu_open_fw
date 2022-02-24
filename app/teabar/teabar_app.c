@@ -547,7 +547,7 @@ void App_Run(void)
 					{
 						goToModeIdle();
 					}
-					zd_buzzer_beep(1,1,0);//蜂鸣一声(3x50ms)
+					zd_buzzer_beep(1,2,0);//蜂鸣一声(3x50ms)
 				}
 				if(UserKeyVal==KEYS_QUSHI_VALUE)//锁定状态下长按取水键5秒，调节默认取水时间
 				{
@@ -560,7 +560,7 @@ void App_Run(void)
 						
 						DisplayBlink_Start();//闪烁初始化处理,每次按下按键后闪烁处理点亮状态，避免按键切换时黑屏
 						
-						zd_buzzer_beep(1,1,0);//蜂鸣一声(3x50ms)
+						zd_buzzer_beep(1,2,0);//蜂鸣一声(3x50ms)
 					}
 					
 				}
@@ -574,7 +574,7 @@ void App_Run(void)
 						
 						DisplayBlink_Start();//闪烁初始化处理,每次按下按键后闪烁处理点亮状态，避免按键切换时黑屏
 						
-						zd_buzzer_beep(1,1,0);//蜂鸣一声(3x50ms)
+						zd_buzzer_beep(1,2,0);//蜂鸣一声(3x50ms)
 					}
 				}
 				if(UserKeyVal==KEYS_JIARE_VALUE)
@@ -587,7 +587,7 @@ void App_Run(void)
 						
 						DisplayBlink_Start();//闪烁初始化处理,每次按下按键后闪烁处理点亮状态，避免按键切换时黑屏
 						
-						zd_buzzer_beep(1,1,0);//蜂鸣一声(3x50ms)
+						zd_buzzer_beep(1,2,0);//蜂鸣一声(3x50ms)
 					}
 				}		
 				
@@ -795,7 +795,7 @@ void App_Run(void)
 					}
 
 				}				
-				zd_buzzer_beep(1,1,0);//蜂鸣一声(3x50ms)
+				zd_buzzer_beep(1,2,0);//蜂鸣一声(3x50ms)
 				zd_key_clear();//清除所有按键标志位
 			}
 			
