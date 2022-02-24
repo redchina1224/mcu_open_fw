@@ -87,11 +87,12 @@ void zd_keyRun(void)
 			if(KeyValQuick_Ago==KeyVal)
 			{
 				KeyQuickPressCount++;
+				UserKeyRepeatDelay=75;
 			}
 			else
 			{
 				KeyQuickPressCount=1;
-				UserKeyRepeatDelay=100;
+				UserKeyRepeatDelay=75;
 			}
 			KeyVal_Ago=KeyVal;
 			UserKeyVal=KeyVal;
@@ -120,7 +121,9 @@ void zd_keyRun(void)
 	{
 		 UserKeyRepeatDelay--; 
 		 if(UserKeyRepeatDelay==0)
+		 {
 			KeyValQuick_Ago=KEYS_IO_NOTPRESS;
+		 }
 	}
 	else {KeyQuickPressCount=0;}
 	
