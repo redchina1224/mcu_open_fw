@@ -2,7 +2,7 @@
 #include "..\com_include_drv.h"
 
 	#ifdef NtcType
-		#include "ntc_table.c" //载入NTC参数温度表
+		#include "ntc_table_drv.c" //载入NTC参数温度表
 
 
 TableValueType GetTempAdcVal(unsigned char temp)

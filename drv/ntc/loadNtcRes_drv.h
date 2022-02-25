@@ -14,6 +14,6 @@
 
 
 	//载入ADC数值计算值
-	#include "ntc_adcval_calc.h"
+	#include "ntc_adcval_calc_drv.h"
 
 #endif

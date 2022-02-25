@@ -9,7 +9,7 @@
 	//载入NTC传感器系统
 	#ifdef NtcType
 		#include "ntc\loadNtcRes_drv.h"
-		#include "ntc\ntc_sensor.h"
+		#include "ntc\ntc_sensor_drv.h"
 	#endif
 
 	//载入显示系统
