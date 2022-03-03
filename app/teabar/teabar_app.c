@@ -966,7 +966,7 @@ void Background_Run(void)
 				if(gbv_pump_start_working_ago==0) 
 				{
 					gbv_stepmotor_workover=0;
-					zd_motorStep_work(1,1000,0);
+					zd_motorStep_work(2,1000,0);
 				}
 				
 				//转向结束后开始取水
@@ -984,7 +984,7 @@ void Background_Run(void)
 				if(gbv_pump_start_working_ago==1) 
 				{
 					gbv_stepmotor_workover=0;
-					zd_motorStep_work(2,1000,0);
+					zd_motorStep_work(1,1000,0);
 				}
 			}
 			
