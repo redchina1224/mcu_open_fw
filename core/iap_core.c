@@ -1,14 +1,14 @@
 //******************************************************************************
 //Copyright(C) 2020-2021 zhejiang zhida dianzikeji Co., Ltd
-//Õã½­ÖÇ´ïµç×Ó¿Æ¼¼ÓÐÏÞ¹«Ë¾
+//æµ™æ±Ÿæ™ºè¾¾ç”µå­ç§‘æŠ€æœ‰é™å…¬å¸
 //File name:      zd_adc.c
 //Author:         zzg
 //Version:        Ver0.1
 //Date:           2021-4-25
-//Description:    IAPÊý¾ÝÐ´Èë
+//Description:    IAPæ•°æ®å†™å…¥
 //History:
 //******************************************************************************
-//Í·ÎÄ¼þ************************************************************************
+//å¤´æ–‡ä»¶************************************************************************
 #include "com_include_core.h"
 
 #define Iap_DelayUs core_DelayUs 
@@ -27,13 +27,13 @@ BYTE IapReadByte(WORD addr)
 {
     BYTE dat;                       //Data buffer
 	
-	ZD_GIE(ZD_GIE_DISABLE);  //ÖÐ¶Ï×ÜÔÊÐí¿ª¹Ø
+	ZD_GIE_DISABLE;  //ä¸­æ–­æ€»å…è®¸å¼€å…³
 	
 	
-	ZD_IAP_DATAAREA_EEPROM;  //IAPArea=0x00£ºÑ¡ÔñROMÇø²Ù×÷  IAPArea=0x02£ºÑ¡ÔñEEPROMÇø²Ù×÷
+	ZD_IAP_DATAAREA_EEPROM;  //IAPArea=0x00ï¼šé€‰æ‹©ROMåŒºæ“ä½œ  IAPArea=0x02ï¼šé€‰æ‹©EEPROMåŒºæ“ä½œ
 
 #if ((McuType==McuType_SinOneChip_SC92F8463B))
-	dat = *(IapAddr+addr);//ZD_IAP_DATAREAD(addr); //¶ÁÈ¡µÄÊý¾Ý
+	dat = *(IapAddr+addr);//ZD_IAP_DATAREAD(addr); //è¯»å–çš„æ•°æ®
 #else
 	ZD_IAP_DATAREAD(addr);
 	Iap_DelayUs(2);
@@ -43,10 +43,10 @@ BYTE IapReadByte(WORD addr)
 
 	
 	
-	ZD_IAP_END;      //MOVCÖ¸ÏòROM
+	ZD_IAP_END;      //MOVCæŒ‡å‘ROM
 	
 	
-	ZD_GIE(ZD_GIE_ENABLE); //ÖÐ¶Ï×ÜÔÊÐí¿ª¹Ø
+	ZD_GIE_ENABLE; //ä¸­æ–­æ€»å…è®¸å¼€å…³
 	
 	
     return dat;                     //Return Flash data
@@ -62,22 +62,22 @@ Output:-
 void IapProgramByte(WORD addr, BYTE dat)
 {
 	
-	//¹ØÖÐ¶Ï
-	ZD_GIE(ZD_GIE_DISABLE);  //ÖÐ¶Ï×ÜÔÊÐí¿ª¹Ø
+	//å…³ä¸­æ–­
+	ZD_GIE_DISABLE;  //ä¸­æ–­æ€»å…è®¸å¼€å…³
 	
-	ZD_IAP_WRITEDATA_SET(dat);      //Ð´ÈëÊý¾ÝData
+	ZD_IAP_WRITEDATA_SET(dat);      //å†™å…¥æ•°æ®Data
 	
-	ZD_IAP_WRITEADDR_SET(addr);  //Ð´ÈëµØÖ·
+	ZD_IAP_WRITEADDR_SET(addr);  //å†™å…¥åœ°å€
 	
-	ZD_IAP_DATAAREA_EEPROM;  //IAPArea=0x00£ºÑ¡ÔñROMÇø²Ù×÷  IAPArea=0x02£ºÑ¡ÔñEEPROMÇø²Ù×÷
+	ZD_IAP_DATAAREA_EEPROM;  //IAPArea=0x00ï¼šé€‰æ‹©ROMåŒºæ“ä½œ  IAPArea=0x02ï¼šé€‰æ‹©EEPROMåŒºæ“ä½œ
 	
 	ZD_IAP_WRITE_START;
 
 	Iap_DelayUs(8);
 	
-	ZD_IAP_END;      //MOVCÖ¸ÏòROM
+	ZD_IAP_END;      //MOVCæŒ‡å‘ROM
 
-	ZD_GIE(ZD_GIE_ENABLE); //ÖÐ¶Ï×ÜÔÊÐí¿ª¹Ø
+	ZD_GIE_ENABLE; //ä¸­æ–­æ€»å…è®¸å¼€å…³
 		
 }
 

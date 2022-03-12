@@ -95,6 +95,12 @@
 		#endif
 	#endif	
 	
+#elif (McuType==McuType_FremontMicroDevices_FT62F13)
+	//晶体时钟配置
+	#define FocsClk 16000000
+	
+	//IO定义标准化	
+	#include "fmd\fmd_core.h"
 
 #elif (McuType==McuType_Unkonw)
 

@@ -10,6 +10,16 @@
 //******************************************************************************
 #ifndef __TOUCHKEY_CORE_H__
 #define __TOUCHKEY_CORE_H__
+#ifdef KeyType
+#if((KeyType&KeyType_McuTouch)==KeyType_McuTouch)
+
+
+#if(McuType==McuType_CmsSemicon_CMS79F738)
+
+#elif(McuType==McuType_FremontMicroDevices_FT62F13)
+	#include "fmd\FT62F13X\Touch_Kscan_Library.h"
+#endif
+
 
 
 /***********************************************************************************************
@@ -29,8 +39,8 @@ void zd_touchkeyInit(void);
 ***********************************************************************************************/
 unsigned char zd_touchkeyRead(unsigned long *keyval);
 
-
-
+#endif  //#if((KeyType&KeyType_McuTouch)==KeyType_McuTouch)
+#endif  //#ifdef KeyType
 #endif  //#ifndef __TOUCHKEY_CORE_H__
 
 

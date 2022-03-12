@@ -6,5 +6,5 @@
 #define DevPlatform_Unkonw 0
 #define DevPlatform_Keil_C51 1
 #define DevPlatform_CMSIDE_CASD 2
-
+#define DevPlatform_FMIDE 3
 #endif

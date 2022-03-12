@@ -396,7 +396,86 @@ void interrupt interrupt_Isr()
 		RBIF = 0;			//清中断标志
 	}
 }
+
+
+#elif (DevPlatform==DevPlatform_FMIDE)
+void interrupt ISR(void)
+{ 
+  //定时器0的中断处理**********************    
+#ifdef Ft0Clk	
+	if(ZD_T0IF_GRIGGER)   //125us进入一次
+    {
+	//定时器蜂鸣驱动-定义在TIMER0时	
+	#ifdef BuzzerType	
+		#if (BuzzerType==BuzzerType_TimerInv)
+			#if(BuzzeTimer==0)
+				buzzer_in_isr();
+			#endif
+		#endif
+	#endif	//#ifdef BuzzerType	
 	
+	//定时器时间系统-定义在TIMER0时	
+	#if (RtcType==RtcType_TimerSoftRtc) 
+		#if(SoftRtcTimer==0)
+		
+			softrtc_in_isr();//RTC时钟内联函数
+						
+			#ifdef DisplayType
+				#if (DisplayType==DisplayType_Dig8SoftLed) 
+				zd_softled_run();//软件LED驱动函数
+				#endif
+			#endif //#ifdef DisplayType
+
+			#ifdef CounterType
+				#if (CounterType==CounterType_SoftCounter) 
+					#ifdef Counter_IO_Channel1
+					softcounter1_in_isr();//softcount1软件计数器内联函数
+					#endif
+				#endif
+			#endif //#ifdef CounterType
+
+					
+					
+			#ifdef ZeroCrossType
+				#if (ZeroCrossType==ZeroCrossType_Gpio) 
+					zerocross_in_isr();//zerocross过零与可控硅驱动内联函数
+				#endif
+			#endif //#ifdef ZeroCrossType
+
+			#ifdef KeyType
+				#if ((KeyType&KeyType_IR)==KeyType_IR)
+
+				#endif
+				
+				#if ((KeyType&KeyType_RF)==KeyType_RF)
+					__ZD_GetRfKeyValue();//射频遥控接收函数
+				#endif					
+
+				#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)				
+					#if (McuType==McuType_CmsSemicon_CMS79F738)
+					__CMS_GetTouchKeyValue();//中微单片机触摸库函数,此函数放在中断,建议中断扫描时间 125us	
+					#endif			
+				#endif //#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)		
+			#endif	//#ifdef KeyType		
+			T_1s_bit=0;
+			T_500ms_bit=0;
+		#endif //#if(SoftRtcTimer==0)
+	#endif //#if (RtcType==RtcType_TimerSoftRtc) 
+        
+	ZD_T0IF_CLEAN;        
+
+     }  
+#endif	//#ifdef Ft0Clk
+
+  //定时器1的中断处理**********************
+	if(TMR1IE && TMR1IF)
+	{
+
+		ZD_T1IF_CLEAN;
+	} 	 
+    
+} 
+
 #elif (DevPlatform==DevPlatform_Keil_C51)
 
 

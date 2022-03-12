@@ -6,9 +6,9 @@
 	#define ZD_NOP  _nop_()
 
 
-	#define ZD_GIE_ENABLE 1
-	#define ZD_GIE_DISABLE 0
-	#define ZD_GIE(x) EA=(x)
+	#define ZD_GIE_ENABLE EA=1
+	#define ZD_GIE_DISABLE EA=0
+	//#define ZD_GIE(x) EA=(x)
 
 
 	#define ZD_T0IE_ENABLE 1

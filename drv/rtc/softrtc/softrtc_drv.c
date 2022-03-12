@@ -41,14 +41,14 @@ unsigned char Rtc_timeNow[3]={0,0,0};
 
 void zd_softrtcInit(void)
 {
-	//¹ØÖĞ¶Ï
-	 ZD_GIE(ZD_GIE_DISABLE);  //ÖĞ¶Ï×ÜÔÊĞí¿ª¹Ø
+	//å…³ä¸­æ–­
+	 ZD_GIE_DISABLE;  //ä¸­æ–­æ€»å…è®¸å¼€å…³
 	
 	T_SecCount=&utcsec;
 	T_10msCount=&utc10msec;
-	zd_timerInit(SoftRtcTimer,125); //³õÊ¼»¯¶¨Ê±Æ÷125usÖĞ¶Ï`
+	zd_timerInit(SoftRtcTimer,125); //åˆå§‹åŒ–å®šæ—¶å™¨125usä¸­æ–­`
 
-	 ZD_GIE(ZD_GIE_ENABLE); //ÖĞ¶Ï×ÜÔÊĞí¿ª¹Ø
+	 ZD_GIE_ENABLE; //ä¸­æ–­æ€»å…è®¸å¼€å…³
 }
 
 unsigned long GetUtcSec(void)

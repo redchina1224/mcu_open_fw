@@ -14,6 +14,9 @@
 	#include "soc\touch_92f8x6xb\SensorMethod.h"
 	#include "soc\touch_92f8x6xb\S_TouchKeyCFG.h"
 	
+#elif (McuType==McuType_FremontMicroDevices_FT62F13)
+
+	#include "fmd\FT62F13X\touch.h"
 
 #elif (McuType==McuType_Unkonw)
 

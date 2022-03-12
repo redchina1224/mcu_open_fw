@@ -9,9 +9,9 @@
 	#define ZD_NOP asm("nop");
 
 
-	#define ZD_GIE_ENABLE 1
-	#define ZD_GIE_DISABLE 0
-	#define ZD_GIE(x) GIE=(x)
+	#define ZD_GIE_ENABLE GIE=1
+	#define ZD_GIE_DISABLE GIE=0
+	//#define ZD_GIE(x) GIE=(x)
 
 
 	#define ZD_T0IE_ENABLE 1
@@ -145,9 +145,9 @@
 	#define ZD_ADC_CLKSET(clkset) ADCON0&=(~(BIT7|BIT6)),ADCON0|=((clkset))
 	
 	
-	//”“∂‘∆Î10Œª
+	//Âè≥ÂØπÈΩê10‰Ωç
 	//#define ZD_ADC_INIT ADCON1|=(BIT7),ADCON0|=(BIT0)
-	//◊Û∂‘∆Î12Œª
+	//Â∑¶ÂØπÈΩê12‰Ωç
 	#define ZD_ADC_INIT ADCON1&=(~BIT7),ADCON0|=(BIT0)
 	/*
 	#define ZD_ADC_CH1_ENABLE ZD_PORTA_DIR|=BIT1
@@ -201,9 +201,9 @@
 	 
 	#define ZD_ADC_CH_SELECT(adch) ( ADCON0&=(~(BIT2|BIT3|BIT4|BIT5)),ADCON1&=(~(BIT6)),ADCON0|=(((adch)<<2)&(BIT2|BIT3|BIT4|BIT5)),ADCON1 |= (((adch)<<2)&BIT6) )
 
-	//”“∂‘∆Î10Œª
+	//Âè≥ÂØπÈΩê10‰Ωç
 	//#define ZD_ADC_GETVAL ((unsigned int)(ADRESH<<8|ADRESL))
-	//◊Û∂‘∆Î12Œª
+	//Â∑¶ÂØπÈΩê12‰Ωç
 	#define ZD_ADC_GETVAL ((unsigned int)((ADRESH<<4)|(ADRESL>>4)))
 	
 	#define ZD_ADC_START ADCON0|=(BIT1);    

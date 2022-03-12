@@ -1,16 +1,16 @@
 //******************************************************************************
 //Copyright(C) 2020-2021 zhejiang zhida dianzikeji Co., Ltd
-//Õã½­ÖÇ´ïµç×Ó¿Æ¼¼ÓĞÏŞ¹«Ë¾
+//æµ™æ±Ÿæ™ºè¾¾ç”µå­ç§‘æŠ€æœ‰é™å…¬å¸
 //File name:      buzz.c
 //Author:         zzg
 //Version:        Ver0.1
 //Date:           2021-4-25
-//Description:    ·äÃùÆ÷´¦Àí
+//Description:    èœ‚é¸£å™¨å¤„ç†
 //History:
 //******************************************************************************
-//Í·ÎÄ¼ş************************************************************************
+//å¤´æ–‡ä»¶************************************************************************
 #include "..\..\com_include_drv.h"
-//º¯Êı¶¨Òå***********************************************************************
+//å‡½æ•°å®šä¹‰***********************************************************************
 
 #ifdef BuzzerType
 
@@ -24,12 +24,12 @@ unsigned char beetofftime_repeat;
 
 
 /***********************************************************************************************
-*º¯ÊıÃû 		: void zd_buzzer_beep(unsigned char beepCnt,unsigned char beepton_x50ms,unsigned char beeptoff_x50ms)
-*º¯Êı¹¦ÄÜÃèÊö 	: ·äÃùÆ÷ÃùÏì¹¤×÷
-*º¯Êı²ÎÊı 		: beepCnt=·äÃù´ÎÊı£¬
-				  beepton=ÃùÏìµÄÊ±³¤ (x50ms) ,
-				  beeptoff=ÖĞ¼äÍ£Ö¹ÃùÏìµÄÊ±³¤ (x50ms)
-*º¯Êı·µ»ØÖµ 	: ÎŞ
+*å‡½æ•°å 		: void zd_buzzer_beep(unsigned char beepCnt,unsigned char beepton_x50ms,unsigned char beeptoff_x50ms)
+*å‡½æ•°åŠŸèƒ½æè¿° 	: èœ‚é¸£å™¨é¸£å“å·¥ä½œ
+*å‡½æ•°å‚æ•° 		: beepCnt=èœ‚é¸£æ¬¡æ•°ï¼Œ
+				  beepton=é¸£å“çš„æ—¶é•¿ (x50ms) ,
+				  beeptoff=ä¸­é—´åœæ­¢é¸£å“çš„æ—¶é•¿ (x50ms)
+*å‡½æ•°è¿”å›å€¼ 	: æ— 
 ***********************************************************************************************/
 void zd_buzzer_beep(unsigned char beepCnt,unsigned char beepton_x50ms,unsigned char beeptoff_x50ms)
 {
@@ -41,12 +41,12 @@ void zd_buzzer_beep(unsigned char beepCnt,unsigned char beepton_x50ms,unsigned c
 
 
 /***********************************************************************************************
-*º¯ÊıÃû 			: void zd_buzzerRun(void)
-*º¯Êı¹¦ÄÜÃèÊö 		: ·äÃùÆ÷ÃùÏì×Ô¶¯¿ØÖÆ(ÃùÏìÊ±¼ä£¬´ÎÊı),ĞèÃ¿50msµ÷ÓÃÒ»´Î
-*º¯Êı²ÎÊı 			: ÎŞ
-*º¯Êı·µ»ØÖµ 		: ÎŞ
+*å‡½æ•°å 			: void zd_buzzerRun(void)
+*å‡½æ•°åŠŸèƒ½æè¿° 		: èœ‚é¸£å™¨é¸£å“è‡ªåŠ¨æ§åˆ¶(é¸£å“æ—¶é—´ï¼Œæ¬¡æ•°),éœ€æ¯50msè°ƒç”¨ä¸€æ¬¡
+*å‡½æ•°å‚æ•° 			: æ— 
+*å‡½æ•°è¿”å›å€¼ 		: æ— 
 ***********************************************************************************************/
-void zd_buzzerRun(void)//Ã¿50msµ÷ÓÃÒ»´Î
+void zd_buzzerRun(void)//æ¯50msè°ƒç”¨ä¸€æ¬¡
 {
 	if(beeptime_cnt>0)
 	{
@@ -97,10 +97,10 @@ void zd_buzzerRun(void)//Ã¿50msµ÷ÓÃÒ»´Î
 
 
 /***********************************************************************************************
-*º¯ÊıÃû 			: void zd_buzzer_init(void)
-*º¯Êı¹¦ÄÜÃèÊö 		: ·äÃù³õÊ¼»¯
-*º¯Êı²ÎÊı 			: ÎŞ
-*º¯Êı·µ»ØÖµ 		: ÎŞ
+*å‡½æ•°å 			: void zd_buzzer_init(void)
+*å‡½æ•°åŠŸèƒ½æè¿° 		: èœ‚é¸£åˆå§‹åŒ–
+*å‡½æ•°å‚æ•° 			: æ— 
+*å‡½æ•°è¿”å›å€¼ 		: æ— 
 ***********************************************************************************************/
 void zd_buzzer_init(void)
 {
@@ -109,18 +109,18 @@ void zd_buzzer_init(void)
 	 Buzzer_IO_Output;
 	 Buzzer_IO_Ctrl(Buzzer_IO_OFF);
 #elif (BuzzerType==BuzzerType_TimerInv)
-	//¹ØÖĞ¶Ï
-	 ZD_GIE(ZD_GIE_DISABLE);  //ÖĞ¶Ï×ÜÔÊĞí¿ª¹Ø
+	//å…³ä¸­æ–­
+	ZD_GIE_DISABLE;  //ä¸­æ–­æ€»å…è®¸å¼€å…³
    beepEn=0;
    T_BuzzerEn=&beepEn;
 	 Buzzer_IO_Output;
 	 Buzzer_IO_Ctrl(Buzzer_IO_OFF);
-	 zd_timerInit(BuzzeTimer,125); //³õÊ¼»¯¶¨Ê±Æ÷125usÖĞ¶Ï
-	//¿ªÖĞ¶Ï
-	 ZD_GIE(ZD_GIE_ENABLE); //ÖĞ¶Ï×ÜÔÊĞí¿ª¹Ø
+	 zd_timerInit(BuzzeTimer,125); //åˆå§‹åŒ–å®šæ—¶å™¨125usä¸­æ–­
+	//å¼€ä¸­æ–­
+	 ZD_GIE_ENABLE; //ä¸­æ–­æ€»å…è®¸å¼€å…³
 #elif (BuzzerType==BuzzerType_PWM)
-	zd_pwmInit(Buzzer_PWM_Channel,4000);//ÅäÖÃ·äÃùÆ÷Í¨µÀÎª4KHz
-	zd_pwmDisable(Buzzer_PWM_Channel);//¹Ø±ÕÊä³ö
+	zd_pwmInit(Buzzer_PWM_Channel,4000);//é…ç½®èœ‚é¸£å™¨é€šé“ä¸º4KHz
+	zd_pwmDisable(Buzzer_PWM_Channel);//å…³é—­è¾“å‡º
 #endif
 }
 

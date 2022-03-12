@@ -1,29 +1,29 @@
 //******************************************************************************
 //Copyright(C) 2020-2021 zhejiang zhida dianzikeji Co., Ltd
-//Õã½­ÖÇ´ïµç×Ó¿Æ¼¼ÓĞÏŞ¹«Ë¾
+//æµ™æ±Ÿæ™ºè¾¾ç”µå­ç§‘æŠ€æœ‰é™å…¬å¸
 //File name:      user_time.c
 //Author:         zzg
 //Version:        Ver0.1
 //Date:           2021-4-25
-//Description:    TIMEÊ±¼ä´¦Àí
+//Description:    TIMEæ—¶é—´å¤„ç†
 //History:
 //******************************************************************************
-//Í·ÎÄ¼ş************************************************************************
+//å¤´æ–‡ä»¶************************************************************************
 #include "core.h"
 
 
 /***********************************************************************************************
-*º¯ÊıÃû 		: void zd_timerInit(unsigned char timerChannel)
-*º¯Êı¹¦ÄÜÃèÊö 	: ³õÊ¼»¯¶¨Ê±Æ÷
-*º¯Êı²ÎÊı 		: unsigned char timerChannel:¶¨Ê±Æ÷ºÅ,
-				  unsigned long _Us£º¶¨Ê±Æ÷Ê±¼ä
-*º¯Êı·µ»ØÖµ 	: ÎŞ
+*å‡½æ•°å 		: void zd_timerInit(unsigned char timerChannel)
+*å‡½æ•°åŠŸèƒ½æè¿° 	: åˆå§‹åŒ–å®šæ—¶å™¨
+*å‡½æ•°å‚æ•° 		: unsigned char timerChannel:å®šæ—¶å™¨å·,
+				  unsigned long _Usï¼šå®šæ—¶å™¨æ—¶é—´
+*å‡½æ•°è¿”å›å€¼ 	: æ— 
 ***********************************************************************************************/
 void zd_timerInit(unsigned char timerChannel,unsigned long _Us)
 {
 	unsigned char cfgerr=1;
 	
-	//ÅäÖÃÏàÓ¦timer¶¨Ê±Æ÷
+	//é…ç½®ç›¸åº”timerå®šæ—¶å™¨
 	switch(timerChannel)
 	{
 		case 0:
@@ -31,14 +31,14 @@ void zd_timerInit(unsigned char timerChannel,unsigned long _Us)
 		 T0_Reload=(	256 - ((unsigned char)	((_Us*1.0)*((Ft0Clk*1.0)/1000000))));
 		
 		#ifdef ZD_TIMER0_LOAD_RELOAD
-			ZD_TIMER0_LOAD_RELOAD = T0_Reload;		//ÖØĞÂ¸³³õÖµ
+			ZD_TIMER0_LOAD_RELOAD = T0_Reload;		//é‡æ–°èµ‹åˆå€¼
 		#endif		
 		
 		 ZD_TIMER0_LOAD = T0_Reload;
 		
 		 ZD_TIMER0_INIT;
 
-		 ZD_T0IE(ZD_T0IE_ENABLE);
+		 ZD_T0IE_ENABLE;
 		
 		 cfgerr=0; 
 		#endif
@@ -63,7 +63,7 @@ void zd_timerInit(unsigned char timerChannel,unsigned long _Us)
 		default:break;
 	}
 	
-	//ÅäÖÃÖĞ¶Ï
+	//é…ç½®ä¸­æ–­
 	if(cfgerr==0)
 	{
 

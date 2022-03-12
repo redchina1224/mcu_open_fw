@@ -20,6 +20,8 @@
 
 #if (McuType==McuType_CmsSemicon_CMS79F738)
 	#include "cms\touch_79ft73x\Touch_Kscan_Library.c"
+#elif(McuType==McuType_FremontMicroDevices_FT62F13)
+	#include "fmd\FT62F13X\Touch_Kscan_Library.c"
 #endif
 
 
@@ -34,10 +36,15 @@
 ***********************************************************************************************/
 void zd_touchkeyInit(void)
 {
-
 	#if (McuType==McuType_SinOneChip_SC92F8463B)
-			//赛元微触控按键初始化
-			TouchKeyInit();	
+		//赛元微触控按键初始化
+		TouchKeyInit();	
+	#elif (McuType==McuType_FremontMicroDevices_FT62F13)
+		//辉芒微触控按键初始化
+    TOUCH_INITIAL();       //初始化TOUCH相关配置
+    //T_StartTouchTime=&StartTouchTime;
+    TIMER1_INITIAL();
+    Touch_init();             //读取初始值
 	#endif
 
 }
@@ -61,6 +68,13 @@ unsigned char zd_touchkeyRead(unsigned long *keyval)
 			
 			TouchKeyRestart();				//启动下一轮转换		
 			return 1;
+		}
+        #elif (McuType==McuType_FremontMicroDevices_FT62F13)
+		if(StartTouchTime >= (2500/SCANNINGTIME/TouchCount))//扫描时间 根据扫描周期及按键个数计算.  
+		{
+			StartTouchTime=0;
+			(*keyval)=TouchKeyScan();
+            return 1;
 		}
 		#elif (McuType==McuType_CmsSemicon_CMS79F738)
 
