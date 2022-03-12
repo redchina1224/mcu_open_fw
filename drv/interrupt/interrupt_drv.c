@@ -99,10 +99,12 @@ inline void softrtc_in_isr(void)
 #if (CounterType==CounterType_SoftCounter) 
 
 #ifdef Counter_IO_Channel1
+
 bit __counter1_bit_status_ago;
-unsigned char __counter1_val=0;
+unsigned int __counter1_val=0;
 unsigned char __counter1filter=0;
-unsigned char *T_Counter1_1sec=&__counter1_val;
+unsigned int *T_Counter1_1sec=&__counter1_val;
+unsigned int *T_Counter1_Total=&__counter1_val;
 
 //void softcounter1_in_isr(void);
 inline void softcounter1_in_isr(void)
@@ -110,6 +112,7 @@ inline void softcounter1_in_isr(void)
 		if(T_500ms_bit)//半秒周期,上升沿与下降沿都累加，所得累加值等同于1秒的值
 		{
 			(*T_Counter1_1sec)=__counter1_val; 
+			(*T_Counter1_Total)+=__counter1_val;
 			__counter1_val=0;
 		}
 
@@ -120,7 +123,7 @@ inline void softcounter1_in_isr(void)
 			{
 				if(__counter1_bit_status_ago==1)//下降沿
 				{
-					if(__counter1_val<250)	__counter1_val++;
+					if(__counter1_val<60000)	__counter1_val++;
 					__counter1_bit_status_ago=0;
 				}
 			}
@@ -132,7 +135,7 @@ inline void softcounter1_in_isr(void)
 			{ 
 				if(__counter1_bit_status_ago==0)//上升沿
 				{
-					if(__counter1_val<250)	__counter1_val++;
+					if(__counter1_val<60000)	__counter1_val++;
 					__counter1_bit_status_ago=1;
 				}
 			}

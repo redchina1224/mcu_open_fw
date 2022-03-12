@@ -13,6 +13,7 @@
 	#define NtcType_10K_B3435 1
 	#define NtcType_50K_B3950 2  //Ntc_50K_B3950
 	#define NtcType_100K_B3950 3  //Ntc_50K_B3950
+	#define NtcType_100K_CM207E 4  //Ntc_50K_B3950
 
 
 #endif
