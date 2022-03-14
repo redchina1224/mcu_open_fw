@@ -471,11 +471,11 @@ void interrupt ISR(void)
 #endif	//#ifdef Ft0Clk
 
   //定时器1的中断处理**********************
-	if(TMR1IE && TMR1IF)
-	{
+	//if(TMR1IE && TMR1IF)
+	//{
 
-		ZD_T1IF_CLEAN;
-	} 	 
+	//	ZD_T1IF_CLEAN;
+	//} 	 
     
 } 
 

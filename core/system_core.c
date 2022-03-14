@@ -32,8 +32,11 @@ void zd_systemInit(void)
 	//系统时钟初始化
 	ZD_FSYS_CLKSET(ZD_FSYS_CLKSET_DEFAULT);
 	
-	//端口初始化(默认值)
+	//中断初始化清零
+	ZD_INTERRUPT_INIT;  					//暂禁止所有中断
 	
+	//端口初始化(默认值)
+	ZD_PORT_INIT;	
 }
 
 
@@ -63,7 +66,7 @@ void zd_timerInit(unsigned char timerChannel,unsigned long _Us)
 		
 		 ZD_TIMER0_INIT;
 
-		 ZD_T0IE(ZD_T0IE_ENABLE);
+		 ZD_T0IE_ENABLE;
 		
 		 cfgerr=0; 
 		#endif
