@@ -74,6 +74,17 @@ void GetHourMinSec(unsigned char* timeval,unsigned long usec)
 	timeval[1]=(usec/60)%60;
 	timeval[2]=(usec/3600)%24;
 }
+
+void SetUtcSecByHourMin(unsigned char hour,unsigned char min)
+{
+	TMR1IE=0;
+	utcsec=((3600*(unsigned long)hour)+(60*(unsigned long)min));
+	TMR1IE=1;
+}
+unsigned long GetUtcSecByHourMin(unsigned char hour,unsigned char min)
+{
+	return ((unsigned long)((3600*(unsigned long)hour)+(60*(unsigned long)min)));
+}
 /*
 bit SecRunOnce(void)
 {

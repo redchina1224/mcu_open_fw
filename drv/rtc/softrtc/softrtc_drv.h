@@ -11,6 +11,12 @@ extern bit mSec_x100_workbit;
 extern bit mSec_x50_workbit;
 extern bit mSec_x10_workbit;
 
+
+
+void SetUtcSecByHourMin(unsigned char hour,unsigned char min);
+
+unsigned long GetUtcSecByHourMin(unsigned char hour,unsigned char min);
+
 unsigned long GetUtcSec(void);
 
 bit GetSecHalfBit(void);
