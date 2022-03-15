@@ -120,26 +120,26 @@
 		#define FsysClk FocsClk/64
 	#endif
 
-	//定时器时钟配置
+	//定时器时钟配置,时钟源为指令时钟,时钟周期为2T
 	#if (ZD_TIMER0_CLKSET_DEFAULT==ZD_TIMER0_CLKSET_FSYS)
 		#if (ZD_TIMER0_CLKPSASET_DEFAULT==ZD_TIMER0_CLKPSASET_DIV1)
-			#define Ft0Clk FsysClk/1
+			#define Ft0Clk FsysClk/2/1
 		#elif (ZD_TIMER0_CLKPSASET_DEFAULT==ZD_TIMER0_CLKPSASET_DIV2)
-			#define Ft0Clk FsysClk/2
+			#define Ft0Clk FsysClk/2/2
 		#elif (ZD_TIMER0_CLKPSASET_DEFAULT==ZD_TIMER0_CLKPSASET_DIV4)
-			#define Ft0Clk FsysClk/4
+			#define Ft0Clk FsysClk/2/4
 		#elif (ZD_TIMER0_CLKPSASET_DEFAULT==ZD_TIMER0_CLKPSASET_DIV8)
-			#define Ft0Clk FsysClk/8
+			#define Ft0Clk FsysClk/2/8
 		#elif (ZD_TIMER0_CLKPSASET_DEFAULT==ZD_TIMER0_CLKPSASET_DIV16)
-			#define Ft0Clk FsysClk/16
+			#define Ft0Clk FsysClk/2/16
 		#elif (ZD_TIMER0_CLKPSASET_DEFAULT==ZD_TIMER0_CLKPSASET_DIV32)
-			#define Ft0Clk FsysClk/32
+			#define Ft0Clk FsysClk/2/32
 		#elif (ZD_TIMER0_CLKPSASET_DEFAULT==ZD_TIMER0_CLKPSASET_DIV64)
-			#define Ft0Clk FsysClk/64
+			#define Ft0Clk FsysClk/2/64
 		#elif (ZD_TIMER0_CLKPSASET_DEFAULT==ZD_TIMER0_CLKPSASET_DIV128)
-			#define Ft0Clk FsysClk/128
+			#define Ft0Clk FsysClk/2/128
 		#elif (ZD_TIMER0_CLKPSASET_DEFAULT==ZD_TIMER0_CLKPSASET_DIV256)
-			#define Ft0Clk FsysClk/256
+			#define Ft0Clk FsysClk/2/256
 		#endif
 
 	#endif	
