@@ -16,6 +16,7 @@
 
 #define LEDBITS_MODE_LOOP_FIX (LEDBITS_MODE_LOOP|LEDBITS_MOVE_FIX)
 #define LEDBITS_MODE_STEP_FIX (LEDBITS_MODE_STEP|LEDBITS_MOVE_FIX)
+#define LEDBITS_MODE_STEP_MASK (LEDBITS_MODE_STEP|LEDBITS_MOVE_MASK)
 
 
 
@@ -29,11 +30,11 @@
 
 struct  zd_ledbits_t {
 unsigned char WorkEn;
-unsigned long MinBit;
-unsigned long MaxBit;
 unsigned char MoveBit_Max;
 unsigned char MoveBit_Min;
 unsigned char MoveBit_cnt;
+unsigned char MaskBit_Set;
+unsigned long MaskValue;
 unsigned long MoveValue;
 unsigned long Value;
 unsigned char WorkDir;
@@ -123,14 +124,14 @@ void zd_ledBits_run(struct zd_ledbits_t *ledBits);
 *函数参数 			: 无
 *函数返回值 		: 无
 ***********************************************************************************************/
-// void zd_ledBits_Set(unsigned long setval);
+void zd_ledBits_SetMaskBit(struct zd_ledbits_t *ledBits,unsigned char mskbit);
 
 /***********************************************************************************************
 *函数功能描述 		: LED位驱动初始化
 *函数参数 			: 无
 *函数返回值 		: 无
 ***********************************************************************************************/
-void zd_ledBits_init(struct zd_ledbits_t *ledBits,unsigned long minbit,unsigned long maxbit);
+void zd_ledBits_init(struct zd_ledbits_t *ledBits,unsigned long movebit,unsigned char minmove,unsigned char maxmove);
 
 
 /***********************************************************************************************

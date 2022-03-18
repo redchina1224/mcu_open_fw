@@ -18,86 +18,74 @@
 
 
 /***********************************************************************************************
-*函数名 		: unsigned char zd_ledBits_isbusy(void)
-*函数功能描述 	: LED位驱动忙标志位
-*函数参数 		: 无，
-*函数返回值 	: 无
-***********************************************************************************************/
-// unsigned char zd_ledBits_isbusy(void);
-
-// unsigned char zd_ledBits_isbusy(void)
-// {
-// 	return ledBitsWorkEn;
-// }
-
-
-/***********************************************************************************************
 *函数名 		: zd_ledBits_shift(void)
 *函数功能描述 	: 循环移位函数
 *函数参数 		: 无
 *函数返回值 	: unsigned char : 返回loop状态,当通过最高位或最低位产生循环时返回1，否则返回0
 ***********************************************************************************************/
-//unsigned char zd_ledBits_shift(struct zd_ledbits_t *ledBits);
 unsigned char zd_ledBits_shift(struct zd_ledbits_t *ledBits)
 {
     unsigned char MoveMode=(ledBits->WorkEn&0x3f);
+    unsigned long MoveValueTemp;
     
 	if(ledBits->WorkDir==LEDBITS_DIR_FORWARD)
 	{
-		if((ledBits->Value&ledBits->MaxBit)==0)
+        if(MoveMode==LEDBITS_MOVE_MASK)
+		{
+			if(ledBits->MoveBit_cnt<=ledBits->MaskBit_Set)
+            {
+                 ledBits->MaskValue|=ledBits->Value;
+            }
+		}
+            
+		if(ledBits->MoveBit_cnt<ledBits->MoveBit_Max)
         {
-			ledBits->Value<<=1;
-            if(MoveMode==1) ledBits->Value|=ledBits->MinBit;
-            if(ledBits->Value&ledBits->MaxBit) return 1;
+            ledBits->MoveBit_cnt++;
+            MoveValueTemp=(ledBits->Value<<1);
+            
+            if(MoveMode==LEDBITS_MOVE_FIX) ledBits->Value|=MoveValueTemp;
+            else ledBits->Value=MoveValueTemp;
+            
+            if(ledBits->MoveBit_cnt==ledBits->MoveBit_Max) return 1;
         }
 		else
 		{
-			ledBits->Value=ledBits->MinBit;
+            ledBits->MoveBit_cnt=ledBits->MoveBit_Min;
+			ledBits->Value=ledBits->MoveValue<<ledBits->MoveBit_Min;
 		}
+        
+		
 	}
 	else if(ledBits->WorkDir==LEDBITS_DIR_REVERSE)
 	{
-		if((ledBits->Value&ledBits->MinBit)==0)
+		if(MoveMode==LEDBITS_MOVE_MASK)
+		{
+			if(ledBits->MoveBit_cnt>=ledBits->MaskBit_Set)
+            {
+                 ledBits->MaskValue|=ledBits->Value;
+            }
+		}
+
+		if(ledBits->MoveBit_cnt>ledBits->MoveBit_Min)
         {
-			ledBits->Value>>=1;
-            if(MoveMode==1) ledBits->Value|=ledBits->MaxBit;
-            if(ledBits->Value&ledBits->MinBit) return 1;
+            ledBits->MoveBit_cnt--;
+            MoveValueTemp=(ledBits->Value>>1);
+            
+            if(MoveMode==LEDBITS_MOVE_FIX) ledBits->Value|=MoveValueTemp;
+            else ledBits->Value=MoveValueTemp;
+
+           if(ledBits->MoveBit_cnt==ledBits->MoveBit_Min) return 1;
         }
 		else
 		{
-			ledBits->Value=ledBits->MaxBit;
+            ledBits->MoveBit_cnt=ledBits->MoveBit_Max;
+			ledBits->Value=ledBits->MoveValue<<ledBits->MoveBit_Max;
 		}
 	}
 
 	return 0;
 	
 }
-/***********************************************************************************************
-*函数名 		: zd_ledBits_StepWork(unsigned char dir,unsigned long stepCount,unsigned char speed)
-*函数功能描述 	: 步进电机工作任务设置，设置后自动开始工作
-*函数参数 		: dir=工作方向，0=锁定当前位置，1=正转，2=反转
-				  stepCount=要工作的脉冲步数 ,
-				  speed=脉冲间隔时间,转速 (x50ms)
-*函数返回值 	: 无
-***********************************************************************************************/
-//void zd_ledBits_StepWork(struct zd_ledbits_t *ledBits,unsigned char dir,unsigned long stepCount,unsigned char speed);
-void zd_ledBits_StepWork(struct zd_ledbits_t *ledBits,unsigned char mode,unsigned char dir,unsigned long stepCount,unsigned char speed)
-{
-	ledBits->WorkEn=LEDBITS_MODE_STEP+(mode&0x3f);
-	ledBits->WorkDir=dir;
-	ledBits->WorkStep_cnt=stepCount;
-	ledBits->WorkSpeed_repeat=speed;
-	ledBits->WorkSpeed_x50ms_cnt=0;
-    if(ledBits->Value==0)
-    {
-        if(dir==1)
-			ledBits->Value=ledBits->MinBit;
-        else
-			ledBits->Value=ledBits->MaxBit;
-    }
-}
-
-
 
 /***********************************************************************************************
 *函数名 		: zd_ledBits_LoopWork(unsigned char dir,unsigned long loopCount,unsigned char speed)
@@ -107,32 +95,6 @@ void zd_ledBits_StepWork(struct zd_ledbits_t *ledBits,unsigned char mode,unsigne
 				  speed=脉冲间隔时间,转速 (x50ms)
 *函数返回值 	: 无
 ***********************************************************************************************/
-//void zd_ledBits_LoopWork(struct zd_ledbits_t *ledBits,unsigned char dir,unsigned long loopCount,unsigned char speed);
-void zd_ledBits_LoopWork(struct zd_ledbits_t *ledBits,unsigned char mode,unsigned char dir,unsigned long loopCount,unsigned char speed)
-{
-	ledBits->WorkEn=LEDBITS_MODE_LOOP+(mode&0x3f);
-	ledBits->WorkDir=dir;
-	ledBits->WorkLoop_cnt=loopCount;
-	ledBits->WorkSpeed_repeat=speed;
-	ledBits->WorkSpeed_x50ms_cnt=0;
-    if(ledBits->Value==0)
-    {
-        if(dir==1)
-			ledBits->Value=ledBits->MinBit;
-        else
-			ledBits->Value=ledBits->MaxBit;
-    }
-}
-
-/***********************************************************************************************
-*函数名 		: zd_ledBits_LoopWork(unsigned char dir,unsigned long loopCount,unsigned char speed)
-*函数功能描述 	: 步进电机工作任务设置，设置后自动开始工作
-*函数参数 		: dir=工作方向，0=锁定当前位置，1=正转，2=反转
-				  stepCount=要工作的脉冲步数 ,
-				  speed=脉冲间隔时间,转速 (x50ms)
-*函数返回值 	: 无
-***********************************************************************************************/
-//void zd_ledBits_LoopWork(struct zd_ledbits_t *ledBits,unsigned char dir,unsigned long loopCount,unsigned char speed);
 void zd_ledBits_Work(struct zd_ledbits_t *ledBits,unsigned char mode,unsigned char dir,unsigned long loopCount,unsigned char speed)
 {
 	ledBits->WorkEn=mode;
@@ -140,66 +102,22 @@ void zd_ledBits_Work(struct zd_ledbits_t *ledBits,unsigned char mode,unsigned ch
 	ledBits->WorkLoop_cnt=loopCount;
 	ledBits->WorkSpeed_repeat=speed;
 	ledBits->WorkSpeed_x50ms_cnt=0;
+    ledBits->MaskValue=0;
     if(ledBits->Value==0)
     {
         if(dir==LEDBITS_DIR_FORWARD)
-			ledBits->Value=ledBits->MinBit;
+        {
+            ledBits->MaskBit_Set=0;
+            ledBits->MoveBit_cnt=ledBits->MoveBit_Min;
+			ledBits->Value=ledBits->MoveValue<<ledBits->MoveBit_Min;
+        }
         else
-			ledBits->Value=ledBits->MaxBit;
+        {
+            ledBits->MaskBit_Set=31;
+            ledBits->MoveBit_cnt=ledBits->MoveBit_Max;
+			ledBits->Value=ledBits->MoveValue<<ledBits->MoveBit_Max;
+        }
     }
-}
-
-/***********************************************************************************************
-*函数名 			: void zd_ledBitsLoop_run(void)
-*函数功能描述 		: LED位驱动自动控制(速度，循环次数),需每50ms调用一次
-*函数参数 			: 无
-*函数返回值 		: 无
-***********************************************************************************************/
-//void zd_ledBitsLoop_run(struct zd_ledbits_t *ledBits);
-void zd_ledBitsLoop_run(struct zd_ledbits_t *ledBits)//
-{
-	if(ledBits->WorkLoop_cnt>0)
-	{
-		ledBits->WorkEn=1;
-		if(++ledBits->WorkSpeed_x50ms_cnt>=ledBits->WorkSpeed_repeat)
-		{
-			ledBits->WorkSpeed_x50ms_cnt=0;
-			if(zd_ledBits_shift(ledBits))
-				ledBits->WorkLoop_cnt--;
-		}
-	}
-	else
-	{
-		ledBits->WorkEn=0;
-	}
-}
-
-
-
-/***********************************************************************************************
-*函数名 			: void zd_ledBitsStep_run(void)
-*函数功能描述 		: LED位驱动自动控制(速度，移动位数),需每50ms调用一次
-*函数参数 			: 无
-*函数返回值 		: 无
-***********************************************************************************************/
-// void zd_ledBitsStep_run(struct zd_ledbits_t *ledBits);
-void zd_ledBitsStep_run(struct zd_ledbits_t *ledBits)//
-{
-	if(ledBits->WorkStep_cnt>0)
-	{
-		ledBits->WorkEn=1;
-		if(++ledBits->WorkSpeed_x50ms_cnt>=ledBits->WorkSpeed_repeat)
-		{
-			ledBits->WorkSpeed_x50ms_cnt=0;
-			
-			zd_ledBits_shift(ledBits);
-			ledBits->WorkStep_cnt--;
-		}
-	}
-	else
-	{
-		ledBits->WorkEn=0;
-	}
 }
 
 /***********************************************************************************************
@@ -208,7 +126,6 @@ void zd_ledBitsStep_run(struct zd_ledbits_t *ledBits)//
 *函数参数 			: 无
 *函数返回值 		: 无
 ***********************************************************************************************/
-// void zd_ledBitsStep_run(struct zd_ledbits_t *ledBits);
 void zd_ledBits_run(struct zd_ledbits_t *ledBits)//
 {
     if(ledBits->WorkEn!=0)
@@ -237,11 +154,18 @@ void zd_ledBits_run(struct zd_ledbits_t *ledBits)//
 *函数参数 			: 无
 *函数返回值 		: 无
 ***********************************************************************************************/
-// void zd_ledBits_Set(unsigned long setval);
-// void zd_ledBits_Set(unsigned long setval)
-// {
-// 	ledBitsValue=startval;
-// }
+void zd_ledBits_SetMaskBit(struct zd_ledbits_t *ledBits,unsigned char mskbit)
+{
+    ledBits->MaskBit_Set=mskbit;
+    if(ledBits->WorkDir==LEDBITS_DIR_FORWARD)
+    {
+       ledBits->MoveBit_Min=ledBits->MaskBit_Set+1;
+    }
+    else if(ledBits->WorkDir==LEDBITS_DIR_REVERSE)
+    {
+		ledBits->MoveBit_Max=ledBits->MaskBit_Set-1;
+    }
+}
 
 /***********************************************************************************************
 *函数功能描述 		: LED位驱动初始化
@@ -252,6 +176,7 @@ void zd_ledBits_stop(struct zd_ledbits_t *ledBits)
 {
     ledBits->WorkEn=0;
 	ledBits->Value=0;
+    ledBits->MaskValue=0;
 	ledBits->WorkStep_cnt=0;
 	ledBits->WorkLoop_cnt=0;
 }
@@ -261,14 +186,14 @@ void zd_ledBits_stop(struct zd_ledbits_t *ledBits)
 *函数参数 			: 无
 *函数返回值 		: 无
 ***********************************************************************************************/
-void zd_ledBits_init(struct zd_ledbits_t *ledBits,unsigned long minbit,unsigned long maxbit)
+void zd_ledBits_init(struct zd_ledbits_t *ledBits,unsigned long movebit,unsigned char minmove,unsigned char maxmove)
 {
 	zd_ledBits_stop(ledBits);
-    ledBits->MinBit=minbit;
-	ledBits->MaxBit=maxbit;
+
+    ledBits->MoveValue=movebit;
     
-    ledBits->MoveBit_Max=4;
-	ledBits->MoveBit_Min=0;
+    ledBits->MoveBit_Max=maxmove;
+	ledBits->MoveBit_Min=minmove;
 
 }
 
