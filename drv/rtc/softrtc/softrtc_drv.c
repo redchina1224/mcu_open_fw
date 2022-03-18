@@ -127,7 +127,7 @@ void zd_basetime_run(void)
 	{	
 		mSec_x10_workbit=1;	
 				
-		if(++mSec_x10_cnt>100)
+		if(++mSec_x10_cnt>=100)
 		{
 			 mSec_x10_cnt=0;	
 			 mSec_x1000_workbit=1;
