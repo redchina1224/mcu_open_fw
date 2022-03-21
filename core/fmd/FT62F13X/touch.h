@@ -58,51 +58,7 @@
 #define   WHEELADDSILER							  0x00         	//0B 0000 10 01 (bit1bit0,第一组滑条滚轮选择，00不用，01滚轮，10滑条。bit3bit2,选择第二组滑条滚轮选择
 
 
-//KEY ON 百分比
-#define   KEY0_ON					65
-#define   KEY1_ON					65
-#define   KEY2_ON					55
-#define   KEY3_ON					65
-#define   KEY4_ON					55
-#define   KEY5_ON					65
-#define   KEY6_ON					55
-#define   KEY7_ON					65
-#define   KEY8_ON					65
-//KEY OFF 百分比
-#define   KEY0_OFF					40
-#define   KEY1_OFF					40
-#define   KEY2_OFF					40
-#define   KEY3_OFF					40
-#define   KEY4_OFF					40
-#define   KEY5_OFF					40
-#define   KEY6_OFF					40
-#define   KEY7_OFF					40
-#define   KEY8_OFF					40
-//----------------------------------------------------------
 
-//触摸阈值	1
-#define  KEY0_ACTIVE_SENSOR_DELTA1		0
-#define  KEY1_ACTIVE_SENSOR_DELTA1		0
-#define  KEY2_ACTIVE_SENSOR_DELTA1		69*KEY2_ON/100
-#define  KEY3_ACTIVE_SENSOR_DELTA1		0
-#define  KEY4_ACTIVE_SENSOR_DELTA1		67*KEY4_ON/100
-#define  KEY5_ACTIVE_SENSOR_DELTA1		0
-#define  KEY6_ACTIVE_SENSOR_DELTA1		49*KEY6_ON/100
-#define  KEY7_ACTIVE_SENSOR_DELTA1		0
-#define  KEY8_ACTIVE_SENSOR_DELTA1		19*KEY8_ON/100
-//----------------------------------------------------------
-
-//非触摸阈值	1
-#define  KEY0_INACTIVE_SENSOR_DELTA1		0
-#define  KEY1_INACTIVE_SENSOR_DELTA1		0
-#define  KEY2_INACTIVE_SENSOR_DELTA1		69*KEY2_OFF/100
-#define  KEY3_INACTIVE_SENSOR_DELTA1		0
-#define  KEY4_INACTIVE_SENSOR_DELTA1		67*KEY4_OFF/100
-#define  KEY5_INACTIVE_SENSOR_DELTA1		0
-#define  KEY6_INACTIVE_SENSOR_DELTA1		49*KEY6_OFF/100
-#define  KEY7_INACTIVE_SENSOR_DELTA1		0
-#define  KEY8_INACTIVE_SENSOR_DELTA1		19*KEY8_OFF/100
-//----------------------------------------------------------
 
 
 unsigned char TouchKeyScan();
