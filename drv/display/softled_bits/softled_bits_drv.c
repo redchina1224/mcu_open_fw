@@ -35,6 +35,8 @@ unsigned char zd_ledBits_shift(struct zd_ledbits_t *ledBits)
 			if(ledBits->MoveBit_cnt<=ledBits->MaskBit_Set)
             {
                  ledBits->MaskValue|=ledBits->Value;
+                 ledBits->MoveBit_Min=ledBits->MaskBit_Set+1;
+                 if(ledBits->MoveBit_Max==ledBits->MoveBit_Min) ledBits->MoveBit_Max=ledBits->MoveBit_Min+1;
             }
 		}
             
@@ -63,6 +65,8 @@ unsigned char zd_ledBits_shift(struct zd_ledbits_t *ledBits)
 			if(ledBits->MoveBit_cnt>=ledBits->MaskBit_Set)
             {
                  ledBits->MaskValue|=ledBits->Value;
+                 ledBits->MoveBit_Max=ledBits->MaskBit_Set-1;
+                 if(ledBits->MoveBit_Max==ledBits->MoveBit_Min) ledBits->MoveBit_Min=ledBits->MoveBit_Max-1;
             }
 		}
 
