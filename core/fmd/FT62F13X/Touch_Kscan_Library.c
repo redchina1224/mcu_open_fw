@@ -47,8 +47,12 @@ bit      awaken;
 unsigned char GKeyValue=0;	
 unsigned int StartTouchTime=0;//开始扫描时间  
 
+
 void TOUCH_INITIAL(void)
 {
+    TRISA |=  (0B00000100);		// 0-输出 1-输入   PA2(TKCAP) set input
+    WPUA &=  (~0B00000100);     	//PA端口上拉控制 1-开上拉 0-关上拉
+    ANSEL0 |=0B00000100;     // TKCAP （A2）设为模拟输入脚	
 	TKCON0=0;
     LVDCON  = 0x17;   //bit2 0: 101/110/111: TOUCH  
 								  //bit3 LVDDEB LVD 电平输出是否经过去抖电路 1：经过去抖 0：不经过去抖 
@@ -58,14 +62,3 @@ void TOUCH_INITIAL(void)
 }
 
 
-void TIMER1_INITIAL(void)  
-{
-    T2CON0 |= 0B00000001;  		 //bit0-bit1  timer2和timer1共用 的分频比 00: 1:1 01: 1：4  1x:1:16   
-	T1CON0 = 0B00010001;//TICKPSA=0; 预分频给TIM1;  T1CKSRC=01;HIRC
-    PR1H=0x6;  //0X640=1600
-    PR1L=0x40; 
-    T1ON=1;
-    TMR1IF=0;
-    TMR1IE=1;
-    PEIE=1;
-}

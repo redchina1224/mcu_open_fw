@@ -48,7 +48,7 @@ unsigned char *T_BuzzerEn=&__buzzer_en;
 //void buzzer_in_isr(void);
 inline void buzzer_in_isr(void)
 {
-	if((*T_BuzzerEn)!=0) Buzzer_IO_Channel=!Buzzer_IO_Channel; else Buzzer_IO_Ctrl(Buzzer_IO_OFF);
+	if((*T_BuzzerEn)!=0) Buzzer_IO_Channel=!Buzzer_IO_Channel;// else Buzzer_IO_Ctrl(Buzzer_IO_OFF);
 	//Buzzer_IO_Channel=!Buzzer_IO_Channel;
 }
 
@@ -60,8 +60,9 @@ inline void buzzer_in_isr(void)
 #if (RtcType==RtcType_TimerSoftRtc) 
 
 bit T_500ms_bit=0;
-bit T_10ms_bit=0;
+bit M_10ms_bit=0;
 bit T_1s_bit=0;
+bit M_1s_bit=0;
 
  unsigned char T_125usCount=0;
  unsigned char __10msCount=0;
@@ -76,9 +77,10 @@ inline void softrtc_in_isr(void)
 	if(++T_125usCount>=80) 
 	{ 
 		T_125usCount=0; 
-		T_10ms_bit=1;
+		M_10ms_bit=1;
 		if(++(*T_10msCount)>=100) 
 		{
+            M_1s_bit=1;
 			T_1s_bit=1;
 			T_500ms_bit=1;
 			(*T_10msCount)=0;
@@ -406,8 +408,10 @@ void interrupt ISR(void)
 { 
   //定时器0的中断处理**********************    
 #ifdef Ft0Clk	
-	if(ZD_T0IF_GRIGGER)   //125us进入一次
-    {
+	if(ZD_T0IF_GRIGGER)
+	{
+	ZD_TIMER0_LOAD +=T0_Reload;		//重新赋初值，在赋值前Timer0已有计数，故在该基础上加初值
+        
 	//定时器蜂鸣驱动-定义在TIMER0时	
 	#ifdef BuzzerType	
 		#if (BuzzerType==BuzzerType_TimerInv)
@@ -471,11 +475,11 @@ void interrupt ISR(void)
 #endif	//#ifdef Ft0Clk
 
   //定时器1的中断处理**********************
-	if(TMR1IE && TMR1IF)
-	{
+	//if(TMR1IE && TMR1IF)
+	//{
 
-		ZD_T1IF_CLEAN;
-	} 	 
+	//	ZD_T1IF_CLEAN;
+	//} 	 
     
 } 
 

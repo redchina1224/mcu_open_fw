@@ -29,6 +29,11 @@
 		#include "key\loadKey_drv.h" //载入显示系统驱动接口信息
 	#endif
 
+	//载入传感器检测系统
+	#ifdef SensorType
+		#include "sensor\loadSensor_drv.h" //载入显示系统驱动接口信息
+	#endif
+
 
 	//载入电机系统
 	#ifdef MotorType

@@ -27,6 +27,8 @@
 	#define ZD_T0_ENABLE TR0=1;
 	#define ZD_T0_DISABLE TR0=0;
 	
+	#define ZD_INTERRUPT_INIT ZD_NOP//临时解决方案,需替换为关所有中断功能
+	#define ZD_PORT_INIT ZD_NOP//临时解决方案,需替换为初始化所有IO的功能
 
 	//#ifdef PORTA
 	#define ZD_PORTA PORTA
@@ -267,5 +269,8 @@
 	
 	#define ZD_UART1_TXBUF TXREG
 	#define ZD_UART1_RXBUF RCREG
+
+
+
 
 #endif

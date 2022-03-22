@@ -74,6 +74,17 @@ void GetHourMinSec(unsigned char* timeval,unsigned long usec)
 	timeval[1]=(usec/60)%60;
 	timeval[2]=(usec/3600)%24;
 }
+
+void SetUtcSecByHourMin(unsigned char hour,unsigned char min)
+{
+	TMR1IE=0;
+	utcsec=((3600*(unsigned long)hour)+(60*(unsigned long)min));
+	TMR1IE=1;
+}
+unsigned long GetUtcSecByHourMin(unsigned char hour,unsigned char min)
+{
+	return ((unsigned long)((3600*(unsigned long)hour)+(60*(unsigned long)min)));
+}
 /*
 bit SecRunOnce(void)
 {
@@ -111,12 +122,31 @@ bit mSec_x10_RunOnce(void)
 
 void zd_basetime_run(void)
 {
+	ZD_CLRWDT;
 	
-	if(T_10ms_bit)
+	mSec_x1000_workbit=0;
+
+	mSec_x500_workbit=0;
+
+	mSec_x250_workbit=0;
+	
+	mSec_x100_workbit=0;
+	
+	mSec_x50_workbit=0;
+
+	mSec_x10_workbit=0;
+    
+/*	if(M_1s_bit)
+    {
+         mSec_x1000_workbit=1;
+         M_1s_bit=0;
+    }
+*/    
+	if(M_10ms_bit)
 	{	
 		mSec_x10_workbit=1;	
 				
-		if(++mSec_x10_cnt>100)
+		if(++mSec_x10_cnt>=100)
 		{
 			 mSec_x10_cnt=0;	
 			 mSec_x1000_workbit=1;
@@ -144,26 +174,28 @@ void zd_basetime_run(void)
 
 
 		
-		T_10ms_bit=0;
+		M_10ms_bit=0;
 	}
 	
 }
 
 void zd_basetime_clear(void)
 {
+    /*
 	ZD_CLRWDT;
 	
-	if(mSec_x1000_workbit) mSec_x1000_workbit=0;
+	mSec_x1000_workbit=0;
 
-	if(mSec_x500_workbit) mSec_x500_workbit=0;
+	mSec_x500_workbit=0;
 
-	if(mSec_x250_workbit) mSec_x250_workbit=0;
+	mSec_x250_workbit=0;
 	
-	if(mSec_x100_workbit) mSec_x100_workbit=0;
+	mSec_x100_workbit=0;
 	
-	if(mSec_x50_workbit) mSec_x50_workbit=0;
+	mSec_x50_workbit=0;
 
-	if(mSec_x10_workbit) mSec_x10_workbit=0;
+	mSec_x10_workbit=0;
+    */
 	
 }
 

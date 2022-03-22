@@ -25,7 +25,8 @@ extern unsigned char *T_BuzzerEn;
 
 #ifdef RtcType
 #if (RtcType==RtcType_TimerSoftRtc) 
-extern bit T_10ms_bit;
+extern bit M_10ms_bit;
+extern bit M_1s_bit;
 extern unsigned char *T_10msCount;
 extern unsigned long *T_SecCount;
 #endif

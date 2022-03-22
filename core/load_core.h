@@ -102,6 +102,49 @@
 	//IO定义标准化	
 	#include "fmd\fmd_core.h"
 
+	//系统时钟
+
+	#if (ZD_FSYS_CLKSET_DEFAULT==ZD_FSYS_CLKSET_FOSC_DIV1)
+		#define FsysClk FocsClk/1
+	#elif (ZD_FSYS_CLKSET_DEFAULT==ZD_FSYS_CLKSET_FOSC_DIV2)
+		#define FsysClk FocsClk/2
+	#elif (ZD_FSYS_CLKSET_DEFAULT==ZD_FSYS_CLKSET_FOSC_DIV4)
+		#define FsysClk FocsClk/4
+	#elif (ZD_FSYS_CLKSET_DEFAULT==ZD_FSYS_CLKSET_FOSC_DIV8)
+		#define FsysClk FocsClk/8
+	#elif (ZD_FSYS_CLKSET_DEFAULT==ZD_FSYS_CLKSET_FOSC_DIV16)
+		#define FsysClk FocsClk/16
+	#elif (ZD_FSYS_CLKSET_DEFAULT==ZD_FSYS_CLKSET_FOSC_DIV32)
+		#define FsysClk FocsClk/32
+	#elif (ZD_FSYS_CLKSET_DEFAULT==ZD_FSYS_CLKSET_FOSC_DIV64)
+		#define FsysClk FocsClk/64
+	#endif
+
+	//定时器时钟配置,时钟源为指令时钟,时钟周期为2T
+	#if (ZD_TIMER0_CLKSET_DEFAULT==ZD_TIMER0_CLKSET_FSYS)
+		#if (ZD_TIMER0_CLKPSASET_DEFAULT==ZD_TIMER0_CLKPSASET_DIV1)
+			#define Ft0Clk FsysClk/2/1
+		#elif (ZD_TIMER0_CLKPSASET_DEFAULT==ZD_TIMER0_CLKPSASET_DIV2)
+			#define Ft0Clk FsysClk/2/2
+		#elif (ZD_TIMER0_CLKPSASET_DEFAULT==ZD_TIMER0_CLKPSASET_DIV4)
+			#define Ft0Clk FsysClk/2/4
+		#elif (ZD_TIMER0_CLKPSASET_DEFAULT==ZD_TIMER0_CLKPSASET_DIV8)
+			#define Ft0Clk FsysClk/2/8
+		#elif (ZD_TIMER0_CLKPSASET_DEFAULT==ZD_TIMER0_CLKPSASET_DIV16)
+			#define Ft0Clk FsysClk/2/16
+		#elif (ZD_TIMER0_CLKPSASET_DEFAULT==ZD_TIMER0_CLKPSASET_DIV32)
+			#define Ft0Clk FsysClk/2/32
+		#elif (ZD_TIMER0_CLKPSASET_DEFAULT==ZD_TIMER0_CLKPSASET_DIV64)
+			#define Ft0Clk FsysClk/2/64
+		#elif (ZD_TIMER0_CLKPSASET_DEFAULT==ZD_TIMER0_CLKPSASET_DIV128)
+			#define Ft0Clk FsysClk/2/128
+		#elif (ZD_TIMER0_CLKPSASET_DEFAULT==ZD_TIMER0_CLKPSASET_DIV256)
+			#define Ft0Clk FsysClk/2/256
+		#endif
+
+	#endif	
+
+
 #elif (McuType==McuType_Unkonw)
 
 #endif
