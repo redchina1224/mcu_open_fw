@@ -14,8 +14,8 @@
 	//#define ZD_GIE(x) GIE=(x)
 
 
-	#define ZD_T0IE_ENABLE 1
-	#define ZD_T0IE_DISABLE 0
+	#define ZD_T0IE_ENABLE T0IE=1
+	#define ZD_T0IE_DISABLE T0IE=0
 	
 	
 	#define ZD_T0IE(x) T0IE=(x)
