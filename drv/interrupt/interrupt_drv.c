@@ -60,6 +60,7 @@ inline void buzzer_in_isr(void)
 #if (RtcType==RtcType_TimerSoftRtc) 
 
 bit T_500ms_bit=0;
+bit M_5ms_bit=0;
 bit M_10ms_bit=0;
 bit T_1s_bit=0;
 bit M_1s_bit=0;
@@ -89,6 +90,8 @@ inline void softrtc_in_isr(void)
 		else if((*T_10msCount)==50) 
 			T_500ms_bit=1;
 	}
+	else if(T_125usCount==40)
+		M_5ms_bit=1;
 }
 #endif
 #endif
