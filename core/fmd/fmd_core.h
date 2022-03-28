@@ -1,8 +1,12 @@
 #ifndef __ZDFMDCORE_H_
 #define __ZDFMDCORE_H_
 
+#if (McuType==McuType_FremontMicroDevices_FT61F13)
+	#include <syscfg.h>
+#elif (McuType==McuType_FremontMicroDevices_FT62F13)
 	#include "FT62F13X\syscfg.h"
-	
+#endif	
+
 	#define ZD_CLRWDT  asm("clrwdt")
 	#define ZD_NOP  __nop()
 	#define ZD_SLEEP  asm("sleep")

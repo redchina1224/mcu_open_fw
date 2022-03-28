@@ -11,5 +11,6 @@
 
 
 #define McuType_FremontMicroDevices_FT62F13 0x0301
+#define McuType_FremontMicroDevices_FT61F13 0x0302
 
 #endif

@@ -95,7 +95,7 @@
 		#endif
 	#endif	
 	
-#elif (McuType==McuType_FremontMicroDevices_FT62F13)
+#elif (McuType==McuType_FremontMicroDevices_FT62F13||McuType==McuType_FremontMicroDevices_FT61F13)
 	//æßÃÂ ±÷”≈‰÷√
 	#define FocsClk 16000000
 	
