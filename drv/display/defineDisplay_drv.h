@@ -3,7 +3,7 @@
 
 	//定义可选型号清单
 	#define DisplayType_Unkonw 0
-	#define DisplayType_Dig8SoftLed 1 //保留向下兼容
+	#define DisplayType_SoftLed_Dig8WithKeys 1 //保留向下兼容
 
 
 	#define DisplayType_SoftLed_Dig8 2

@@ -2,27 +2,31 @@
 #include "..\..\com_include_drv.h"
 
 #ifdef DisplayType
-#if (DisplayType==DisplayType_Dig8SoftLed) 
+#if (DisplayType==DisplayType_SoftLed_Dig8WithKeys) 
 
 unsigned char LedDrvCaseSelect;
 unsigned char *Led_WriteSegBuffer;
 unsigned char *Led_WriteComBuffer;
 
-unsigned char LedBrightSet=0;
+unsigned char LedBrightSet=5;
 unsigned char LedBrightCnt;
 //unsigned char LedBlinkSegTempVal;
-
+unsigned long softledkey;
 
 
 //在bsp_run中调用，或在中断中调用
 void zd_softled_run(void)	
 {
 	
-	if(++LedBrightCnt>10)
+	if(++LedBrightCnt>40)
 	{
 		LedBrightCnt=0;
 		
+		softledkey=KEYS_IO_VALUE;
+        
+		Led_IO_COM_OUTPUT;
 		Led_IO_COM_CTRL_OFF;
+        Led_IO_SEG_OUTPUT;
 		Led_IO_SEG_CTRL_OFF;
 
 		if(++LedDrvCaseSelect>=DISPLAY_WR_BUFFER_LENGTH) LedDrvCaseSelect=0;
@@ -33,7 +37,9 @@ void zd_softled_run(void)
 	else if(LedBrightCnt==LedBrightSet)
 	{
 		Led_IO_COM_CTRL_OFF;
-		Led_IO_SEG_CTRL_OFF;
+		Led_IO_SEG_CTRL_ON;
+        KEYS_IO_INPUT;
+        KEYS_IO_WPUA;
 	}
 	
 

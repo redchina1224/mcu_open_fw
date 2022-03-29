@@ -3,7 +3,7 @@
 
 //#if ((KeyType&KeyType_MultiChannel)==KeyType_MultiChannel)
 
-	#if ((KeyType&KeyType_Gpio)==KeyType_Gpio)
+	#if ((KeyType&KeyType_Gpio)==KeyType_Gpio||(KeyType&KeyType_SoftLedWithGpio)==KeyType_SoftLedWithGpio)
 struct zd_userkey_t gpioKeys;
 	#endif
 	
@@ -113,10 +113,20 @@ void zd_keyCheck(struct zd_userkey_t* ukey,unsigned long keysnotpress)
 void zd_keyRun(void)
 {
 #if (KeyType&KeyType_Gpio)==KeyType_Gpio)
-
-	gpioKeys.KeyVal=KEYS_IO_VALUE; //获取按键值
-	zd_keyCheck(&gpioKeys,KEYS_IO_NOTPRESS);
+		gpioKeys.KeyVal=KEYS_IO_VALUE; //获取按键值
+		zd_keyCheck(&gpioKeys,KEYS_IO_NOTPRESS);
 #endif	
+
+#if (KeyType&KeyType_SoftLedWithGpio)==KeyType_SoftLedWithGpio)
+	#ifdef DisplayType
+		#if (DisplayType==DisplayType_SoftLed_Dig8WithKeys) 
+			gpioKeys.KeyVal=softledkey;
+            zd_keyCheck(&gpioKeys,KEYS_IO_NOTPRESS);
+		#endif
+    #endif
+#endif	
+
+
 #if (KeyType&KeyType_McuTouch)==KeyType_McuTouch)
 
 	zd_touchkeyRead(&(mcuTouchKeys.KeyVal));

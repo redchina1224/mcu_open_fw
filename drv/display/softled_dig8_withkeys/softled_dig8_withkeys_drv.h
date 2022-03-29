@@ -1,6 +1,7 @@
-#ifndef __SOFTLED_DRV_H_
-#define __SOFTLED_DRV_H_
+#ifndef __SOFTLED_DIG8_WITHKEYS_DRV_H_
+#define __SOFTLED_DIG8_WITHKEYS_DRV_H_
 
+extern unsigned long softledkey;
 extern unsigned char *Led_WriteSegBuffer;
 extern unsigned char *Led_WriteComBuffer;
 

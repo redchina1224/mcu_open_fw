@@ -8,6 +8,8 @@
 	#define KeyType_Touch BIT2 //触摸按键
 	#define KeyType_IR BIT3 //红外编码
 	#define KeyType_RF BIT4 //红外编码
+	#define KeyType_SoftLedWithGpio BIT5 //与软件LED驱动共用的直接IO
+
 
 	#define KeyType_MultiChannel BIT31 //多通道使能
 

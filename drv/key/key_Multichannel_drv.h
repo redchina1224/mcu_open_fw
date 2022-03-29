@@ -36,7 +36,7 @@ unsigned char UserKeyPressed_up;
 
 //#if ((KeyType&KeyType_MultiChannel)==KeyType_MultiChannel)
 
-	#if ((KeyType&KeyType_Gpio)==KeyType_Gpio)
+	#if ((KeyType&KeyType_Gpio)==KeyType_Gpio||(KeyType&KeyType_SoftLedWithGpio)==KeyType_SoftLedWithGpio)
 extern struct zd_userkey_t gpioKeys;
 	#endif
 	

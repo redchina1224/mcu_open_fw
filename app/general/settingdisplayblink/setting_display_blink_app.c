@@ -9,7 +9,7 @@
 //History:
 //******************************************************************************
 
-
+#include "..\..\com_include_app.h"
 
 unsigned char settingDisplayBlink(struct  zd_setting_display_blink_t* setting )
 {
@@ -32,6 +32,7 @@ unsigned char settingDisplayBlink(struct  zd_setting_display_blink_t* setting )
 			{			
 				setting->blinkDisplayEn=0;//闪烁时是否显示或熄屏的标志,置0后，下次切换为显示
 			}
+			setting->blinkTimeOut_x100ms=5;
 		}
 
 

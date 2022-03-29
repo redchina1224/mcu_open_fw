@@ -2,7 +2,7 @@
 #include "..\..\com_include_drv.h"
 
 #ifdef DisplayType
-#if (DisplayType==DisplayType_Dig8SoftLed) 
+#if (DisplayType==DisplayType_SoftLed_Dig8) 
 
 unsigned char LedDrvCaseSelect;
 unsigned char *Led_WriteSegBuffer;
