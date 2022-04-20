@@ -28,7 +28,7 @@
 	#define ZD_T0_DISABLE TR0=0;
 	
 	#define ZD_INTERRUPT_INIT ZD_NOP//临时解决方案,需替换为关所有中断功能
-	#define ZD_PORT_INIT ZD_NOP//临时解决方案,需替换为初始化所有IO的功能
+	#define ZD_PORT_INIT RBPU=0,ZD_NOP//临时解决方案,需替换为初始化所有IO的功能
 
 	//#ifdef PORTA
 	#define ZD_PORTA PORTA
