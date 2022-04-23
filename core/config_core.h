@@ -75,6 +75,9 @@
 		
 	#endif		
 	
+#elif (McuType==McuType_CmsSemicon_CMS80F252X)
+
+
 
 #elif (McuType==McuType_SinOneChip_SC92F8463B)
 

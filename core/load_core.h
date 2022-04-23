@@ -59,6 +59,35 @@
 	#endif		
 	
 
+#elif (McuType==McuType_CmsSemicon_CMS80F252X)
+
+	//晶体时钟配置
+	#define FocsClk 48000000
+	
+	//IO定义标准化	
+	#include "cms\cms80f_core.h"
+
+	//系统时钟
+	#if (ZD_FSYS_CLKSET_DEFAULT==ZD_FSYS_CLKSET_FOSC_DIV1)
+		#define FsysClk FocsClk/1
+	#elif (ZD_FSYS_CLKSET_DEFAULT==ZD_FSYS_CLKSET_FOSC_DIV2)
+		#define FsysClk FocsClk/2
+	#elif (ZD_FSYS_CLKSET_DEFAULT==ZD_FSYS_CLKSET_FOSC_DIV4)
+		#define FsysClk FocsClk/4
+	#elif (ZD_FSYS_CLKSET_DEFAULT==ZD_FSYS_CLKSET_FOSC_DIV8)
+		#define FsysClk FocsClk/8
+	#endif
+	
+	
+	//定时器时钟配置
+	#if (ZD_TIMER0_CLKSET_DEFAULT==ZD_TIMER0_CLKSET_FSYS)
+		#if (ZD_TIMER0_CLKPSASET_DEFAULT==ZD_TIMER0_CLKPSASET_DIV4)
+			#define Ft0Clk FsysClk/4
+		#elif (ZD_TIMER0_CLKPSASET_DEFAULT==ZD_TIMER0_CLKPSASET_DIV12)
+			#define Ft0Clk FsysClk/12
+		#endif
+	#endif	
+
 #elif (McuType==McuType_SinOneChip_SC92F8463B)
 
 	//晶体时钟配置
