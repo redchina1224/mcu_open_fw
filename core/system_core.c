@@ -36,7 +36,7 @@ void zd_systemInit(void)
 	ZD_INTERRUPT_INIT;  					//暂禁止所有中断
 	
 	//端口初始化(默认值)
-	ZD_PORT_INIT;	
+	ZD_PORT_INIT;
 }
 
 
