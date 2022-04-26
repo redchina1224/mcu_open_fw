@@ -61,7 +61,7 @@ void zd_key_init(void);
 void zd_key_clear(struct zd_userkey_t *ukey);
 void zd_keyRun(void);
 
-
+void zd_keyCheck(struct zd_userkey_t* ukey,unsigned long keysnotpress);
 
 
 #endif 
