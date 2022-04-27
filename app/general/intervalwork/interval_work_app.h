@@ -32,7 +32,7 @@ unsigned char intervalTimeOut_Dis_x100ms;
 
 void intervalWorkRun(struct  zd_interval_work_t* work);
 
-void intervalWorkRun_Start(struct  zd_interval_work_t* work,unsigned char En_mSec,,unsigned char Dis_mSec);
+void intervalWorkRun_Start(struct  zd_interval_work_t* work,unsigned char En_mSec,unsigned char Dis_mSec);
 
 #endif 
 

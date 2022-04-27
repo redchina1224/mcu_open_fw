@@ -11,6 +11,8 @@
 //Í·ÎÄ¼þ************************************************************************
 #include "..\..\..\com_include_drv.h"
 //******************************************************************************
+#ifdef DisplayType
+#if (DisplayType==DisplayType_Dig8IcLed_tm1628) 
 
 #define tm1628_Delay core_DelayUs 
 
@@ -114,3 +116,5 @@ void TM1628_Init()
       
 } // TM1668_Init()
 
+#endif
+#endif

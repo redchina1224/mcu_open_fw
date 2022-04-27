@@ -7,7 +7,7 @@ void zd_sensorCheck(struct zd_sensor_t* sen,unsigned char chkmax,unsigned char c
 
 	if(chkmax)
 	{
-		if(sen->TriggerFilterCnt<100) sen->TriggerFilterCnt++;
+		if(sen->TriggerFilterCnt<sen->TriggerFilterValue) sen->TriggerFilterCnt++;
 		else	sen->TriggerStatus=2;
 			
 	}

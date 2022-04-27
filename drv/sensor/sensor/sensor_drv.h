@@ -4,6 +4,7 @@
 struct  zd_sensor_t {
  unsigned char SensorStatus;
  unsigned char TriggerFilterCnt;
+ unsigned char TriggerFilterValue;
  unsigned char TriggerStatus;
 };
 
