@@ -20,6 +20,10 @@ void SendData(unsigned char dat);
 
 
  unsigned char *Tm1628_WriteBuffer;
+
+ unsigned char sendSelectAddr=0;
+ unsigned char sendSelectData=0;
+
 //******************************************************************************
 //******************************************************************************
 
@@ -115,6 +119,17 @@ void TM1628_Init()
 		//TM1628_SendAddrData(0xCF,0XFF);
       
 } // TM1668_Init()
+
+
+void TM1628_SendDataRun(void)
+{
+		if(sendSelectAddr>0xC0) {sendSelectAddr--; sendSelectData++;}else {sendSelectAddr=0xcb;sendSelectData=0;}
+		TM1628_SendAddrData(sendSelectAddr,(Tm1628_WriteBuffer[sendSelectData]&0x03)|(Tm1628_WriteBuffer[sendSelectData]<<2));
+		sendSelectAddr--;
+		TM1628_SendAddrData(sendSelectAddr,Tm1628_WriteBuffer[sendSelectData]);
+
+}
+
 
 #endif
 #endif
