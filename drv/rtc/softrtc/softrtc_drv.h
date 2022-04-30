@@ -11,7 +11,7 @@ extern bit mSec_x100_workbit;
 extern bit mSec_x50_workbit;
 extern bit mSec_x10_workbit;
 
-
+extern unsigned char Rtc_timeNow[3];
 
 void SetUtcSecByHourMin(unsigned char hour,unsigned char min);
 
