@@ -10,6 +10,7 @@
 	#define DisplayType_SoftLed_Bits 3
 
 
-	#define DisplayType_Dig8IcLed_tm1628 4
+	#define DisplayType_Dig8IcLed_tm1628 0x0104
+	#define DisplayType_Dig8IcLcd_tm1621c 0x0204
 
 #endif
