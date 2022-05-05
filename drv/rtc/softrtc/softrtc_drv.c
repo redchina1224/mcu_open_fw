@@ -21,7 +21,7 @@ unsigned char utc10msec=0;
 //xdata unsigned long localsec=0;
 
 //unsigned int softrtctestv=0;
-
+bit mSec_x500_flashbit=0;
 bit mSec_x1000_workbit=0;
 bit mSec_x500_workbit=0;
 bit mSec_x250_workbit=0;
@@ -125,8 +125,12 @@ void zd_basetime_run(void)
 	ZD_CLRWDT;
 	
 	mSec_x1000_workbit=0;
-
-	mSec_x500_workbit=0;
+	
+	if(mSec_x500_workbit)
+	{
+		mSec_x500_workbit=0;
+		mSec_x500_flashbit=~mSec_x500_flashbit;
+	}
 
 	mSec_x250_workbit=0;
 	

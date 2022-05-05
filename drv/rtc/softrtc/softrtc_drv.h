@@ -4,6 +4,7 @@
 
 
 //extern unsigned int softrtctestv;
+extern bit mSec_x500_flashbit;
 extern bit mSec_x1000_workbit;
 extern bit mSec_x500_workbit;
 extern bit mSec_x250_workbit;
