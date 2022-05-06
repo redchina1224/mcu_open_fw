@@ -77,14 +77,14 @@ unsigned char zd_touchkeyRead(unsigned long *keyval)
 		}
 		#elif (McuType==McuType_CmsSemicon_CMS79F738)
 
-		/*
+		
 		(*keyval)=_CMS_KeyFlag[2];
 		(*keyval)<<=8;
 		(*keyval)|=_CMS_KeyFlag[1];
 		(*keyval)<<=8;
 		(*keyval)|=_CMS_KeyFlag[0];
-		*/
-		(*keyval)=(unsigned long)(_CMS_KeyFlag[0]);
+		
+		//(*keyval)=(unsigned long)(_CMS_KeyFlag[0]);
 		return 1;
 		#endif
 		
