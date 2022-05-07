@@ -16,6 +16,13 @@
 //声明外部变量******************************************************************
 
 
+#ifdef PowerOffCheckType
+#ifdef (PowerOffCheckType==PowerOffCheckType_MCULVD)
+extern bit M_PowerOff_bit;
+#endif
+#endif
+
+
 #ifdef BuzzerType
 #if (BuzzerType==BuzzerType_TimerInv)
 extern unsigned char *T_BuzzerEn;
