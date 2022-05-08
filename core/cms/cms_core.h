@@ -24,6 +24,9 @@
 	#define ZD_T0IF_CLEAN T0IF=0
 	#define ZD_T0IF_GRIGGER (T0IF==1)
 
+	#define ZD_LVDIF_CLEAN LVDIF=0
+	#define ZD_LVDIF_GRIGGER (LVDIF==1)
+
 	#define ZD_T0_ENABLE TR0=1;
 	#define ZD_T0_DISABLE TR0=0;
 	

@@ -17,7 +17,7 @@
 
 
 #ifdef PowerOffCheckType
-#ifdef (PowerOffCheckType==PowerOffCheckType_MCULVD)
+#if (PowerOffCheckType==PowerOffCheckType_MCULVD)
 extern bit M_PowerOff_bit;
 #endif
 #endif

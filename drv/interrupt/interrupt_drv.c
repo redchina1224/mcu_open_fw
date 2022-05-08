@@ -40,12 +40,11 @@ void interrupt_SoftRtcConfig(unsigned char *T_ms,unsigned long *T_sec)
 */
 
 #ifdef PowerOffCheckType
-#ifdef (PowerOffCheckType==PowerOffCheckType_MCULVD)
+#if (PowerOffCheckType==PowerOffCheckType_MCULVD)
 bit M_PowerOff_bit=0;
 inline void powerofflvd_in_isr(void)
 {
 	M_PowerOff_bit=1;
-	ZD_LVDIF_CLEAN;			//清中断标志位
 	ZD_GIE_DISABLE;
 }
 #endif
@@ -262,11 +261,12 @@ inline void zerocross_in_isr(void)
 	
 void interrupt interrupt_Isr()
 {
-#ifdef PowerOffType
-#ifdef (PowerOffType==PowerOffType_MCULVD)
+#ifdef PowerOffCheckType
+#if (PowerOffCheckType==PowerOffCheckType_MCULVD)
 	if(ZD_LVDIF_GRIGGER)
 	{
 		powerofflvd_in_isr();
+		ZD_LVDIF_CLEAN;	//清中断标志位
 	}	
 #endif
 #endif

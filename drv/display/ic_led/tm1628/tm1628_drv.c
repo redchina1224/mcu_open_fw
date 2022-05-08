@@ -99,7 +99,7 @@ void TM1628_Init()
     SendData(M_DISP_CTRL_SETTING(1));
     SET_STB();
     tm1628_Delay(5); 
-
+/*
 		//1628Œª∂Œ≥ı ºªØ°£
 		TM1628_SendAddrData(0xC0,Tm1628_WriteBuffer[5]);
 		TM1628_SendAddrData(0xC1,(Tm1628_WriteBuffer[5]&0x03)|(Tm1628_WriteBuffer[5]<<2));
@@ -117,7 +117,7 @@ void TM1628_Init()
 		//TM1628_SendAddrData(0xCD,0Xff);
 		//TM1628_SendAddrData(0xCE,0XFF);
 		//TM1628_SendAddrData(0xCF,0XFF);
-      
+ */     
 } // TM1668_Init()
 
 
