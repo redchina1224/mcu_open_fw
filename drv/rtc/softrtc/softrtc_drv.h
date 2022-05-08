@@ -4,6 +4,7 @@
 
 
 //extern unsigned int softrtctestv;
+extern bit Sec_x1_workbit;
 extern bit mSec_x500_flashbit;
 extern bit mSec_x1000_workbit;
 extern bit mSec_x500_workbit;
@@ -16,7 +17,7 @@ extern unsigned char Rtc_timeNow[3];
 
 void SetUtcSecByHourMin(unsigned char hour,unsigned char min);
 
-unsigned long GetUtcSecByHourMin(unsigned char hour,unsigned char min);
+unsigned long GetUtcSecByHourMin(unsigned long hour,unsigned long min);
 
 unsigned long GetUtcSec(void);
 

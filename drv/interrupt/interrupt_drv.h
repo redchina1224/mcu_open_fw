@@ -46,6 +46,7 @@ extern unsigned long *T_SecCount;
 #if (CounterType==CounterType_SoftCounter) 
 
 	#ifdef Counter_IO_Channel1
+	void softcounter1_reset(void);
 	extern unsigned int *T_Counter1_1sec;
 	extern unsigned int *T_Counter1_Total;
 	#endif

@@ -21,6 +21,7 @@ unsigned char utc10msec=0;
 //xdata unsigned long localsec=0;
 
 //unsigned int softrtctestv=0;
+bit Sec_x1_workbit=0;
 bit mSec_x500_flashbit=0;
 bit mSec_x1000_workbit=0;
 bit mSec_x500_workbit=0;
@@ -81,7 +82,7 @@ void SetUtcSecByHourMin(unsigned char hour,unsigned char min)
 	utcsec=((3600*(unsigned long)hour)+(60*(unsigned long)min));
 	TMR1IE=1;
 }
-unsigned long GetUtcSecByHourMin(unsigned char hour,unsigned char min)
+unsigned long GetUtcSecByHourMin(unsigned long hour,unsigned long min)
 {
 	return ((unsigned long)((3600*(unsigned long)hour)+(60*(unsigned long)min)));
 }
@@ -123,7 +124,9 @@ bit mSec_x10_RunOnce(void)
 void zd_basetime_run(void)
 {
 	ZD_CLRWDT;
-	
+
+	Sec_x1_workbit=0;
+		
 	mSec_x1000_workbit=0;
 	
 	if(mSec_x500_workbit)
@@ -140,12 +143,12 @@ void zd_basetime_run(void)
 
 	mSec_x10_workbit=0;
     
-/*	if(M_1s_bit)
+	if(M_1s_bit)
     {
-         mSec_x1000_workbit=1;
+         Sec_x1_workbit=1;
          M_1s_bit=0;
     }
-*/    
+    
 	if(M_10ms_bit)
 	{	
 		mSec_x10_workbit=1;	

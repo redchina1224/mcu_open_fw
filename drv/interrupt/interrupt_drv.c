@@ -124,6 +124,14 @@ unsigned char __counter1filter=0;
 unsigned int *T_Counter1_1sec=&__counter1_val;
 unsigned int *T_Counter1_Total=&__counter1_val;
 
+void softcounter1_reset(void)
+{
+	ZD_GIE_DISABLE;
+	(*T_Counter1_1sec)=0;
+	(*T_Counter1_Total)=0;
+	ZD_GIE_ENABLE;
+}
+
 //void softcounter1_in_isr(void);
 inline void softcounter1_in_isr(void)
 {
