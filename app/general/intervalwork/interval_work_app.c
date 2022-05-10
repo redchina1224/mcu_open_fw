@@ -35,7 +35,7 @@ void intervalWorkRun(struct  zd_interval_work_t* work)
 
 }
 
-void intervalWorkRun_Start(struct  zd_interval_work_t* work,unsigned char En_mSec,unsigned char Dis_mSec)
+void intervalWorkRun_Start(struct  zd_interval_work_t* work,unsigned int En_mSec,unsigned int Dis_mSec)
 {
 	work->intervalWorkEn=0;//单次闪烁计时,置0后，立即执行一次切换操作
 	work->intervalTimeOut_x100ms=0;

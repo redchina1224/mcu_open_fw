@@ -23,16 +23,16 @@ struct  zd_interval_work_t {
 		unsigned char inRunning6:1;
 		unsigned char inRunning7:1;		
 	};
-unsigned char intervalTimeOut_x100ms;
-unsigned char intervalTimeOut_En_x100ms;
-unsigned char intervalTimeOut_Dis_x100ms;
+unsigned int intervalTimeOut_x100ms;
+unsigned int intervalTimeOut_En_x100ms;
+unsigned int intervalTimeOut_Dis_x100ms;
 };
 
 
 
 void intervalWorkRun(struct  zd_interval_work_t* work);
 
-void intervalWorkRun_Start(struct  zd_interval_work_t* work,unsigned char En_mSec,unsigned char Dis_mSec);
+void intervalWorkRun_Start(struct  zd_interval_work_t* work,unsigned int En_mSec,unsigned int Dis_mSec);
 
 #endif 
 
