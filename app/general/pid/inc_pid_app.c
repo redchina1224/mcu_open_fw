@@ -1,4 +1,4 @@
-#include "..\com_include_app.h"
+#include "..\..\com_include_app.h"
 
 //PID参数移到项目中的app_cfg.h中进行配置,此处保留以方便将此代码单独移作它用
 //#define PID_KP 0.04 //PID比例系数
@@ -17,7 +17,16 @@
 //#define PID_KD ((PID_TD)/PID_T)*PID_KP)	  //PID微分系数//KD=(Td/T)*KP
 
 
-void zd_incpid_init(struct zd_pospid_t *pid)
+//KP:（上个周期误差的变化量与误差的趋势）当前的误差值减去最近一次的误差值，如果是正值说明误差在变大，如果是负值说明误差在变小
+//#define PID_KP 0.04 //PID比例系数
+
+//KI: 当前的误差值
+//#define PID_KI ((PID_T/(PID_TI))*PID_KP)  //PID积分系数//KI=(T/Ti)*KP
+
+//KD:（上个周期误差的变化量与误差的趋势）- (上上个周期误差的变化量与误差的趋势）,绝对值越大说明调节的速度越快与目标值接近的速度越快
+//#define PID_KD ((PID_TD)/PID_T)*PID_KP)	  //PID微分系数//KD=(Td/T)*KP
+
+void zd_incpid_init(struct zd_incpid_t *pid)
 {
 	pid->error=0;
 	pid->error_last=0;
@@ -29,9 +38,9 @@ void zd_incpid_init(struct zd_pospid_t *pid)
 	pid->out=0;
 }
 
-void zd_incpid_run(struct zd_pospid_t *pid)
+void zd_incpid_run(struct zd_incpid_t *pid)
 {
-	singned int outdelta;
+	signed int outdelta;
 	pid->error_prev = pid->error_last;
 	pid->error_last = pid->error;
 	pid->error = pid->target - pid->current;

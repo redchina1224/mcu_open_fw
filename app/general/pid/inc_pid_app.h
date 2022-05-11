@@ -12,7 +12,7 @@
 #define __APPSTDLIB_INC_PID_H__
 //******************************************************************
 
-struct  zd_pid_t {
+struct  zd_incpid_t {
 signed int error;
 signed int error_last;
 signed int error_prev;
@@ -25,8 +25,8 @@ signed int out;
 
 
 
-void zd_incpid_init(struct zd_pospid_t *pid);
-void zd_incpid_run(struct zd_pospid_t *pid);
+void zd_incpid_init(struct zd_incpid_t *pid);
+void zd_incpid_run(struct zd_incpid_t *pid);
 
 #endif 
 
