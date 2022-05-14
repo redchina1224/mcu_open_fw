@@ -295,12 +295,14 @@ void interrupt interrupt_Isr()
 	//定时器时间系统-定义在TIMER0时	
 	#if (RtcType==RtcType_TimerSoftRtc) 
 		#if(SoftRtcTimer==0)
-		
+
 			softrtc_in_isr();//RTC时钟内联函数
 						
 			#ifdef DisplayType
-				#if (DisplayType==DisplayType_SoftLed_Dig8) 
-				zd_softled_run();//软件LED驱动函数
+				#if ((DisplayType&DisplayType_SoftLed)==DisplayType_SoftLed) 
+					#ifdef DisplayTypeSoftLedModel
+						zd_softled_run();//软件LED驱动函数
+					#endif
 				#endif
 			#endif //#ifdef DisplayType
 

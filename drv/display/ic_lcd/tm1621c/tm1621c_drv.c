@@ -12,7 +12,9 @@
 #include "..\..\..\com_include_drv.h"
 //******************************************************************************
 #ifdef DisplayType
-#if (DisplayType==DisplayType_Dig8IcLcd_tm1621c) 
+#if ((DisplayType&DisplayType_IcLcd)==DisplayType_IcLcd)
+#ifdef DisplayTypeIcLcdModel
+#if ((DisplayTypeIcLcdModel&DisplayType_IcLcd_tm1621c)== DisplayType_IcLcd_tm1621c)
 
 #define tm1621c_Delay core_DelayUs 
 
@@ -173,10 +175,11 @@ void TM1621C_SendDataRun(void)
 	TM1621C_SendAddrData(Tm1621c_AddrList[sendSelectAddr][0],Tm1621c_WriteBuffer[sendSelectAddr]&0x0f);
 	TM1621C_SendAddrData(Tm1621c_AddrList[sendSelectAddr][1],(Tm1621c_WriteBuffer[sendSelectAddr]>>4)&0x0f);	
 
-	if(++sendSelectAddr>=DISPLAY_WR_BUFFER_LENGTH) sendSelectAddr=0;
+	if(++sendSelectAddr>=DisplayIcLcdBufferLength) sendSelectAddr=0;
 
 }
 
-
+#endif
+#endif
 #endif
 #endif
