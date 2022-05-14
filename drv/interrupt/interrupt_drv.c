@@ -465,8 +465,10 @@ void interrupt ISR(void)
 			softrtc_in_isr();//RTC时钟内联函数
 						
 			#ifdef DisplayType
-				#if ((DisplayType==DisplayType_SoftLed_Dig8)||(DisplayType==DisplayType_SoftLed_Dig8WithKeys))
-				zd_softled_run();//软件LED驱动函数
+				#if ((DisplayType&DisplayType_SoftLed)==DisplayType_SoftLed) 
+					#ifdef DisplayTypeSoftLedModel
+						zd_softled_run();//软件LED驱动函数
+					#endif
 				#endif
 			#endif //#ifdef DisplayType
 

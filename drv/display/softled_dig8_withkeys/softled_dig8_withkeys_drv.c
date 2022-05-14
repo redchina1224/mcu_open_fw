@@ -1,8 +1,8 @@
 
 #include "..\..\com_include_drv.h"
-
 #ifdef DisplayType
-#if (DisplayType==DisplayType_SoftLed_Dig8WithKeys) 
+#if ((DisplayType&DisplayType_SoftLed)==DisplayType_SoftLed) 
+#ifdef DisplayTypeSoftLedModel
 
 unsigned char LedDrvCaseSelect;
 unsigned char *Led_WriteSegBuffer;
@@ -29,17 +29,14 @@ void zd_softled_run(void)
         Led_IO_SEG_OUTPUT;
 		Led_IO_SEG_CTRL_OFF;
 
-		if(++LedDrvCaseSelect>=DISPLAY_WR_BUFFER_LENGTH) LedDrvCaseSelect=0;
+		if(++LedDrvCaseSelect>=DisplaySoftLedBufferLength) LedDrvCaseSelect=0;
 		
 		Led_IO_SEG_CTRL(Led_WriteSegBuffer[LedDrvCaseSelect]);
 		Led_IO_COM_CTRL(Led_WriteComBuffer[LedDrvCaseSelect]);
 	}
 	else if(LedBrightCnt==LedBrightSet)
 	{
-		Led_IO_COM_CTRL_OFF;
-		Led_IO_SEG_CTRL_ON;
-        KEYS_IO_INPUT;
-        KEYS_IO_WPUA;
+        KEYS_IO_INIT;
 	}
 	
 
@@ -79,5 +76,6 @@ void zd_softled_set_bright(unsigned char bright)
 	
 	LedBrightSet=bright;
 }
+#endif
 #endif
 #endif

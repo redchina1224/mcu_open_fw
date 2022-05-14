@@ -119,11 +119,15 @@ void zd_keyRun(void)
 
 #if (KeyType&KeyType_SoftLedWithGpio)==KeyType_SoftLedWithGpio)
 	#ifdef DisplayType
-		#if (DisplayType==DisplayType_SoftLed_Dig8WithKeys) 
+	#if ((DisplayType&DisplayType_SoftLed)==DisplayType_SoftLed) 
+	#ifdef DisplayTypeSoftLedModel
+		#if (DisplayTypeSoftLedModel==DisplayType_SoftLed_Dig8WithKeys) 
 			gpioKeys.KeyVal=softledkey;
             zd_keyCheck(&gpioKeys,KEYS_IO_NOTPRESS);
 		#endif
     #endif
+    #endif
+    #endif    
 #endif	
 
 
