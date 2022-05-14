@@ -7,7 +7,7 @@
 
 unsigned char LedDrvCaseSelect;
 unsigned char *Led_WriteSegBuffer;
-unsigned char *Led_WriteComBuffer;
+const unsigned char *Led_WriteComBuffer;
 
 unsigned char LedBrightSet=0;
 unsigned char LedBrightCnt;
