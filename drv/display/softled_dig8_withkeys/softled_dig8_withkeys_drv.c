@@ -8,7 +8,7 @@ unsigned char LedDrvCaseSelect;
 unsigned char *Led_WriteSegBuffer;
 unsigned char *Led_WriteComBuffer;
 
-unsigned char LedBrightSet=5;
+unsigned char LedBrightSet=20;
 unsigned char LedBrightCnt;
 //unsigned char LedBlinkSegTempVal;
 unsigned long softledkey;
@@ -71,7 +71,7 @@ void zd_softled_init(void)
 
 void zd_softled_set_bright(unsigned char bright)	
 {
-	if(bright>10) bright=10;
+	if(bright>10) bright=20;
 	if(bright<1) bright=1;
 	
 	LedBrightSet=bright;
