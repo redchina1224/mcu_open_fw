@@ -12,7 +12,9 @@
 #include "..\..\..\com_include_drv.h"
 //******************************************************************************
 #ifdef DisplayType
-#if (DisplayType==DisplayType_Dig8IcLed_tm1628) 
+#if ((DisplayType&DisplayType_IcLed)==DisplayType_IcLed) 
+#ifdef DisplayTypeIcLedModel
+#if (DisplayTypeIcLedModel==DisplayType_IcLed_tm1628) 
 
 #define tm1628_Delay core_DelayUs 
 
@@ -130,6 +132,7 @@ void TM1628_SendDataRun(void)
 
 }
 
-
+#endif
+#endif
 #endif
 #endif
