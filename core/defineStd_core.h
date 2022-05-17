@@ -77,6 +77,28 @@ unsigned char Value;
 	};
 } zd_charbits_t;
 
+typedef union {
+unsigned int Value;
+	struct {
+		unsigned char bit0:1;
+		unsigned char bit1:1;
+		unsigned char bit2:1;
+		unsigned char bit3:1;	
+		unsigned char bit4:1;
+		unsigned char bit5:1;
+		unsigned char bit6:1;
+		unsigned char bit7:1;
+		unsigned char bit8:1;
+		unsigned char bit9:1;
+		unsigned char bit10:1;
+		unsigned char bit11:1;	
+		unsigned char bit12:1;
+		unsigned char bit13:1;
+		unsigned char bit14:1;
+		unsigned char bit15:1;
+	};
+} zd_intbits_t;
+
 
 
 typedef union {
