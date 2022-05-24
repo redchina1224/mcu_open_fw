@@ -1,4 +1,4 @@
-#include "..\com_include_app.h"
+#include "..\..\com_include_app.h"
 
 //PID参数移到项目中的app_cfg.h中进行配置,此处保留以方便将此代码单独移作它用
 //#define PID_KP 0.04 //PID比例系数
