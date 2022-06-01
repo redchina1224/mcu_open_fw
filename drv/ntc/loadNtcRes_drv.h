@@ -18,4 +18,7 @@
 	//载入ADC数值计算值
 	#include "ntc_adcval_calc_drv.h"
 
+	//计算温度表长度
+	#define TEMPTABLE_BUFFER_LENGTH (TEMPTABLE_BUFFER_END-TEMPTABLE_BUFFER_START+1)
+
 #endif
