@@ -72,38 +72,51 @@ inline void buzzer_in_isr(void)
 #if (RtcType==RtcType_TimerSoftRtc) 
 
 bit T_500ms_bit=0;
-bit M_5ms_bit=0;
-bit M_10ms_bit=0;
 bit T_1s_bit=0;
+
+bit M_10ms_bit=0;
+bit M_50ms_bit=0;
+bit M_100ms_bit=0;
 bit M_1s_bit=0;
 
- unsigned char T_125usCount=0;
+ unsigned char __125usCount=0;
  unsigned char __10msCount=0;
- unsigned long __SecCount=0;
- unsigned char *T_10msCount=&__10msCount;
- unsigned long *T_SecCount=&__SecCount;
+ unsigned char __100msCount=0; 
+ //unsigned long __SecCount=0;
+ //unsigned long *T_SecCount=&__SecCount;
 
 
 //void softrtc_in_isr(void);
 inline void softrtc_in_isr(void)
 {
-	if(++T_125usCount>=80) 
+	if(++__125usCount>=80) 
 	{ 
-		T_125usCount=0; 
+		__125usCount=0; 
 		M_10ms_bit=1;
-		if(++(*T_10msCount)>=100) 
+		if(++__10msCount>=10) 
 		{
-            M_1s_bit=1;
-			T_1s_bit=1;
-			T_500ms_bit=1;
-			(*T_10msCount)=0;
-			(*T_SecCount)++;
+			__10msCount=0;
+			
+			M_100ms_bit=1;
+			
+			if(++__100msCount>=10)
+			{
+				__100msCount=0;
+				M_1s_bit=1;
+				T_1s_bit=1;
+				T_500ms_bit=1;
+				//(*T_SecCount)++;
+			}
+			else if(__100msCount==5) 
+				T_500ms_bit=1;
+
 		}
-		else if((*T_10msCount)==50) 
-			T_500ms_bit=1;
+		else if(__10msCount==5)
+			M_50ms_bit=1;
+
 	}
-	else if(T_125usCount==40)
-		M_5ms_bit=1;
+	//else if(T_125usCount==40)
+	//	M_5ms_bit=1;
 }
 #endif
 #endif
