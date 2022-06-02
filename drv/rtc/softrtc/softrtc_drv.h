@@ -19,7 +19,7 @@ void SetUtcSecByHourMin(unsigned char hour,unsigned char min);
 
 unsigned long GetUtcSecByHourMin(unsigned long hour,unsigned long min);
 
-unsigned long GetUtcSec(void);
+unsigned long zd_getUtc_Sec(void);
 
 bit GetSecHalfBit(void);
 
