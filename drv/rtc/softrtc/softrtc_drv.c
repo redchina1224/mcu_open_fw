@@ -58,9 +58,9 @@ void GetHourMinSec(unsigned char* timeval,unsigned long usec)
 
 void SetUtcSecByHourMin(unsigned char hour,unsigned char min)
 {
-	ZD_GIE_DISABLE;
+	//ZD_GIE_DISABLE;
 	utcsec=((3600*(unsigned long)hour)+(60*(unsigned long)min));
-	ZD_GIE_ENABLE;
+	//ZD_GIE_ENABLE;
 }
 
 unsigned long GetUtcSecByHourMin(unsigned long hour,unsigned long min)
