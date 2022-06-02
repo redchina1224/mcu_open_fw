@@ -14,11 +14,9 @@
 extern unsigned char *Tm1628_WriteBuffer;
 
 
-void TM1628_Init         (void);
-void TM1628_SendDataRun(void);
-void TM1628_Switch       (unsigned char flag);
-void TM1628_SendAddrData (unsigned char addr, unsigned char dat);
-
+void tm1628_Init(void);
+void tm1628_SendDataRun(void);
+void tm1628_BrightSet(unsigned char flag);
 
 #endif
 //******************************************************************************

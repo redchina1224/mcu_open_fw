@@ -18,7 +18,7 @@
 
 #define tm1628_Delay core_DelayUs 
 
-void SendData(unsigned char dat);
+void tm1628_SendByte(unsigned char dat);
 
 
  unsigned char *Tm1628_WriteBuffer;
@@ -28,35 +28,35 @@ void SendData(unsigned char dat);
 
 //******************************************************************************
 //******************************************************************************
+#define tm1628_SendStart SET_STB();tm1628_Delay(5);CLR_STB();
+#define tm1628_SendEnd SET_STB();
 
+#define tm1628_SendCmd(cmd) tm1628_SendStart;tm1628_SendByte((cmd));tm1628_SendEnd;
+#define tm1628_SendData(addr,data) tm1628_SendStart;tm1628_SendByte((addr));tm1628_Delay(5);tm1628_SendByte((data));tm1628_SendEnd;
 
-void TM1628_SendAddrData(unsigned char addr, unsigned char dat)
+/*
+void tm1628_SendData(unsigned char addr, unsigned char dat)
 {
-    SET_STB();
-    tm1628_Delay(5);
-    CLR_STB();
+    SET_STB(); tm1628_Delay(5); CLR_STB();
     SendData(addr);
     tm1628_Delay(5);
     SendData(dat);
     SET_STB();
     tm1628_Delay(5);
 } // TM1668_SendAddrData(unsigned char, unsigned char)   
+*/
 
 
-
-
-
-void TM1628_Switch(unsigned char flag)
+void tm1628_BrightSet(unsigned char flag)
 {   
-	CLR_STB();
-    SendData((unsigned char)M_DISP_CTRL_SETTING(flag));
-    SET_STB();
+	if(flag>0) flag=((flag-1)|0x88); else flag=0x80;
+	tm1628_SendCmd(flag);
 } 
 
 
 
 
-void SendData(unsigned char dat)
+void tm1628_SendByte(unsigned char dat)
 {
     unsigned char i;
 
@@ -78,57 +78,25 @@ void SendData(unsigned char dat)
 
 }
 
-void TM1628_Init()
+void tm1628_Init()
 {
     INIT_TRIS();
-    SET_STB();
-    tm1628_Delay(10);
 
-    // 发送显示模式设置
-    CLR_STB();
-    SendData(CFG_DISP_MODE_SETTING);
-    SET_STB();
-    tm1628_Delay(5);
-    // 发送数据命令设置 // 0x44为固定地址模式，0x40为自动地址增加模式  
-    CLR_STB();
-		tm1628_Delay(10);
-    SendData(CFG_DATA_CMD_SETTING);
-    SET_STB();
-    tm1628_Delay(5);
+    //发送显示模式设置
+	tm1628_SendCmd(CFG_DISP_MODE_SETTING);
 
-    // 发送显示控制
-    CLR_STB();
-    SendData(M_DISP_CTRL_SETTING(1));
-    SET_STB();
-    tm1628_Delay(5); 
-/*
-		//1628位段初始化。
-		TM1628_SendAddrData(0xC0,Tm1628_WriteBuffer[5]);
-		TM1628_SendAddrData(0xC1,(Tm1628_WriteBuffer[5]&0x03)|(Tm1628_WriteBuffer[5]<<2));
-		TM1628_SendAddrData(0xC2,Tm1628_WriteBuffer[4]);
-		TM1628_SendAddrData(0xC3,(Tm1628_WriteBuffer[4]&0x03)|(Tm1628_WriteBuffer[4]<<2));
-		TM1628_SendAddrData(0xC4,Tm1628_WriteBuffer[3]);
-		TM1628_SendAddrData(0xC5,(Tm1628_WriteBuffer[3]&0x03)|(Tm1628_WriteBuffer[3]<<2));		
-		TM1628_SendAddrData(0xC6,Tm1628_WriteBuffer[2]);
-		TM1628_SendAddrData(0xC7,(Tm1628_WriteBuffer[2]&0x03)|(Tm1628_WriteBuffer[2]<<2));
-		TM1628_SendAddrData(0xC8,Tm1628_WriteBuffer[1]);
-		TM1628_SendAddrData(0xC9,(Tm1628_WriteBuffer[1]&0x03)|(Tm1628_WriteBuffer[1]<<2));
-		TM1628_SendAddrData(0xCA,Tm1628_WriteBuffer[0]);
-		TM1628_SendAddrData(0xCB,(Tm1628_WriteBuffer[0]&0x03)|(Tm1628_WriteBuffer[0]<<2));
-		//TM1628_SendAddrData(0xCC,0Xff);
-		//TM1628_SendAddrData(0xCD,0Xff);
-		//TM1628_SendAddrData(0xCE,0XFF);
-		//TM1628_SendAddrData(0xCF,0XFF);
- */     
+    //发送数据命令设置 // 0x44为固定地址模式，0x40为自动地址增加模式  
+	tm1628_SendCmd(CFG_DATA_CMD_SETTING);
+  
 } // TM1668_Init()
 
 
-void TM1628_SendDataRun(void)
+void tm1628_SendDataRun(void)
 {
 		if(sendSelectAddr>0xC0) {sendSelectAddr--; sendSelectData++;}else {sendSelectAddr=0xcb;sendSelectData=0;}
-		TM1628_SendAddrData(sendSelectAddr,(Tm1628_WriteBuffer[sendSelectData]&0x03)|(Tm1628_WriteBuffer[sendSelectData]<<2));
+		tm1628_SendData(sendSelectAddr,(Tm1628_WriteBuffer[sendSelectData]&0x03)|(Tm1628_WriteBuffer[sendSelectData]<<2));
 		sendSelectAddr--;
-		TM1628_SendAddrData(sendSelectAddr,Tm1628_WriteBuffer[sendSelectData]);
+		tm1628_SendData(sendSelectAddr,Tm1628_WriteBuffer[sendSelectData]);
 
 }
 
