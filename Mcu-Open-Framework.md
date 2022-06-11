@@ -3,7 +3,7 @@
 
 ## **Mcu-Open-Framework     V0.10**
 <br/>
-当前适配 CMSIDE，FMDIDE，KEILC51。
+当前适配 CMSIDE，FMDIDE，HDIDE，KEILC51。
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 <font size=5>发布日期 2021-12-09</font>
 <br/>
@@ -26,7 +26,7 @@
 <td>版本</td>
 <td>版本说明</td>
 <tr>
-<td>2021-02-10</td>
+<td>2022-02-10</td>
 <td>V0.10</td>
 <td><ul>
 <li>预览发布版本V0.10</li>
@@ -52,6 +52,7 @@
 
 
 
+
 <div STYLE="page-break-after: always;"></div>
 
 ## **目录：**
@@ -63,6 +64,48 @@
 <div STYLE="page-break-after: always;"></div>
 
 ## **二、文件目录介绍：**
+
+### *<u>内核驱动：./core*</u>
+
+#### 中微MCU内核专用驱动：./core/cms
+
+- touch_79ft73x目录：
+
+  中微79f738，79ft738触摸库及相关集成代码
+  
+- cms_core.h：
+
+  中微79f单片机标准化头文件及标准接口宏定义
+  
+- cms80f_core.h：
+
+  中微80f的C51单片要m标准化头文件及标准接口宏定义
+
+#### 辉芒微MCU内核专用驱动：./core/fmd
+
+- FT62F13X目录：
+
+  辉芒微FT62F13X触摸库及相关集成代码
+  
+- fmd_core.h：
+
+  辉芒微单片机标准化头文件及标准接口宏定义
+
+#### 汉达MCU内核专用驱动：./core/fmd
+
+- hd_core.h：
+
+  汉达单片机标准化头文件及标准接口宏定义
+
+#### 赛元微MCU内核专用驱动：./core/soc
+
+- soc_core.h：
+
+  赛元微单片机标准化头文件及标准接口宏定义
+
+<div STYLE="page-break-after: always;"></div>
+### *<u>外设驱动：./drv*</u>
+
 #### NTC模块：./drv/ntc
 
 - NTC__xxK_Bxxxx目录：
@@ -144,11 +187,11 @@
   
 - key_drv.c 与 key_drv.h
 
-  单路按键信号检测与触发标志位产生处理，依赖以上的各类按键信号接口方案。
+  单类型按键信号检测与触发标志位产生处理，依赖以上的各类按键信号接口方案，此方案不再更新支持，推荐使用后面的key_Multichannel_drv来实现，以实现后续更好的兼容。
   
 - key_Multichannel_drv 与 key_Multichannel_drv.h
 
-  单路按键信号检测与触发标志位产生处理，依赖以上的各类按键信号接口方案。
+  多类型按键信号检测与触发标志位产生处理，依赖以上的各类按键信号接口方案。
   
 #### INTERRUPT模块：./drv/inputerrupt
 
@@ -158,14 +201,26 @@
   
 #### DISPLAY模块：./drv/display
 
-- softled目录：
+- softled_dig8目录：
 
   类LED数码管显示驱动的软件实现，推荐依赖 125uS 定时中断来实现，防止闪烁。
+  
+- softled_dig8_withkeys目录：
+
+  类LED数码管显示驱动的软件实现合并按键检测,仅针对特定电路的按键检测方式,暂不作说明，待有更通用的方案再进行整理说明，推荐依赖 125uS 定时中断来实现。
 
 - softled_bits目录：
 
   类流水灯的软件实现，可实现流水灯,柱状充电等效果。
 
+- ic_led目录：
+
+  段码式led驱动芯片相关驱动代码。
+  
+- ic_lcd目录：
+
+  段码式lcd驱动芯片相关驱动代码。
+  
 - defineDisplay_drv.h
 
   定义配置参数值，当新增可选Display实现时必须在此文件同步更新相应的定义值，以便在项目中可通过该定义值配置使用
@@ -178,7 +233,7 @@
 
 - buzzer目录：
 
-  常规蜂鸣器驱动的软件实现，包含GPIO型、定时中断取反型、PWM输出型，其中定中断取反型依赖 125uS 定时中断来实现，PWM输出型依赖MCU硬件PWM功能。
+  常规蜂鸣器驱动的软件实现，包含有源GPIO型、无源定时中断取反型、PWM输出型，其中定时中断取反型依赖 125uS 定时中断来实现，PWM输出型依赖MCU硬件PWM功能。
 
 - defineBuzzer_drv.h
 
@@ -215,3 +270,31 @@
 - loadSensor_drv.h
 
   根据项目配置中定义的Sensor，载入对应的实现函数头文件。
+
+<div STYLE="page-break-after: always;"></div>
+### *<u>应用模块：./app*</u>
+
+#### 可共用的通用应用代码：./app/general
+
+- intervalwork目录：
+
+  间隔工作代码，某些需要间隔工作的负载控制如5秒开6秒关循环控制等
+
+- pid目录：
+
+  pid通用算法代码,代码较大,并且仍需调校通用性，如测试效果没有很大改善，建议慎用。
+
+- settingdisplayblink目录：
+
+  设置过程代码，实现了进入设置闪烁，改变值时不闪烁，设置超时自动退出等功能
+  
+- signalfiltering目录：
+
+  信号滤波代码,实现开关信号防抖检测，模拟信号双向开路短路故障检测等
+  
+- valcheck目录：
+
+  数值合规检测代码,实现数值的限幅，用于数据初始化后合规检测。
+
+
+
