@@ -1,7 +1,7 @@
 #ifndef __ZDWXJZCORE_H_
 #define __ZDWXJZCORE_H_
 
-	#include "JZ8P2600.h"
+	#include "JZ8P2600/JZ8P2600_core.h"
 
 
 #define EI()  __asm__(" ei ")
