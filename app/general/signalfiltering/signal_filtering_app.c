@@ -3,7 +3,8 @@
 
 void zd_signalCheck(struct zd_signal_filtering_t* sig,unsigned char chkmax,unsigned char chkmin)
 {
-
+	unsigned char TriggerFilterValueHalf;
+	TriggerFilterValueHalf=(sig->TriggerFilterValue>>1);
 	if(chkmax)
 	{
 		if(sig->TriggerFilterCnt<sig->TriggerFilterValue) sig->TriggerFilterCnt++;
@@ -17,8 +18,10 @@ void zd_signalCheck(struct zd_signal_filtering_t* sig,unsigned char chkmax,unsig
 	}
 	else
 	{
-		sig->TriggerFilterCnt=50;
-		sig->TriggerStatus=0;
+		if(sig->TriggerFilterCnt==TriggerFilterValueHalf) sig->TriggerStatus=0;
+		else if(sig->TriggerFilterCnt>TriggerFilterValueHalf) sig->TriggerFilterCnt--;
+		else if(sig->TriggerFilterCnt<TriggerFilterValueHalf) sig->TriggerFilterCnt++;
+		
 	}
 
 }
