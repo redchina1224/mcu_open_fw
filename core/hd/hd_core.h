@@ -107,15 +107,32 @@
 	#define ZD_PORT2_PDRES WPDC
 
 
-	#define ZD_PORT2_0 PC0
-	#define ZD_PORT2_1 PC1
-
-
 	#define ZD_PORTC_0 PC0
 	#define ZD_PORTC_1 PC1
+	#define ZD_PORTC_2 PC2
+	#define ZD_PORTC_3 PC3
+	#define ZD_PORTC_4 PC4
+	#define ZD_PORTC_5 PC5
+	#define ZD_PORTC_6 PC6
+	#define ZD_PORTC_7 PC7
 
 
 	//#endif
+
+	#define ZD_PORTD PORTD
+	#define ZD_PORTD_DIR TRISD
+
+	#define ZD_PORTD_PHRES WPUD
+	#define ZD_PORTD_PDRES WPDD
+
+	#define ZD_PORTD_0 PD0
+	#define ZD_PORTD_1 PD1
+	#define ZD_PORTD_2 PD2
+	#define ZD_PORTD_3 PD3
+	#define ZD_PORTD_4 PD4
+	#define ZD_PORTD_5 PD5
+	#define ZD_PORTD_6 PD6
+	#define ZD_PORTD_7 PD7
 
 
 
