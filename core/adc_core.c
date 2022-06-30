@@ -289,7 +289,7 @@ void zd_adcRun(void)
 			}
 			adc_value_sum=adc_value_sum/ADC_COLLECTION_LIST_TIMES;
 			#else
-				adc_value_sum=adc_value_list[adc_ch_select][adc_ch_collection_times];
+				adc_value_sum=adc_value_list[adc_ch_select][0];
 			#endif
 			//通道周期采集完成回调
 			//if(adc_ch_callback[adc_ch_select]!=NULL)
