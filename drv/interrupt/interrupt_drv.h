@@ -62,6 +62,7 @@ extern bit M_1s_bit;
 	extern unsigned char zeroCrossPassCntMax;
 	extern unsigned char triacOn_CrossPass;
 	extern bit triacOnEnable;
+	extern bit zeroCrossError;
 	#endif
 #endif 
 

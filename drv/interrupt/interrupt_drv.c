@@ -1,4 +1,4 @@
-//******************************************************************************
+ //******************************************************************************
 //Copyright(C) 2020-2021 Zhejiang Zhida Electronic Technology Co., Ltd
 //浙江智达电子科技有限公司
 //File name:      interrupt_core.c
@@ -236,7 +236,7 @@ inline void zerocross_in_isr(void)
 	*/
 	
 	//过零检测 100HZ--zeroCrossPassCnt最大值为80
-	if(zeroCrossPassCnt<150) zeroCrossPassCnt++; else zeroCrossError=1;
+	if(zeroCrossPassCnt<200) zeroCrossPassCnt++; else { zeroCrossError=1; zeroCrossPassCnt=0;}
 	
 	if(__zerocross_bit_status_ago!=ZeroCross_IO_Channel)
 	{
@@ -259,8 +259,15 @@ inline void zerocross_in_isr(void)
 	}
 
 	//可控硅控制
-	if(triacOnEnable==1&&zeroCrossPassCnt>triacOn_CrossPass)
-		Triac_IO_Ctrl(Triac_IO_ON);
+	if(triacOnEnable==1)
+	{
+		if(zeroCrossPassCnt>triacOn_CrossPass)
+		{
+			Triac_IO_Ctrl(Triac_IO_ON);
+		}
+	}
+	else
+		Triac_IO_Ctrl(Triac_IO_OFF);
 
 }
 
