@@ -447,7 +447,7 @@ void interrupt interrupt_Isr()
 
 
 
-
+/*
 
 	if(INTF)
 	{
@@ -457,6 +457,7 @@ void interrupt interrupt_Isr()
 	{
 		RBIF = 0;			//清中断标志
 	}
+	*/
 }
 
 
