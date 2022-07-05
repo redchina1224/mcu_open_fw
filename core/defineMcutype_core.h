@@ -5,6 +5,7 @@
 #define McuType_Unkonw 0
 
 #define McuType_CmsSemicon_CMS79F738 0x0101
+#define McuType_CmsSemicon_CMS79F113 0x0102
 #define McuType_CmsSemicon_CMS80F252X 0x0151
 
 
