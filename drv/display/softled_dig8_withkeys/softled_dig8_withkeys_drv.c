@@ -3,11 +3,13 @@
 #ifdef DisplayType
 #if ((DisplayType&DisplayType_SoftLed)==DisplayType_SoftLed) 
 #ifdef DisplayTypeSoftLedModel
+#if (DisplayTypeSoftLedModel==DisplayType_SoftLed_Dig8WithKeys) 
+
 
 unsigned char LedDrvCaseSelect;
 unsigned char *Led_WriteSegBuffer;
 unsigned char *Led_WriteComBuffer;
-
+unsigned char LedBrightSet_Rel=20;
 unsigned char LedBrightSet=20;
 unsigned char LedBrightCnt;
 //unsigned char LedBlinkSegTempVal;
@@ -17,43 +19,34 @@ unsigned long softledkey;
 //在bsp_run中调用，或在中断中调用
 void zd_softled_run(void)	
 {
-	
-	if(++LedBrightCnt>40)
+	LedBrightCnt++;
+	if(LedBrightCnt==LedBrightSet_Rel||LedBrightSet==0)
+	{
+        KEYS_IO_INIT;
+	}
+	else if(LedBrightCnt>79)
 	{
 		LedBrightCnt=0;
+		LedBrightSet_Rel=LedBrightSet;
 		
 		softledkey=KEYS_IO_VALUE;
         
+		Led_IO_SEG_OUTPUT;
+		Led_IO_SEG_CTRL_OFF;
 		Led_IO_COM_OUTPUT;
 		Led_IO_COM_CTRL_OFF;
-        Led_IO_SEG_OUTPUT;
-		Led_IO_SEG_CTRL_OFF;
+
 
 		if(++LedDrvCaseSelect>=DisplaySoftLedBufferLength) LedDrvCaseSelect=0;
 		
 		Led_IO_SEG_CTRL(Led_WriteSegBuffer[LedDrvCaseSelect]);
 		Led_IO_COM_CTRL(Led_WriteComBuffer[LedDrvCaseSelect]);
 	}
-	else if(LedBrightCnt==LedBrightSet)
-	{
-        KEYS_IO_INIT;
-	}
+
 	
 
 
-/*
-COM0_PIN=0;
-COM1_PIN=0;
 
-
-SEG_D_PIN=1;
-SEG_E_PIN=1;
-SEG_A_PIN=1;
-SEG_B_PIN=1;
-SEG_C_PIN=1;
-SEG_G_PIN=1;
-SEG_F_PIN=1;
-*/
 }
 
 
@@ -71,11 +64,13 @@ void zd_softled_init(void)
 
 void zd_softled_set_bright(unsigned char bright)	
 {
-	if(bright>10) bright=20;
-	if(bright<1) bright=1;
+	if(bright>75) bright=75;
+	//if(bright<1) bright=1;
 	
 	LedBrightSet=bright;
 }
+
+#endif
 #endif
 #endif
 #endif
