@@ -2,16 +2,27 @@
 #define __CORECONFIG_LOAD_H_
 
 //按芯片载入对应头文件 并定义标准化接口
-#if ((McuType==McuType_CmsSemicon_CMS79F738))
+#if ((McuType==McuType_CmsSemicon_CMS79F738)||(McuType==McuType_CmsSemicon_CMS79F726))
 
 	//晶体时钟配置
 	#define FocsClk 16000000
-	
+
+	#if ((McuType==McuType_CmsSemicon_CMS79F738))
 	//IO定义标准化	
 	#include "cms\cms_core.h"
 
 	//触摸库宏定义
 	//#include "cms\touch_79ft73x\CMS_CheckTouch_PT_79FT73xx_V1.08.h"
+
+	#elif (McuType==McuType_CmsSemicon_CMS79F726)
+
+	//IO定义标准化	
+	#include "cms\cms79f726_core.h"
+
+	//触摸库宏定义
+	//#include "cms\touch_79ft72x\CMS_CheckTouch_PT_79F72x_V1.01.h"
+
+	#endif
 	
 	//系统时钟
 	#if (ZD_FSYS_CLKSET_DEFAULT==ZD_FSYS_CLKSET_FOSC_DIV1)

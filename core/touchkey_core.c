@@ -20,6 +20,8 @@
 
 #if (McuType==McuType_CmsSemicon_CMS79F738)
 	#include "cms\touch_79ft73x\Touch_Kscan_Library.c"
+#elif(McuType==McuType_CmsSemicon_CMS79F726)
+	#include "cms\touch_79ft72x\Touch_Kscan_Library.c"
 #elif(McuType==McuType_FremontMicroDevices_FT62F13)
 	#include "fmd\FT62F13X\Touch_Kscan_Library.c"
 #endif
@@ -75,17 +77,30 @@ unsigned char zd_touchkeyRead(unsigned long *keyval)
 			(*keyval)=TouchKeyScan();
             return 1;
 		}
-		#elif (McuType==McuType_CmsSemicon_CMS79F738)
+		#elif ((McuType&McuType_Mask)==McuType_CmsSemicon_CMS79F)
+			#if (TOUCH_KEYS_TOTAL_NUMBER>24)
+				(*keyval)=_CMS_KeyFlag[3];
+				(*keyval)<<=8;			
+				(*keyval)|=_CMS_KeyFlag[2];
+				(*keyval)<<=8;
+				(*keyval)|=_CMS_KeyFlag[1];
+				(*keyval)<<=8;
+				(*keyval)|=_CMS_KeyFlag[0];
+			#elif (TOUCH_KEYS_TOTAL_NUMBER>16)
+				(*keyval)=_CMS_KeyFlag[2];
+				(*keyval)<<=8;
+				(*keyval)|=_CMS_KeyFlag[1];
+				(*keyval)<<=8;
+				(*keyval)|=_CMS_KeyFlag[0];
+			#elif (TOUCH_KEYS_TOTAL_NUMBER>8)
+				(*keyval)=_CMS_KeyFlag[1];
+				(*keyval)<<=8;
+				(*keyval)|=_CMS_KeyFlag[0];
+			#else
+				(*keyval)=_CMS_KeyFlag[0];
+			#endif
 
-		
-		(*keyval)=_CMS_KeyFlag[2];
-		(*keyval)<<=8;
-		(*keyval)|=_CMS_KeyFlag[1];
-		(*keyval)<<=8;
-		(*keyval)|=_CMS_KeyFlag[0];
-		
-		//(*keyval)=(unsigned long)(_CMS_KeyFlag[0]);
-		return 1;
+			return 1;
 		#endif
 		
 return 0;
