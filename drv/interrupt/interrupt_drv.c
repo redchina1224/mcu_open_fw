@@ -352,7 +352,7 @@ void interrupt interrupt_Isr()
 				#endif					
 
 				#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)				
-					#if (McuType==McuType_CmsSemicon_CMS79F738)
+					#if ((McuType&McuType_Mask)==McuType_CmsSemicon_CMS79F)
 					__CMS_GetTouchKeyValue();//中微单片机触摸库函数,此函数放在中断,建议中断扫描时间 125us	
 					#endif			
 				#endif //#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)		
