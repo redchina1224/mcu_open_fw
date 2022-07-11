@@ -4,7 +4,9 @@
 #if ((DisplayType&DisplayType_SoftLed)==DisplayType_SoftLed) 
 #ifdef DisplayTypeSoftLedModel
 #if (DisplayTypeSoftLedModel==DisplayType_SoftLed_Dig8WithKeys) 
-
+#ifndef DisplaySoftLedBrightMax
+	#define	DisplaySoftLedBrightMax 40
+#endif 
 
 unsigned char LedDrvCaseSelect;
 unsigned char *Led_WriteSegBuffer;
@@ -22,9 +24,9 @@ void zd_softled_run(void)
 	LedBrightCnt++;
 	if(LedBrightCnt==LedBrightSet_Rel||LedBrightSet==0)
 	{
-        KEYS_IO_INIT;
+        	KEYS_IO_INIT;
 	}
-	else if(LedBrightCnt>79)
+	else if(LedBrightCnt>DisplaySoftLedBrightMax)
 	{
 		LedBrightCnt=0;
 		LedBrightSet_Rel=LedBrightSet;
@@ -64,7 +66,7 @@ void zd_softled_init(void)
 
 void zd_softled_set_bright(unsigned char bright)	
 {
-	if(bright>75) bright=75;
+	if(bright>DisplaySoftLedBrightMax) bright=DisplaySoftLedBrightMax;
 	//if(bright<1) bright=1;
 	
 	LedBrightSet=bright;
