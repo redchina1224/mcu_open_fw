@@ -156,12 +156,12 @@ inline void softcounter1_in_isr(void)
 
 		if(Counter_IO_Channel1==0)
 		{
-			if(__counter1filter<20) __counter1filter++;
+			if(__counter1filter<10) __counter1filter++;
 			else
 			{
 				if(__counter1_bit_status_ago==1)//下降沿
 				{
-					if(__counter1_val<60000)	__counter1_val++;
+					if(__counter1_val<64999)	__counter1_val++;
 					__counter1_bit_status_ago=0;
 				}
 			}
@@ -173,7 +173,7 @@ inline void softcounter1_in_isr(void)
 			{ 
 				if(__counter1_bit_status_ago==0)//上升沿
 				{
-					if(__counter1_val<60000)	__counter1_val++;
+					if(__counter1_val<64999)	__counter1_val++;
 					__counter1_bit_status_ago=1;
 				}
 			}
@@ -236,38 +236,32 @@ inline void zerocross_in_isr(void)
 	*/
 	
 	//过零检测 100HZ--zeroCrossPassCnt最大值为80
-	if(zeroCrossPassCnt<200) zeroCrossPassCnt++; else { zeroCrossError=1; zeroCrossPassCnt=0;}
+	if(zeroCrossPassCnt<99) zeroCrossPassCnt++; else { zeroCrossError=1; zeroCrossPassCntMax=0;}
 	
 	if(__zerocross_bit_status_ago!=ZeroCross_IO_Channel)
 	{
 		if(0==__zerocross_bit_status_ago)
 		{
-			//if(++__zerocrossfilter>4)
-			{
-				zeroCrossPassCntMax=zeroCrossPassCnt;
-				zeroCrossPassCnt=0;
-				Triac_IO_Ctrl(Triac_IO_OFF);
-				__zerocross_bit_status_ago=1;
-				//__zerocrossfilter=0;
-			}
+			zeroCrossPassCntMax=zeroCrossPassCnt;
+			zeroCrossPassCnt=0;
+			__zerocross_bit_status_ago=1;
+			Triac_IO_Ctrl(Triac_IO_OFF);
 		}
 		else
 		{
 			__zerocross_bit_status_ago=0;
-			//__zerocrossfilter=0;
 		}
 	}
 
 	//可控硅控制
-	if(triacOnEnable==1)
+	if(triacOnEnable==1&&zeroCrossPassCnt>triacOn_CrossPass)
 	{
-		if(zeroCrossPassCnt>triacOn_CrossPass)
-		{
-			Triac_IO_Ctrl(Triac_IO_ON);
-		}
+		Triac_IO_Ctrl(Triac_IO_ON);
 	}
 	else
+	{
 		Triac_IO_Ctrl(Triac_IO_OFF);
+	}
 
 }
 
