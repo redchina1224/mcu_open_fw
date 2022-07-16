@@ -35,8 +35,12 @@ void zd_pospid_run(struct zd_pospid_t *pid)
 	pid->error = pid->target - pid->current;
 	
 	//积分分离
-	if(pid->error<PID_INTEGRAL_DISABLE_VALUE&&pid->error>(-PID_INTEGRAL_DISABLE_VALUE)) //每摄氏度预估差25
+	if((pid->error<PID_INTEGRAL_DISABLE_VALUE_Max&&pid->error>(-PID_INTEGRAL_DISABLE_VALUE_Max))\
+		&&(pid->error<PID_INTEGRAL_DISABLE_VALUE_Min&&pid->error>(-PID_INTEGRAL_DISABLE_VALUE_Min))) //每摄氏度预估差25
 	{
+		//积分限幅封顶一次后清零(以免连续过调)
+		if(pid->integral==PID_INTEGRAL_LIMIT_VALUE||pid->integral==(-PID_INTEGRAL_LIMIT_VALUE)) pid->integral=0;
+		
 		pid->integral+=pid->error;
 		
 		//积分限幅
