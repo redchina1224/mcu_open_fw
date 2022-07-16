@@ -7,8 +7,14 @@
 
 TableValueType GetTempAdcVal(unsigned char temp)
 {
-	if(temp<=(TEMPTABLE_BUFFER_LENGTH-1))
-	return cucv_temp_Tab[temp];
+	unsigned char tablepos;
+	
+	if(temp<=TEMPTABLE_BUFFER_START) tablepos=0;//TEMPTABLE_BUFFER_START;
+	else
+		tablepos=temp-TEMPTABLE_BUFFER_START;
+	
+	if(tablepos<=(TEMPTABLE_BUFFER_LENGTH-1))
+	return cucv_temp_Tab[tablepos];
 	else return 0;
 }
 
@@ -18,7 +24,7 @@ unsigned char TmpC_to_TmpF(unsigned char tmpc)
     return (unsigned char)(((((unsigned int)tmpc)*18)/10)+32);
 }
 
-unsigned char CalcTmpC(unsigned char adcval,unsigned char TempC_realtime)
+unsigned char CalcTmpC(TableValueType adcval,unsigned char TempC_realtime)
 {
 	unsigned char tablepos;
 	
