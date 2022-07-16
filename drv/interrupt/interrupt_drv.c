@@ -236,7 +236,7 @@ inline void zerocross_in_isr(void)
 	*/
 	
 	//过零检测 100HZ--zeroCrossPassCnt最大值为80
-	if(zeroCrossPassCnt<99) zeroCrossPassCnt++; else { zeroCrossError=1; zeroCrossPassCntMax=0;}
+	if(zeroCrossPassCnt<200) zeroCrossPassCnt++; else { zeroCrossError=1; zeroCrossPassCntMax=200;}
 	
 	if(__zerocross_bit_status_ago!=ZeroCross_IO_Channel)
 	{
