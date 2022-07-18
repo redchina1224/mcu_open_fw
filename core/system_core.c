@@ -56,7 +56,12 @@ void zd_timerInit(unsigned char timerChannel,unsigned long _Us)
 	{
 		case 0:
 		#ifdef Ft0Clk
-		 T0_Reload=(unsigned char)(	256 - ((unsigned char)	((_Us*1.0)*((Ft0Clk*1.0)/1000000))));
+		
+		#ifdef T0_RELOAD_DEFAULT
+			T0_Reload=T0_RELOAD_DEFAULT;
+		#else
+			T0_Reload=(unsigned char)(	256 - ((unsigned char)	((_Us*1.0)*((Ft0Clk*1.0)/1000000))));
+		#endif
 		
 		#ifdef ZD_TIMER0_LOAD_RELOAD
 			ZD_TIMER0_LOAD_RELOAD = T0_Reload;		//ÖØÐÂ¸³³õÖµ
