@@ -7,15 +7,26 @@
 
 TableValueType GetTempAdcVal(unsigned char temp)
 {
+
+	#if (TEMPTABLE_BUFFER_START==0)
+
+	if(temp<=(TEMPTABLE_BUFFER_LENGTH-1))
+	return cucv_temp_Tab[temp];
+	else return 0;
+
+	#else
 	unsigned char tablepos;
-	
 	if(temp<=TEMPTABLE_BUFFER_START) tablepos=0;//TEMPTABLE_BUFFER_START;
 	else
-		tablepos=temp-TEMPTABLE_BUFFER_START;
-	
+		tablepos=(unsigned char)(temp-TEMPTABLE_BUFFER_START);
+		
 	if(tablepos<=(TEMPTABLE_BUFFER_LENGTH-1))
 	return cucv_temp_Tab[tablepos];
 	else return 0;
+		
+	#endif
+
+
 }
 
 
@@ -26,32 +37,62 @@ unsigned char TmpC_to_TmpF(unsigned char tmpc)
 
 unsigned char CalcTmpC(TableValueType adcval,unsigned char TempC_realtime)
 {
-	unsigned char tablepos;
-	
-	if(TempC_realtime<TEMPTABLE_BUFFER_START) TempC_realtime=TEMPTABLE_BUFFER_START;
-	tablepos=TempC_realtime-TEMPTABLE_BUFFER_START;
-	
-	#ifdef NtcOnBoardResPullType
-			if(adcval>cucv_temp_Tab[tablepos])
-			{
-				#if ((NtcOnBoardResPullType==NtcOnBoardResPullUp))
-					if(TempC_realtime>TEMPTABLE_BUFFER_START) TempC_realtime--;
-				#elif (NtcOnBoardResPullType==NtcOnBoardResPullDown)
-					if(TempC_realtime<TEMPTABLE_BUFFER_END) TempC_realtime++;
-				#endif
-				
-				//gucv_real_tempC=gucv_real_temp/1.8;
+	#if (TEMPTABLE_BUFFER_START==0)
 
-			}
-			else if(adcval<cucv_temp_Tab[tablepos])
-			{
-				#if ((NtcOnBoardResPullType==NtcOnBoardResPullUp))
-					if(TempC_realtime<TEMPTABLE_BUFFER_END) TempC_realtime++;
-				#elif (NtcOnBoardResPullType==NtcOnBoardResPullDown)
-					if(TempC_realtime>TEMPTABLE_BUFFER_START) TempC_realtime--;
-				#endif
-			}
+		#ifdef NtcOnBoardResPullType
+				if(adcval>cucv_temp_Tab[TempC_realtime])
+				{
+					#if ((NtcOnBoardResPullType==NtcOnBoardResPullUp))
+						if(TempC_realtime>TEMPTABLE_BUFFER_START) TempC_realtime--;
+					#elif (NtcOnBoardResPullType==NtcOnBoardResPullDown)
+						if(TempC_realtime<TEMPTABLE_BUFFER_END) TempC_realtime++;
+					#endif
+					
+					//gucv_real_tempC=gucv_real_temp/1.8;
+
+				}
+				else if(adcval<cucv_temp_Tab[TempC_realtime])
+				{
+					#if ((NtcOnBoardResPullType==NtcOnBoardResPullUp))
+						if(TempC_realtime<TEMPTABLE_BUFFER_END) TempC_realtime++;
+					#elif (NtcOnBoardResPullType==NtcOnBoardResPullDown)
+						if(TempC_realtime>TEMPTABLE_BUFFER_START) TempC_realtime--;
+					#endif
+				}
+		#endif
+
+
+	#else
+		unsigned char tablepos;
+		if(TempC_realtime<TEMPTABLE_BUFFER_START) TempC_realtime=TEMPTABLE_BUFFER_START;
+		tablepos=(unsigned char)(TempC_realtime-TEMPTABLE_BUFFER_START);
+		
+		#ifdef NtcOnBoardResPullType
+				if(adcval>cucv_temp_Tab[tablepos])
+				{
+					#if ((NtcOnBoardResPullType==NtcOnBoardResPullUp))
+						if(TempC_realtime>TEMPTABLE_BUFFER_START) TempC_realtime--;
+					#elif (NtcOnBoardResPullType==NtcOnBoardResPullDown)
+						if(TempC_realtime<TEMPTABLE_BUFFER_END) TempC_realtime++;
+					#endif
+					
+					//gucv_real_tempC=gucv_real_temp/1.8;
+
+				}
+				else if(adcval<cucv_temp_Tab[tablepos])
+				{
+					#if ((NtcOnBoardResPullType==NtcOnBoardResPullUp))
+						if(TempC_realtime<TEMPTABLE_BUFFER_END) TempC_realtime++;
+					#elif (NtcOnBoardResPullType==NtcOnBoardResPullDown)
+						if(TempC_realtime>TEMPTABLE_BUFFER_START) TempC_realtime--;
+					#endif
+				}
+		#endif
+	
+	
 	#endif
+	
+
 	return TempC_realtime;
 }
 
