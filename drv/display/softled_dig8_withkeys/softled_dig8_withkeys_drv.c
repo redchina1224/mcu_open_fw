@@ -10,7 +10,7 @@
 
 unsigned char LedDrvCaseSelect;
 unsigned char *Led_WriteSegBuffer;
-unsigned char *Led_WriteComBuffer;
+const unsigned char *Led_WriteComBuffer;
 unsigned char LedBrightSet_Rel=20;
 unsigned char LedBrightSet=20;
 unsigned char LedBrightCnt;
@@ -31,7 +31,7 @@ void zd_softled_run(void)
 		LedBrightCnt=0;
 		LedBrightSet_Rel=LedBrightSet;
 		
-		softledkey=KEYS_IO_VALUE;
+		softledkey=((unsigned long)(KEYS_IO_VALUE));
         
 		Led_IO_SEG_OUTPUT;
 		Led_IO_SEG_CTRL_OFF;
