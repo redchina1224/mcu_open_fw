@@ -3,7 +3,7 @@
 
 	#include <cms.h>
 
-	#include "touch_79ft73x\TouchKeyConst.h"
+	//#include "touch_79ft73x\TouchKeyConst.h"
 
 	#define ZD_CLRWDT asm("clrwdt");
 	#define ZD_NOP asm("nop");
@@ -153,7 +153,7 @@
 	//右对齐10位
 	//#define ZD_ADC_INIT ADCON1|=(BIT7),ADCON0|=(BIT0)
 	//左对齐12位
-	#define ZD_ADC_INIT ADCON1&=(~BIT7),ADCON0|=(BIT0)
+	#define ZD_ADC_INIT ADCON1&=(~(BIT7|BIT6|BIT2)),ADCON0|=(BIT0)
 	/*
 	#define ZD_ADC_CH1_ENABLE ZD_PORTA_DIR|=BIT1
 	#define ZD_ADC_CH2_ENABLE ZD_PORTA_DIR|=BIT2
