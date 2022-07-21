@@ -96,7 +96,7 @@ inline void softrtc_in_isr(void)
 		if(++__10msCount>=10) 
 		{
 			__10msCount=0;
-			
+			M_50ms_bit=1;
 			M_100ms_bit=1;
 			
 			if(++__100msCount>=10)

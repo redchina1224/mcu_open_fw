@@ -8,6 +8,7 @@ unsigned long utc100msec=0;
 
 bit Sec_x1_workbit=0;
 bit mSec_x500_flashbit=0;
+bit mSec_x250_flashbit=0;
 bit mSec_x1000_workbit=0;
 bit mSec_x500_workbit=0;
 bit mSec_x250_workbit=0;
@@ -83,10 +84,15 @@ void zd_basetime_run(void)
 		mSec_x500_flashbit=~mSec_x500_flashbit;
 	}
 
-	mSec_x250_workbit=0;
+	if(mSec_x250_workbit)
+	{
+		mSec_x250_workbit=0;
+		mSec_x250_flashbit=~mSec_x250_flashbit;
+	}
 	
+
 	mSec_x100_workbit=0;
-	
+
 	mSec_x50_workbit=0;
 
 	mSec_x10_workbit=0;
