@@ -456,8 +456,11 @@ void interrupt interrupt_Isr()
 
 
 #elif (DevPlatform==DevPlatform_FMIDE)
+unsigned char pageAuxTemp=0;
 void interrupt ISR(void)
-{ 
+{   
+pageAuxTemp=AUXPGE;
+AUXPGE=0;
   //定时器0的中断处理**********************    
 #ifdef Ft0Clk	
 	if(ZD_T0IF_GRIGGER)
@@ -535,6 +538,7 @@ void interrupt ISR(void)
 	//	ZD_T1IF_CLEAN;
 	//} 	 
     
+AUXPGE=pageAuxTemp;
 } 
 
 #elif (DevPlatform==DevPlatform_Keil_C51)
