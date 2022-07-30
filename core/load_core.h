@@ -70,7 +70,10 @@
 	#endif	
 #elif (McuType==McuType_CmsSemicon_CMS89F2265B)
 	//晶体时钟配置
-	#define FocsClk 8000000
+
+	#ifndef FocsClk
+		#define FocsClk 8000000
+	#endif
 	
 	//IO定义标准化	
 	#include "cms\cms89f2265b_core.h"
