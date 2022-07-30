@@ -26,18 +26,19 @@ void zd_softled_run(void)
 	{
         	KEYS_IO_INIT;
 	}
-	else if(LedBrightCnt>DisplaySoftLedBrightMax)
+	else if(LedBrightCnt==DisplaySoftLedBrightMax)
 	{
-		LedBrightCnt=0;
-		LedBrightSet_Rel=LedBrightSet;
-		
 		softledkey=((unsigned long)(KEYS_IO_VALUE));
         
 		Led_IO_SEG_OUTPUT;
 		Led_IO_SEG_CTRL_OFF;
 		Led_IO_COM_OUTPUT;
 		Led_IO_COM_CTRL_OFF;
-
+	}
+	else if(LedBrightCnt>DisplaySoftLedBrightMax)
+	{
+		LedBrightCnt=0;
+		LedBrightSet_Rel=LedBrightSet;
 
 		if(++LedDrvCaseSelect>=DisplaySoftLedBufferLength) LedDrvCaseSelect=0;
 		
