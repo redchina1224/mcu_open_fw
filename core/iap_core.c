@@ -26,6 +26,7 @@ Output:Flash data
 BYTE IapReadByte(WORD addr)
 {
     BYTE dat;                       //Data buffer
+	BYTE gie_buf=ZD_GIE;
 	
 	ZD_GIE_DISABLE;  //中断总允许开关
 	
@@ -46,7 +47,7 @@ BYTE IapReadByte(WORD addr)
 	ZD_IAP_END;      //MOVC指向ROM
 	
 	
-	ZD_GIE_ENABLE; //中断总允许开关
+	if(gie_buf!=0) ZD_GIE_ENABLE; //中断总允许开关
 	
 	
     return dat;                     //Return Flash data
@@ -61,7 +62,7 @@ Output:-
 ----------------------------*/
 void IapProgramByte(WORD addr, BYTE dat)
 {
-	
+	BYTE gie_buf=ZD_GIE;
 	//关中断
 	ZD_GIE_DISABLE;  //中断总允许开关
 	
@@ -72,12 +73,13 @@ void IapProgramByte(WORD addr, BYTE dat)
 	ZD_IAP_DATAAREA_EEPROM;  //IAPArea=0x00：选择ROM区操作  IAPArea=0x02：选择EEPROM区操作
 	
 	ZD_IAP_WRITE_START;
-
+	
 	Iap_DelayUs(8);
+	while(ZD_IAP_WRITE_NOT_OVER);
 	
 	ZD_IAP_END;      //MOVC指向ROM
 
-	ZD_GIE_ENABLE; //中断总允许开关
+	if(gie_buf!=0) ZD_GIE_ENABLE; //中断总允许开关
 		
 }
 

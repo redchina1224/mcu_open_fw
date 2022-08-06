@@ -8,7 +8,7 @@
 	#define ZD_CLRWDT asm("clrwdt");
 	#define ZD_NOP asm("nop");
 
-
+	#define ZD_GIE GIE
 	#define ZD_GIE_ENABLE GIE=1
 	#define ZD_GIE_DISABLE GIE=0
 	//#define ZD_GIE(x) GIE=(x)
@@ -262,7 +262,10 @@
 	
 	#define ZD_IAP_READ_START 		RD=1
 	#define ZD_IAP_WRITE_START 		EECON1|=0x30,WREN=1,EECON2=0x55,EECON2=0xaa,WR=1
+	#define ZD_IAP_WRITE_NOT_OVER 		(WR==1)
 	
+
+
 	#define ZD_IAP_DATAREAD(x) 		ZD_IAP_READADDR_SET(x),ZD_IAP_READ_START
 	#define ZD_IAP_DATA EEDAT
 	#define ZD_IAP_END WREN=0
