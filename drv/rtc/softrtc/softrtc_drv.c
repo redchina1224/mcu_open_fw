@@ -72,7 +72,7 @@ unsigned long GetUtcSecByHourMin(unsigned long hour,unsigned long min)
 
 void zd_basetime_run(void)
 {
-	ZD_CLRWDT;
+	//ZD_CLRWDT;
 
 	Sec_x1_workbit=0;
 		
