@@ -94,7 +94,7 @@ void zd_keyCheck(struct zd_userkey_t* ukey,unsigned long keysnotpress)
 		if(ukey->KeyVal_Ago!=ukey->KeyVal)
 		{
 			ukey->KeyVal_Ago=ukey->KeyVal;
-			if(ukey->KeyLongPressCount<200) ukey->UserKeyPressed_up=1;
+			if(ukey->KeyLongPressCount>5&&ukey->KeyLongPressCount<200) ukey->UserKeyPressed_up=1;
 		}
 		
 		ukey->KeyLongPressCount=0;
