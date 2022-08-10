@@ -1,3 +1,6 @@
+#ifndef __SCR_VOLT_PERCENT_DRV_H_
+#define __SCR_VOLT_PERCENT_DRV_H_
+
 #define SCR_VOLT_PERCENT_0      1.00000 
 #define SCR_VOLT_PERCENT_1      0.93623 
 #define SCR_VOLT_PERCENT_2      0.90967 
@@ -99,3 +102,5 @@
 #define SCR_VOLT_PERCENT_98     0.09033 
 #define SCR_VOLT_PERCENT_99     0.06377 
 #define SCR_VOLT_PERCENT_100    0.00000 
+
+#endif

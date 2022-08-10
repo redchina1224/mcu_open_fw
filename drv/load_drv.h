@@ -12,6 +12,14 @@
 		#include "ntc\ntc_sensor_drv.h"
 	#endif
 
+
+	//载入SCR可控硅过零控制系统
+	#ifdef ScrType
+		#include "scr\scr_volt_percent.h"
+		#include "scr\scr_crosszero_ctrl_drv.h"
+	#endif
+
+
 	//载入显示系统
 	#ifdef DisplayType
 		#include "display\loadDisplay_drv.h" //载入显示系统驱动接口信息
