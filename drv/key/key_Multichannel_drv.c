@@ -84,7 +84,7 @@ void zd_keyCheck(struct zd_userkey_t* ukey,unsigned long keysnotpress)
 
 				
 			ukey->KeyValQuick_Ago=ukey->KeyVal;
-			ukey->KeyLongPressCount=0;
+			//ukey->KeyLongPressCount=0; //此处不清零,可使按住一个按键不放再按其他按键并释放时不会触发按住不放的那个按键
 
 		}	
 	}
