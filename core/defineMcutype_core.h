@@ -25,4 +25,7 @@
 
 
 
+#define McuType_BydMicro_BF7512 0x0501
+
+
 #endif

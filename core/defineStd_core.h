@@ -27,7 +27,13 @@ typedef signed long int32_t;
 typedef signed int  int16_t;
 typedef signed char int8_t;
 
+typedef unsigned long ulong;
+typedef unsigned int  uint;
+typedef unsigned char uchar;
 
+typedef signed long slong;
+typedef signed int  sint;
+typedef signed char schar;
 
 typedef float f24;
 typedef double d24;
@@ -48,9 +54,7 @@ typedef signed long 		INT32S; 	// 有符号32位整型变量
 typedef float 			    FP32; 		// 单精度浮点数(32位长度) 
 typedef double 			    FP64; 		// 双精度浮点数(64位长度)
 
-#define	uchar	unsigned	char
-#define	uint	unsigned	int
-#define	uint32	unsigned	double	int
+
 
 
 
@@ -74,73 +78,74 @@ unsigned char Value;
 		unsigned char bit5:1;
 		unsigned char bit6:1;
 		unsigned char bit7:1;		
-	};
+	}Bits;
 } zd_charbits_t;
+
 
 typedef union {
 unsigned int Value;
 	struct {
-		unsigned char bit0:1;
-		unsigned char bit1:1;
-		unsigned char bit2:1;
-		unsigned char bit3:1;	
-		unsigned char bit4:1;
-		unsigned char bit5:1;
-		unsigned char bit6:1;
-		unsigned char bit7:1;
-		unsigned char bit8:1;
-		unsigned char bit9:1;
-		unsigned char bit10:1;
-		unsigned char bit11:1;	
-		unsigned char bit12:1;
-		unsigned char bit13:1;
-		unsigned char bit14:1;
-		unsigned char bit15:1;
-	};
+		unsigned int bit0:1;
+		unsigned int bit1:1;
+		unsigned int bit2:1;
+		unsigned int bit3:1;	
+		unsigned int bit4:1;
+		unsigned int bit5:1;
+		unsigned int bit6:1;
+		unsigned int bit7:1;
+		unsigned int bit8:1;
+		unsigned int bit9:1;
+		unsigned int bit10:1;
+		unsigned int bit11:1;	
+		unsigned int bit12:1;
+		unsigned int bit13:1;
+		unsigned int bit14:1;
+		unsigned int bit15:1;
+	}Bits;
 } zd_intbits_t;
 
 
-
+/*
 typedef union {
 unsigned long Value;
 	struct {
-		unsigned char bit0:1;
-		unsigned char bit1:1;
-		unsigned char bit2:1;
-		unsigned char bit3:1;	
-		unsigned char bit4:1;
-		unsigned char bit5:1;
-		unsigned char bit6:1;
-		unsigned char bit7:1;
-		unsigned char bit8:1;
-		unsigned char bit9:1;
-		unsigned char bit10:1;
-		unsigned char bit11:1;
-		unsigned char bit12:1;
-		unsigned char bit13:1;
-		unsigned char bit14:1;
-		unsigned char bit15:1;
-		unsigned char bit16:1;
-		unsigned char bit17:1;
-		unsigned char bit18:1;
-		unsigned char bit19:1;
-		unsigned char bit20:1;
-		unsigned char bit21:1;
-		unsigned char bit22:1;
-		unsigned char bit23:1;
-		unsigned char bit24:1;
-		unsigned char bit25:1;
-		unsigned char bit26:1;
-		unsigned char bit27:1;
-		unsigned char bit28:1;
-		unsigned char bit29:1;
-		unsigned char bit30:1;
-		unsigned char bit31:1;
+		unsigned long bit0:1;
+		unsigned long bit1:1;
+		unsigned long bit2:1;
+		unsigned long bit3:1;	
+		unsigned long bit4:1;
+		unsigned long bit5:1;
+		unsigned long bit6:1;
+		unsigned long bit7:1;
+		unsigned long bit8:1;
+		unsigned long bit9:1;
+		unsigned long bit10:1;
+		unsigned long bit11:1;
+		unsigned long bit12:1;
+		unsigned long bit13:1;
+		unsigned long bit14:1;
+		unsigned long bit15:1;
+		unsigned long bit16:1;
+		unsigned long bit17:1;
+		unsigned long bit18:1;
+		unsigned long bit19:1;
+		unsigned long bit20:1;
+		unsigned long bit21:1;
+		unsigned long bit22:1;
+		unsigned long bit23:1;
+		unsigned long bit24:1;
+		unsigned long bit25:1;
+		unsigned long bit26:1;
+		unsigned long bit27:1;
+		unsigned long bit28:1;
+		unsigned long bit29:1;
+		unsigned long bit30:1;
+		unsigned long bit31:1;
 
-	};
+	}Bits;
 } zd_longbits_t;
 
-
+*/
 
 //常量定义
 

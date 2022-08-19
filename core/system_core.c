@@ -29,6 +29,12 @@ void core_DelayUs(unsigned char dl_t)
 ***********************************************************************************************/
 void zd_systemInit(void)
 {
+	//关闭总中断
+	ZD_GIE_DISABLE;
+
+	//BOR默认打开无需配置
+
+
 	//系统时钟初始化
 	ZD_FSYS_CLKSET(ZD_FSYS_CLKSET_DEFAULT);
 	

@@ -343,6 +343,26 @@
 
 	#endif	
 
+#elif (McuType==McuType_BydMicro_BF7512)
+
+	//晶体时钟配置
+	#define FocsClk 48000000
+	
+	//IO定义标准化	
+	#include "byd\byd_core.h"
+
+	//系统时钟
+	#if (ZD_FSYS_CLKSET_DEFAULT==ZD_FSYS_CLKSET_FOSC_DIV2_DIV2)
+		#define FsysClk FocsClk/4
+	#elif (ZD_FSYS_CLKSET_DEFAULT==ZD_FSYS_CLKSET_FOSC_DIV2_DIV4)
+		#define FsysClk FocsClk/8
+	#elif (ZD_FSYS_CLKSET_DEFAULT==ZD_FSYS_CLKSET_FOSC_DIV2_DIV6)
+		#define FsysClk FocsClk/12
+	#elif (ZD_FSYS_CLKSET_DEFAULT==ZD_FSYS_CLKSET_FOSC_DIV2_DIV24)
+		#define FsysClk FocsClk/48
+	#endif
+
+
 #elif (McuType==McuType_Unkonw)
 
 #endif
