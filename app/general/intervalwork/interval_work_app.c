@@ -18,17 +18,17 @@ void intervalWorkRun(struct  zd_interval_work_t* work)
 		if(work->intervalTimeOut_x100ms>0) work->intervalTimeOut_x100ms--;//
 		else
 		{
-			if(work->intervalWorkEn==0)//
+			if(work->Bits.intervalWorkEn==0)//
 			{
 
 				work->intervalTimeOut_x100ms=work->intervalTimeOut_En_x100ms;
 
-				work->intervalWorkEn=1;//
+				work->Bits.intervalWorkEn=1;//
 			}
 			else
 			{
 				work->intervalTimeOut_x100ms=work->intervalTimeOut_Dis_x100ms;
-				work->intervalWorkEn=0;//
+				work->Bits.intervalWorkEn=0;//
 			}
 
 		}
@@ -37,7 +37,7 @@ void intervalWorkRun(struct  zd_interval_work_t* work)
 
 void intervalWorkRun_Start(struct  zd_interval_work_t* work,unsigned int En_mSec,unsigned int Dis_mSec)
 {
-	work->intervalWorkEn=0;//单次闪烁计时,置0后，立即执行一次切换操作
+	work->Bits.intervalWorkEn=0;//单次闪烁计时,置0后，立即执行一次切换操作
 	work->intervalTimeOut_x100ms=0;
 	work->intervalTimeOut_En_x100ms=En_mSec;
 	work->intervalTimeOut_Dis_x100ms=Dis_mSec;

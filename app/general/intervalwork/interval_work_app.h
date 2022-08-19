@@ -22,7 +22,7 @@ struct  zd_interval_work_t {
 		unsigned char inRunning5:1;
 		unsigned char inRunning6:1;
 		unsigned char inRunning7:1;		
-	};
+	}Bits;
 unsigned int intervalTimeOut_x100ms;
 unsigned int intervalTimeOut_En_x100ms;
 unsigned int intervalTimeOut_Dis_x100ms;
