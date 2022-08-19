@@ -42,7 +42,12 @@ void interrupt_SoftRtcConfig(unsigned char *T_ms,unsigned long *T_sec)
 #ifdef PowerOffCheckType
 #if (PowerOffCheckType==PowerOffCheckType_MCULVD)
 bit M_PowerOff_bit=0;
+
+#if (DevPlatform==DevPlatform_Keil_C51)
+void powerofflvd_in_isr(void)
+#else
 inline void powerofflvd_in_isr(void)
+#endif
 {
 	M_PowerOff_bit=1;
 	ZD_GIE_DISABLE;
@@ -56,9 +61,11 @@ inline void powerofflvd_in_isr(void)
 unsigned char __buzzer_en=0;
 unsigned char *T_BuzzerEn=&__buzzer_en;
 
-
-//void buzzer_in_isr(void);
+#if (DevPlatform==DevPlatform_Keil_C51)
+void buzzer_in_isr(void)
+#else
 inline void buzzer_in_isr(void)
+#endif
 {
 	if((*T_BuzzerEn)!=0) Buzzer_IO_Channel=!Buzzer_IO_Channel;// else Buzzer_IO_Ctrl(Buzzer_IO_OFF);
 	//Buzzer_IO_Channel=!Buzzer_IO_Channel;
@@ -85,9 +92,11 @@ bit M_1s_bit=0;
  //unsigned long __SecCount=0;
  //unsigned long *T_SecCount=&__SecCount;
 
-
-//void softrtc_in_isr(void);
+#if (DevPlatform==DevPlatform_Keil_C51)
+void softrtc_in_isr(void)
+#else
 inline void softrtc_in_isr(void)
+#endif
 {
 	if(++__125usCount>=80) 
 	{ 
@@ -144,8 +153,11 @@ void softcounter1_reset(void)
 	ZD_GIE_ENABLE;
 }
 
-//void softcounter1_in_isr(void);
+#if (DevPlatform==DevPlatform_Keil_C51)
+void softcounter1_in_isr(void)
+#else
 inline void softcounter1_in_isr(void)
+#endif
 {
 		if(T_500ms_bit)//半秒周期,上升沿与下降沿都累加，所得累加值等同于1秒的值
 		{
@@ -199,9 +211,11 @@ inline void softcounter1_in_isr(void)
 	unsigned char zeroCrossPassCnt;
 	unsigned char triacOn_CrossPass=40;
 
-
-//void zerocross_in_isr(void);
+#if (DevPlatform==DevPlatform_Keil_C51)
+void zerocross_in_isr(void)
+#else
 inline void zerocross_in_isr(void)
+#endif
 {
 	//过零检测与清零
 	/*
@@ -546,13 +560,14 @@ AUXPGE=pageAuxTemp;
 
 void timer0_Isr() interrupt 1
 {
-#ifdef Ft0Clk	
+//#ifdef Ft0Clk	
 
 	//---------------------------------------
 		#ifndef ZD_TIMER0_LOAD_RELOAD
-			ZD_TIMER0_LOAD += T0_Reload;		//重新赋初值，在赋值前Timer0已有计数，故在该基础上加初值
+			//ZD_TIMER0_LOAD += T0_Reload;		//重新赋初值，在赋值前Timer0已有计数，故在该基础上加初值
 		#endif
 	//---------------------------------------
+
 
 	//定时器蜂鸣驱动-定义在TIMER0时	
 	#ifdef BuzzerType	
@@ -566,12 +581,14 @@ void timer0_Isr() interrupt 1
 	//定时器时间系统-定义在TIMER0时	
 	#if (RtcType==RtcType_TimerSoftRtc) 
 		#if(SoftRtcTimer==0)
-		
+
 			softrtc_in_isr();//RTC时钟内联函数
 						
 			#ifdef DisplayType
-				#if (DisplayType==DisplayType_Dig8SoftLed) 
-				zd_softled_run();//软件LED驱动函数
+				#if ((DisplayType&DisplayType_SoftLed)==DisplayType_SoftLed) 
+					#ifdef DisplayTypeSoftLedModel
+						zd_softled_run();//软件LED驱动函数
+					#endif
 				#endif
 			#endif //#ifdef DisplayType
 
@@ -601,17 +618,23 @@ void timer0_Isr() interrupt 1
 				#endif					
 
 				#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)				
-
+					#if ((McuType&McuType_Mask)==McuType_CmsSemicon_CMS79F)
+					//__CMS_GetTouchKeyValue();//中微单片机触摸库函数,此函数放在中断,建议中断扫描时间 125us	
+					#endif			
 				#endif //#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)		
 			#endif	//#ifdef KeyType		
 			T_1s_bit=0;
+			T_500ms_bit=0;
 		#endif //#if(SoftRtcTimer==0)
 	#endif //#if (RtcType==RtcType_TimerSoftRtc) 
+			
+
+
 
 	
 		ZD_T0IF_CLEAN;			//清中断标志位
 
-#endif	
+//#endif	//#ifdef Ft0Clk
 }
 
 void timer1_Isr() interrupt 3
