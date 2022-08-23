@@ -604,7 +604,7 @@ void timer0_Isr() interrupt 1
 					
 			#ifdef ZeroCrossType
 				#if (ZeroCrossType==ZeroCrossType_Gpio) 
-					zerocross_in_isr();//zerocross过零与可控硅驱动内联函数
+					//zerocross_in_isr();//zerocross过零与可控硅驱动内联函数
 				#endif
 			#endif //#ifdef ZeroCrossType
 
