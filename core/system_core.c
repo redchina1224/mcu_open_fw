@@ -92,9 +92,22 @@ void zd_timerInit(unsigned char timerChannel,unsigned long _Us)
 		 break;
 		case 2:
 		#ifdef Ft2Clk
-		 T2H_Reload = (65536 - ((unsigned int)((_Us*1.0)*((Ft1Clk*1.0)/1000000))))>>8;
-		 T2L_Reload = (65536 - ((unsigned int)((_Us*1.0)*((Ft1Clk*1.0)/1000000))));
+		
+		#ifdef T2_RELOAD_DEFAULT
+
+			#ifdef ZD_TIMER2_LOAD_RELOAD
+				ZD_TIMER2_LOAD_RELOAD(T2_RELOAD_DEFAULT);		//ÖØÐÂ¸³³õÖµ
+			#endif	
+
+		#endif
+				 		
 		 ZD_TIMER2_INIT;
+
+		ZD_TIMER2_LOAD_RELOAD(T2_RELOAD_DEFAULT);
+
+		 ZD_T2IE_ENABLE;
+		 
+		 ZD_T2_ENABLE;
 		 cfgerr=0; 
 		#endif
 		 break;

@@ -44,7 +44,7 @@
 	#endif
 
 	
-	//定时器时钟配置
+	//定时器0时钟配置
 	#if (ZD_TIMER0_CLKSET_DEFAULT==ZD_TIMER0_CLKSET_FSYS_DIV4)
 	
 		#if (ZD_TIMER0_CLKPSASET_DEFAULT==ZD_TIMER0_CLKPSASET_NONE)
@@ -68,6 +68,19 @@
 		#endif
 		
 	#endif	
+
+
+	//定时器2时钟配置
+	#if ((ZD_TIMER2_CLKSET_DEFAULT&(BIT0|BIT1))==ZD_TIMER2_CLKSET_FSYS_DIV4_DIV1)
+		#define Ft2Clk FsysClk/4/1
+	#elif ((ZD_TIMER2_CLKSET_DEFAULT&(BIT0|BIT1))==ZD_TIMER2_CLKSET_FSYS_DIV4_DIV4)
+		#define Ft2Clk FsysClk/4/4
+	#elif ((ZD_TIMER2_CLKSET_DEFAULT&(BIT0|BIT1))==ZD_TIMER2_CLKSET_FSYS_DIV4_DIV16)
+		#define Ft2Clk FsysClk/4/16
+	#endif	
+
+
+
 #elif (McuType==McuType_CmsSemicon_CMS89F2265B)
 	//晶体时钟配置
 
