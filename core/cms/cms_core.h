@@ -6,6 +6,9 @@
 	#include "touch_79ft73x\TouchKeyConst.h"
 
 	#define ZD_CLRWDT asm("clrwdt");
+
+	#define ZD_WDT_SETPSA OPTION_REG|=(0x07);
+
 	#define ZD_NOP asm("nop");
 
 	#define ZD_GIE GIE

@@ -53,7 +53,7 @@ void zd_systemInit(void)
 				  unsigned long _Us：定时器时间
 *函数返回值 	: 无
 ***********************************************************************************************/
-void zd_timerInit(unsigned char timerChannel,unsigned long _Us)
+void zd_timerInit(unsigned char timerChannel)
 {
 	unsigned char cfgerr=1;
 	
@@ -66,7 +66,7 @@ void zd_timerInit(unsigned char timerChannel,unsigned long _Us)
 		#ifdef T0_RELOAD_DEFAULT
 			T0_Reload=T0_RELOAD_DEFAULT;
 		#else
-			T0_Reload=(unsigned char)(	256 - ((unsigned char)	((_Us*1.0)*((Ft0Clk*1.0)/1000000))));
+			//T0_Reload=(unsigned char)(	256 - ((unsigned char)	((_Us*1.0)*((Ft0Clk*1.0)/1000000))));
 		#endif
 		
 		#ifdef ZD_TIMER0_LOAD_RELOAD

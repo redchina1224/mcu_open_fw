@@ -28,7 +28,7 @@ void zd_softrtcInit(void)
 	 ZD_GIE_DISABLE;  //中断总允许开关
 	
 	//T_SecCount=&utcsec;
-	zd_timerInit(SoftRtcTimer,125); //初始化定时器125us中断`
+	zd_timerInit(SoftRtcTimer); //初始化定时器125us中断`
 
 	 ZD_GIE_ENABLE; //中断总允许开关
 }

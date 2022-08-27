@@ -115,7 +115,7 @@ void zd_buzzer_init(void)
    T_BuzzerEn=&beepEn;
 	 Buzzer_IO_Output;
 	 Buzzer_IO_Ctrl(Buzzer_IO_OFF);
-	 zd_timerInit(BuzzeTimer,125); //初始化定时器125us中断
+	 zd_timerInit(BuzzeTimer); //初始化定时器125us中断
 	//开中断
 	 ZD_GIE_ENABLE; //中断总允许开关
 #elif (BuzzerType==BuzzerType_PWM)
