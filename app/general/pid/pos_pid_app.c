@@ -29,6 +29,24 @@ void zd_pospid_init(struct zd_pospid_t *pid)
 	pid->out=0;
 }
 
+#ifdef PID_KP_DIV
+	#define PID_P_VALUE (pid->error/PID_KP_DIV)
+#else
+	#define PID_P_VALUE (pid->error*PID_KP_MUL)
+#endif
+
+#ifdef PID_KI_DIV
+	#define PID_I_VALUE (pid->integral/PID_KI_DIV)
+#else
+	#define PID_I_VALUE (pid->integral*PID_KI_MUL)
+#endif
+
+#ifdef PID_KD_DIV
+	#define PID_D_VALUE (pid->derivative/PID_KD_DIV)
+#else
+	#define PID_D_VALUE (pid->derivative*PID_KD_MUL)
+#endif
+
 void zd_pospid_run(struct zd_pospid_t *pid)
 {
 
@@ -52,8 +70,27 @@ void zd_pospid_run(struct zd_pospid_t *pid)
 	pid->derivative=pid->error-pid->error_prev;
 	
 	pid->error_prev=pid->error;
+
+	//比例分离	
+	#ifdef PID_PROPORTION_DISABLE_VALUE
+
+	if((pid->error<PID_PROPORTION_DISABLE_VALUE&&pid->error>(-PID_PROPORTION_DISABLE_VALUE))) //
+	{
+		pid->error=0;
+	}
+	#endif
+
+	//微分分离	
+	#ifdef PID_DERIVATIVE_DISABLE_VALUE
+
+	if((pid->derivative<PID_DERIVATIVE_DISABLE_VALUE&&pid->derivative>(-PID_DERIVATIVE_DISABLE_VALUE))) //
+	{
+		pid->derivative=0;
+	}
+	#endif	
 	
-	pid->out = ((PID_KP * pid->error) + (PID_KI * pid->integral) + (PID_KD * pid->derivative));
+
+	pid->out = (PID_P_VALUE+PID_I_VALUE+PID_D_VALUE);
 	
 	//输出限幅
 	if(pid->out>PID_OUT_LIMIT_MAXVALUE) pid->out=PID_OUT_LIMIT_MAXVALUE;

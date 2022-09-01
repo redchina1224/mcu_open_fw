@@ -1,0 +1,6 @@
+	//Q=焦=瓦/秒
+	//C=水的比热容=4200 J/(kg*c)
+	//M=每秒的水质量kg ,每分钟的水量=waterspeed_x100ml_min/10（L）=waterspeed_x100ml_min/10（kg）
+	//T=温升=设定温-进水温（c）
+	//Q=CMT=4200*((waterspeed_x100ml_min/10)/60)*delt_temp;
+	//Q=CMT=(waterspeed_x100ml_min*delt_temp*7);
