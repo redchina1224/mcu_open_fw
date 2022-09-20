@@ -22,7 +22,7 @@ struct  zd_setting_display_blink_t {
 		unsigned char inSetting5:1;
 		unsigned char inSetting6:1;
 		unsigned char inSetting7:1;		
-	};
+	}Bits;
 unsigned char exitTimeOut_x100ms;
 unsigned char blinkTimeOut_x100ms;
 };
@@ -42,7 +42,7 @@ void settingDisplayBlink_Start(struct  zd_setting_display_blink_t* setting,unsig
 			//触发设置和在设置过程中
 			if(按键触发)
 			{
-				setting.inSetting1=1;
+				setting.Bits.inSetting1=1;
 				settingDisplayBlink_Start(&setting,50);//进入设置态,超时退出时间设置为50x100ms
 			}
 

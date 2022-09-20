@@ -2,15 +2,8 @@
 #define __TOUCHCORECONFIG_LOAD_H_
 
 //按芯片载入对应头文件 并定义标准化接口
-#if ((McuType==McuType_CmsSemicon_CMS79F738))
-
-
-	//触摸库
-	#include "cms\touch_79ft73x\CMS_CheckTouch_PT_79FT73xx_V1.08.h"
-#elif (McuType==McuType_CmsSemicon_CMS79F726)
-	#include "cms\touch_79ft72x\CMS_CheckTouch_PT_79F72x_V1.02.h"
-	
-
+#if (((McuType&McuType_FacMask)==McuType_CmsSemicon))
+	#include "cms\cms_touch_load_core.h"
 #elif (McuType==McuType_SinOneChip_SC92F8463B)
 
 	#include "soc\touch_92f8x6xb\SensorMethod.h"
