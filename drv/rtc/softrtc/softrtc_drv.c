@@ -8,16 +8,19 @@ unsigned long utc100msec=0;
 
 bit Sec_x1_workbit=0;
 bit mSec_x500_flashbit=0;
-bit mSec_x250_flashbit=0;
+//bit mSec_x250_flashbit=0;
 bit mSec_x1000_workbit=0;
 bit mSec_x500_workbit=0;
-bit mSec_x250_workbit=0;
+//bit mSec_x250_workbit=0;
 bit mSec_x100_workbit=0;
-bit mSec_x50_workbit=0;
-bit mSec_x10_workbit=0;
+//bit mSec_x50_workbit=0;
+//bit mSec_x40_workbit=0;
+bit mSec_x20_workbit=0;
+//bit mSec_x10_workbit=0;
 
 
-unsigned char mSec_x50_cnt=0;
+
+//unsigned char mSec_x50_cnt=0;
 unsigned char mSec_x100_cnt=0;
 
 unsigned char Rtc_timeNow[3]={0,0,0};
@@ -83,40 +86,29 @@ void zd_basetime_run(void)
 		mSec_x500_workbit=0;
 		mSec_x500_flashbit=~mSec_x500_flashbit;
 	}
-
+/*
 	if(mSec_x250_workbit)
 	{
 		mSec_x250_workbit=0;
 		mSec_x250_flashbit=~mSec_x250_flashbit;
 	}
-	
+*/	
 
 	mSec_x100_workbit=0;
 
-	mSec_x50_workbit=0;
+	//mSec_x50_workbit=0;
 
-	mSec_x10_workbit=0;
+	mSec_x20_workbit=0;
+	//mSec_x10_workbit=0;
     
 
     
-	if(M_10ms_bit)
+	if(M_20ms_bit)
 	{	
-		mSec_x10_workbit=1;	
-		M_10ms_bit=0;
+		mSec_x20_workbit=1;	
+		M_20ms_bit=0;
 	}
-	
-	if(M_50ms_bit)
-	{	
-		M_50ms_bit=0;
-		mSec_x50_workbit=1;	
-				
-		if(++mSec_x50_cnt>=5)
-		{
-			 mSec_x50_cnt=0;	
-			 mSec_x250_workbit=1;
-		}
-	}
-	
+
 	if(M_100ms_bit)
 	{	
 		M_100ms_bit=0;

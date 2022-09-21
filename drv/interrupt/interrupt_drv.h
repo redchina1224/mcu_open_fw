@@ -32,8 +32,10 @@ extern unsigned char *T_BuzzerEn;
 
 #ifdef RtcType
 #if (RtcType==RtcType_TimerSoftRtc) 
-extern bit M_10ms_bit;
-extern bit M_50ms_bit;
+//extern bit M_10ms_bit;
+extern bit M_20ms_bit;
+extern bit M_40ms_bit;
+//extern bit M_50ms_bit;
 extern bit M_100ms_bit;
 extern bit M_1s_bit;
 //extern unsigned long *T_SecCount;
@@ -69,7 +71,8 @@ extern bit M_1s_bit;
 
 
 #ifdef Ft0Clk
-extern unsigned char T0_Reload;
+extern unsigned char T0L_Reload;
+extern unsigned char T0H_Reload;
 #endif
 
 #ifdef Ft1Clk

@@ -5,7 +5,7 @@
 #if ((McuType==McuType_CmsSemicon_CMS79F738)||(McuType==McuType_CmsSemicon_CMS79F726))
 
 	//晶体时钟配置
-	#define FocsClk 16000000
+	#define FocsClk 8000000
 
 	#if ((McuType==McuType_CmsSemicon_CMS79F738))
 	//IO定义标准化	

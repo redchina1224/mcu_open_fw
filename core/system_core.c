@@ -62,19 +62,18 @@ void zd_timerInit(unsigned char timerChannel)
 	{
 		case 0:
 		#ifdef Ft0Clk
-		
+
 		#ifdef T0_RELOAD_DEFAULT
-			T0_Reload=T0_RELOAD_DEFAULT;
-		#else
-			//T0_Reload=(unsigned char)(	256 - ((unsigned char)	((_Us*1.0)*((Ft0Clk*1.0)/1000000))));
+			#ifdef ZD_TIMER0_LOAD_RELOAD
+				ZD_TIMER0_LOAD_RELOAD(T0_RELOAD_DEFAULT);		//重新赋初值
+			#else
+				T0L_Reload=T0_RELOAD_DEFAULT;
+				T0H_Reload=T0_RELOAD_DEFAULT>>8;
+			#endif	
+			
+			ZD_TIMER0_LOAD_SET(T0_RELOAD_DEFAULT);
 		#endif
-		
-		#ifdef ZD_TIMER0_LOAD_RELOAD
-			ZD_TIMER0_LOAD_RELOAD = T0_Reload;		//重新赋初值
-		#endif		
-		
-		 ZD_TIMER0_LOAD = T0_Reload;
-		
+	
 		 ZD_TIMER0_INIT;
 
 		 ZD_T0IE_ENABLE;
@@ -83,33 +82,39 @@ void zd_timerInit(unsigned char timerChannel)
 		#endif
 		 break;
 		case 1:
-		#ifdef Ft1Clk
-		 T1H_Reload = (65536 - ((unsigned int)((_Us*1.0)*((Ft1Clk*1.0)/1000000))))>>8;
-		 T1L_Reload = (65536 - ((unsigned int)((_Us*1.0)*((Ft1Clk*1.0)/1000000))));
-		 ZD_TIMER1_INIT;
+		//#ifdef Ft1Clk
+		ZD_T1IE_ENABLE;
+		T1CON=0x31;
+		
+		 //T1H_Reload = (65536 - ((unsigned int)((_Us*1.0)*((Ft1Clk*1.0)/1000000))))>>8;
+		 //T1L_Reload = (65536 - ((unsigned int)((_Us*1.0)*((Ft1Clk*1.0)/1000000))));
+		 //ZD_TIMER1_INIT;
 		 cfgerr=0; 
-		#endif
+		//#endif
 		 break;
 		case 2:
-		#ifdef Ft2Clk
-		
-		#ifdef T2_RELOAD_DEFAULT
+		//#ifdef Ft2Clk
 
+		#ifdef T2_RELOAD_DEFAULT
 			#ifdef ZD_TIMER2_LOAD_RELOAD
 				ZD_TIMER2_LOAD_RELOAD(T2_RELOAD_DEFAULT);		//重新赋初值
+			#else
+				..T2L_Reload=T2_RELOAD_DEFAULT;
+				..T2H_Reload=T2_RELOAD_DEFAULT>>8;
 			#endif	
-
+			
+			ZD_TIMER2_LOAD_SET(T2_RELOAD_DEFAULT);
 		#endif
 				 		
 		 ZD_TIMER2_INIT;
 
-		ZD_TIMER2_LOAD_RELOAD(T2_RELOAD_DEFAULT);
+		 ZD_TIMER2_CLKSET(ZD_TIMER2_CLKSET_DEFAULT);
 
 		 ZD_T2IE_ENABLE;
 		 
 		 ZD_T2_ENABLE;
 		 cfgerr=0; 
-		#endif
+		//#endif
 		 break;
 
 		default:break;
