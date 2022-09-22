@@ -430,8 +430,10 @@ void interrupt interrupt_Isr()
 	
 	//8M外置晶体,13:42开始测试,20ms基值249,每100ms将20ms基准值调至250一次,随后调回249,测试至14:43,电子板时钟比电脑慢1秒
 	//if((__20msCount==2)) ZD_TIMER2_LOAD_RELOAD((T2_RELOAD_DEFAULT+1)) else ZD_TIMER2_LOAD_RELOAD((T2_RELOAD_DEFAULT))
-	//8M外置晶体,15:20开始测试电子板慢0.5秒,20ms基值249,每个1秒内前半秒中每100ms将20ms基准值调至250一次,随后调回249,测试至17:20,电子板时钟比电脑   秒
-	if((__20msCount==2)&&(__100msCount<5)) ZD_TIMER2_LOAD_RELOAD((T2_RELOAD_DEFAULT+1)) else ZD_TIMER2_LOAD_RELOAD((T2_RELOAD_DEFAULT))
+	//8M外置晶体,9:15开始测试电子板慢0.5秒,20ms基值249,每个1秒内前半秒中每100ms将20ms基准值调至250一次,随后调回249,测试至10:35,电子板时钟比电脑慢2秒+
+	//if((__20msCount==2)&&(__100msCount<5)) {ZD_TIMER2_LOAD_RELOAD((T2_RELOAD_DEFAULT+1))} else {ZD_TIMER2_LOAD_RELOAD((T2_RELOAD_DEFAULT))}
+	//8M外置晶体, 11:00开始测试电子板慢0.5秒,20ms基值249,每个1秒将20ms基准值调至250一次,随后调回249,测试至1 ,电子板时钟比电脑慢  秒
+	//if((__20msCount==2)&&(__100msCount==1)) {ZD_TIMER2_LOAD_RELOAD((T2_RELOAD_DEFAULT+1))} else {ZD_TIMER2_LOAD_RELOAD((T2_RELOAD_DEFAULT))}
 	
 	
 	//---------------------------------------
