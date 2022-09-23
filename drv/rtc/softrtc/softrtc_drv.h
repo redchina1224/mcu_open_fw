@@ -11,10 +11,11 @@ extern bit mSec_x1000_workbit;
 extern bit mSec_x500_workbit;
 //extern bit mSec_x250_workbit;
 extern bit mSec_x100_workbit;
-//extern bit mSec_x50_workbit;
-extern bit mSec_x40_workbit;
+extern bit mSec_x50_workbit;
+//extern bit mSec_x40_workbit;
+//extern bit mSec_x30_workbit;
 extern bit mSec_x20_workbit;
-//extern bit mSec_x10_workbit;
+extern bit mSec_x10_workbit;
 
 extern unsigned char Rtc_timeNow[3];
 
