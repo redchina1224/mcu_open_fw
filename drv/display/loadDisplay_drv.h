@@ -32,7 +32,9 @@
 
 
 	#if ((DisplayType&DisplayType_IcLed)==DisplayType_IcLed)
-		#if ((DisplayTypeIcLedModel&DisplayType_IcLed_tm1628)== DisplayType_IcLed_tm1628)	
+		#if ((DisplayTypeIcLedModel&DisplayType_IcLed_tm1640)== DisplayType_IcLed_tm1640)
+			#include "ic_led\tm1640\tm1640_drv.h"
+		#elif ((DisplayTypeIcLedModel&DisplayType_IcLed_tm1628)== DisplayType_IcLed_tm1628)
 			#include "ic_led\tm1628\tm1628_drv.h"
 		#endif
 	#endif

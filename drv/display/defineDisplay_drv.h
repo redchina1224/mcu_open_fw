@@ -13,6 +13,7 @@
 
 	#define DisplayType_IcLed 0x040000
 	#define DisplayType_IcLed_tm1628 (DisplayType_IcLed+BIT0)
+	#define DisplayType_IcLed_tm1640 (DisplayType_IcLed+BIT1)
 	//#define DisplayType_Dig8IcLed_tm1628 (DisplayType_IcLed+BIT0)
 
 	#define DisplayType_IcLcd 0x080000
