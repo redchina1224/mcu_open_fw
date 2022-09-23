@@ -64,8 +64,8 @@ void zd_keyCheck(struct zd_userkey_t* ukey,unsigned long keysnotpress)
 		if(ukey->KeyVal_Ago==ukey->KeyVal)
 		{
 			ukey->UserKeyPressed=1;
-			if(ukey->KeyLongPressCount<500) ukey->KeyLongPressCount++;
-			if(ukey->KeyLongPressCount==3) ukey->UserKeyPressed_down=1;
+			if(ukey->KeyLongPressCount<1000) ukey->KeyLongPressCount++;
+			if(ukey->KeyLongPressCount==5) ukey->UserKeyPressed_down=1;
 			if(ukey->KeyLongPressCount==50) ukey->UserKeyLongPressed=1;			
 		}
 		else
@@ -77,7 +77,7 @@ void zd_keyCheck(struct zd_userkey_t* ukey,unsigned long keysnotpress)
 			else
 			{
 				ukey->KeyQuickPressCount=1;
-				ukey->UserKeyRepeatDelay=50;
+				ukey->UserKeyRepeatDelay=100;
 			}
 			ukey->KeyVal_Ago=ukey->KeyVal;
 			ukey->UserKeyVal=ukey->KeyVal;
@@ -85,8 +85,8 @@ void zd_keyCheck(struct zd_userkey_t* ukey,unsigned long keysnotpress)
 				
 			ukey->KeyValQuick_Ago=ukey->KeyVal;
 			
-			//此处不清零（ukey->KeyLongPressCount=10）,可使按住一个按键不放再按其他按键并释放时不会触发按住不放的那个按键按下,并使多键长按时不在200ms内一起按下时重置清零
-			if(ukey->KeyLongPressCount>5) {ukey->KeyLongPressCount=5; ukey->UserKeyLongPressed=0;}
+			//此处不清零（ukey->KeyLongPressCount=10）,可使按住一个按键不放再按其他按键并释放时不会触发按住不放的那个按键按下,并使多键长按时不在100ms内一起按下时重置清零
+			if(ukey->KeyLongPressCount>10) {ukey->KeyLongPressCount=10; ukey->UserKeyLongPressed=0;}
 
 		}	
 	}
@@ -96,7 +96,7 @@ void zd_keyCheck(struct zd_userkey_t* ukey,unsigned long keysnotpress)
 		if(ukey->KeyVal_Ago!=ukey->KeyVal)
 		{
 			ukey->KeyVal_Ago=ukey->KeyVal;
-			if(ukey->KeyLongPressCount>2&&ukey->KeyLongPressCount<100) ukey->UserKeyPressed_up=1;
+			if(ukey->KeyLongPressCount>5&&ukey->KeyLongPressCount<200) ukey->UserKeyPressed_up=1;
 		}
 		
 		ukey->KeyLongPressCount=0;
