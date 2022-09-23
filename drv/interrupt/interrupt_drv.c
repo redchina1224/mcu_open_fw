@@ -88,12 +88,12 @@ inline void buzzer_in_isr(void)
 
 bit T_500ms_bit=0;
 bit T_1s_bit=0;
-
+bit M_10ms_bit=0;
 bit M_20ms_bit=0;
 bit M_50ms_bit=0;
 bit M_100ms_bit=0;
 bit M_1s_bit=0;
-
+ unsigned char __125usCount_0=0;
  unsigned char __125usCount=0;
  unsigned char __20msCount=0;
  unsigned char __100msCount=0; 
@@ -106,10 +106,12 @@ void softrtc_in_isr(void)
 inline void softrtc_in_isr(void)
 #endif
 {
+#ifdef SoftRtcTimerBaseUs
 #if (SoftRtcTimerBaseUs<10000)
 	if(++__125usCount>=(10000/SoftRtcTimerBaseUs)) 
 	{ 
 		__125usCount=0; 
+#endif
 #endif
 		M_20ms_bit=1;
 		if(++__20msCount>=5) 
@@ -132,11 +134,12 @@ inline void softrtc_in_isr(void)
 		}
 		//else if(__20msCount==5)
 		//	M_50ms_bit=1;
-			
+#ifdef SoftRtcTimerBaseUs			
 #if (SoftRtcTimerBaseUs<10000)
 	}
 	//else if(T_125usCount==40)
 	//	M_5ms_bit=1;
+#endif
 #endif
 
 }
@@ -323,6 +326,11 @@ void interrupt interrupt_Isr()
 		#endif
 	//---------------------------------------
 
+	if(++__125usCount_0>=80) 
+	{ 
+		__125usCount_0=0; 
+		M_10ms_bit=1;
+	}
 	//定时器蜂鸣驱动
 	#ifdef BuzzerType	
 		#if (BuzzerType==BuzzerType_TimerInv)
@@ -427,13 +435,6 @@ void interrupt interrupt_Isr()
 	#ifndef ZD_TIMER2_LOAD_RELOAD
 		ZD_TIMER2_LOAD_ADD_SET(T2_RELOAD_DEFAULT);		//重新赋初值，在赋值前Timer0已有计数，故在该基础上加初值
 	#endif
-	
-	//8M外置晶体,13:42开始测试,20ms基值249,每100ms将20ms基准值调至250一次,随后调回249,测试至14:43,电子板时钟比电脑慢1秒
-	//if((__20msCount==2)) ZD_TIMER2_LOAD_RELOAD((T2_RELOAD_DEFAULT+1)) else ZD_TIMER2_LOAD_RELOAD((T2_RELOAD_DEFAULT))
-	//8M外置晶体,9:15开始测试电子板慢0.5秒,20ms基值249,每个1秒内前半秒中每100ms将20ms基准值调至250一次,随后调回249,测试至10:35,电子板时钟比电脑慢2秒+
-	//if((__20msCount==2)&&(__100msCount<5)) {ZD_TIMER2_LOAD_RELOAD((T2_RELOAD_DEFAULT+1))} else {ZD_TIMER2_LOAD_RELOAD((T2_RELOAD_DEFAULT))}
-	//8M外置晶体, 11:00开始测试电子板慢0.5秒,20ms基值249,每个1秒将20ms基准值调至250一次,随后调回249,测试至1 ,电子板时钟比电脑慢  秒
-	//if((__20msCount==2)&&(__100msCount==1)) {ZD_TIMER2_LOAD_RELOAD((T2_RELOAD_DEFAULT+1))} else {ZD_TIMER2_LOAD_RELOAD((T2_RELOAD_DEFAULT))}
 	
 	
 	//---------------------------------------
@@ -664,7 +665,7 @@ AUXPGE=pageAuxTemp;
 
 void timer0_Isr() interrupt 1
 {
-//#ifdef Ft0Clk	
+#ifdef Ft0Clk	
 
 	//---------------------------------------
 		#ifndef ZD_TIMER0_LOAD_RELOAD
@@ -738,7 +739,7 @@ void timer0_Isr() interrupt 1
 	
 		ZD_T0IF_CLEAN;			//清中断标志位
 
-//#endif	//#ifdef Ft0Clk
+#endif	//#ifdef Ft0Clk
 }
 
 void timer1_Isr() interrupt 3
