@@ -3,8 +3,6 @@
 
 	#include <cms80f252x.h>
 
-	#include "touch_79ft73x\TouchKeyConst.h"
-
 	#define ZD_CLRWDT 	TA=0xAA,TA=0x55,WDCON|=BIT0;
 	#define ZD_NOP _nop_();
 

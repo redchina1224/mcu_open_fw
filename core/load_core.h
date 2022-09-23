@@ -218,6 +218,20 @@
 			#define Ft0Clk FsysClk/12
 		#endif
 	#endif	
+#elif (McuType==McuType_CmsSemicon_CMS80F7518)
+
+	//晶体时钟配置
+	#define FocsClk 48000000
+	
+	//IO定义标准化	
+	#include "cms\cms80f7518_core.h"
+
+	//系统时钟
+
+	
+	
+	//定时器时钟配置
+
 
 #elif (McuType==McuType_SinOneChip_SC92F8463B)
 

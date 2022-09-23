@@ -39,6 +39,7 @@
 /*****************************************************************************/
 /* Global pre-processor symbols/macros ('#define') */
 /*****************************************************************************/
+/*
 typedef   signed            char int8_t;
 typedef   signed short      int int16_t;
 typedef   signed            long  int32_t;
@@ -54,7 +55,7 @@ typedef int8_t   s8;
 typedef uint32_t  u32;
 typedef uint16_t  u16;
 typedef uint8_t   u8;
-
+*/
 
 /*----------BYTE Register------------------*/
 /*-----------SFR(特殊功能寄存器)-------*/
@@ -1407,6 +1408,7 @@ extern  uint32_t  SystemClock;
 /*****************************************************************************/
 /* Global function prototypes ('extern', definition in C source) */
 /*****************************************************************************/
+/*
 #include "system.h"
 #include "gpio.h"
 #include "wdt.h"
@@ -1426,7 +1428,7 @@ extern  uint32_t  SystemClock;
 #include "lcd.h"
 #include "mdu.h"
 #include "crc.h"
-
+*/
 
 #endif /* _CMS80FX51X_H_ */
 

@@ -162,7 +162,7 @@
 	
 	#define ZD_FSYS_CLKSET_DEFAULT ZD_FSYS_CLKSET_FOSC_DIV1
 	
-	#define ZD_FSYS_CLKSET(clkset) OSCCON&=(~(BIT6|BIT5|BIT4)),OSCCON|=(clkset)
+	#define ZD_FSYS_CLKSET(clkset) OSCCON=(clkset) //OSCCON&=(~(BIT6|BIT5|BIT4|BIT0)),OSCCON|=(clkset)
 
 
 	//////////////////////////////////////////////////////

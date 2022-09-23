@@ -82,7 +82,7 @@ void zd_timerInit(unsigned char timerChannel)
 		#endif
 		 break;
 		case 1:
-		//#ifdef Ft1Clk
+		#ifdef Ft1Clk
 		ZD_T1IE_ENABLE;
 		T1CON=0x31;
 		
@@ -90,10 +90,10 @@ void zd_timerInit(unsigned char timerChannel)
 		 //T1L_Reload = (65536 - ((unsigned int)((_Us*1.0)*((Ft1Clk*1.0)/1000000))));
 		 //ZD_TIMER1_INIT;
 		 cfgerr=0; 
-		//#endif
+		#endif
 		 break;
 		case 2:
-		//#ifdef Ft2Clk
+		#ifdef Ft2Clk
 
 		#ifdef T2_RELOAD_DEFAULT
 			#ifdef ZD_TIMER2_LOAD_RELOAD
@@ -114,7 +114,7 @@ void zd_timerInit(unsigned char timerChannel)
 		 
 		 ZD_T2_ENABLE;
 		 cfgerr=0; 
-		//#endif
+		#endif
 		 break;
 
 		default:break;
