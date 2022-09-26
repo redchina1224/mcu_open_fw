@@ -8,7 +8,7 @@
 	#include "touch_79ft72x\CMS_CheckTouch_PT_79F72x_V1.02.h"
 	
 #elif (McuType==McuType_CmsSemicon_CMS80F7518)
-	#include "Device\CMS80fx51x\Touch\CheckTouchKey_80F75xx.h"
+	#include "Device\CMS80fx51x\Touch\CMS_CheckTouchKey_80F75xx_PT_V1.06.h"
 #endif
 
 

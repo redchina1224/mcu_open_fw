@@ -20,6 +20,8 @@
 
 #if (McuType==McuType_CmsSemicon_CMS79F738)
 	#include "cms\touch_79ft73x\Touch_Kscan_Library.c"
+#elif(McuType==McuType_CmsSemicon_CMS80F7518)
+	#include "cms\Device\CMS80fx51x\Touch\Touch_Kscan_Library.c"
 #elif(McuType==McuType_CmsSemicon_CMS79F726)
 	#include "cms\touch_79ft72x\Touch_Kscan_Library.c"
 #elif(McuType==McuType_FremontMicroDevices_FT62F13)
@@ -101,6 +103,8 @@ unsigned char zd_touchkeyRead(unsigned long *keyval)
 			#endif
 
 			return 1;
+		#elif ((McuType&McuType_Mask)==McuType_CmsSemicon_CMS80F) 
+			(*keyval)=KeyFlag;
 		#endif
 		
 return 0;
