@@ -227,6 +227,26 @@
 	#include "cms\cms80f7518_core.h"
 
 	//系统时钟
+	/*
+	#if (ZD_FSYS_CLKSET_DEFAULT==ZD_FSYS_CLKSET_FOSC_DIV1)
+		#define FsysClk FocsClk/1
+	#elif (ZD_FSYS_CLKSET_DEFAULT==ZD_FSYS_CLKSET_FOSC_DIV2)
+		#define FsysClk FocsClk/2
+	#elif (ZD_FSYS_CLKSET_DEFAULT==ZD_FSYS_CLKSET_FOSC_DIV4)
+		#define FsysClk FocsClk/4
+	#elif (ZD_FSYS_CLKSET_DEFAULT==ZD_FSYS_CLKSET_FOSC_DIV8)
+		#define FsysClk FocsClk/8
+	#endif
+	*/
+
+#define FsysClk FocsClk/2
+	
+	//定时器时钟配置
+	#if (ZD_TIMER0_CLKSET_DEFAULT==ZD_TIMER0_CLKSET_FSYS_DIV4)
+		#define Ft0Clk FsysClk/4
+	#elif (ZD_TIMER0_CLKSET_DEFAULT==ZD_TIMER0_CLKSET_FSYS_DIV12)
+		#define Ft0Clk FsysClk/12
+	#endif
 
 	
 	

@@ -89,7 +89,7 @@ void zd_buzzerRun(void)//每50ms调用一次
 		#if (BuzzerType==BuzzerType_Gpio)
 			Buzzer_IO_Ctrl(Buzzer_IO_OFF);
 		#else
-			//Buzzer_IO_Input;
+			Buzzer_IO_Input;
 		#endif
 	}
 }

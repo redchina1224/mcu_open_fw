@@ -74,7 +74,7 @@ void buzzer_in_isr(void)
 inline void buzzer_in_isr(void)
 #endif
 {
-	if((*T_BuzzerEn)!=0) Buzzer_IO_Channel=!Buzzer_IO_Channel; else Buzzer_IO_Input;
+	if((*T_BuzzerEn)!=0) Buzzer_IO_Channel=!Buzzer_IO_Channel;// else Buzzer_IO_Input;
 	//Buzzer_IO_Output;
 	//Buzzer_IO_Channel=!Buzzer_IO_Channel;
 }
@@ -96,6 +96,7 @@ bit M_1s_bit=0;
  unsigned char __125usCount_0=0;
  unsigned char __125usCount=0;
  unsigned char __20msCount=0;
+ unsigned char __10msCount=0;
  unsigned char __100msCount=0; 
  //unsigned long __SecCount=0;
  //unsigned long *T_SecCount=&__SecCount;
@@ -106,6 +107,7 @@ void softrtc_in_isr(void)
 inline void softrtc_in_isr(void)
 #endif
 {
+
 #ifdef SoftRtcTimerBaseUs
 #if (SoftRtcTimerBaseUs<10000)
 	if(++__125usCount>=(10000/SoftRtcTimerBaseUs)) 
@@ -113,10 +115,11 @@ inline void softrtc_in_isr(void)
 		__125usCount=0; 
 #endif
 #endif
-		M_20ms_bit=1;
-		if(++__20msCount>=5) 
+		//M_20ms_bit=1;
+		M_10ms_bit=1;
+		if(++__10msCount>=10) 
 		{
-			__20msCount=0;
+			__10msCount=0;
 			//M_50ms_bit=1;
 			M_100ms_bit=1;
 			
@@ -184,7 +187,7 @@ inline void softcounter1_in_isr(void)
 
 		if(Counter_IO_Channel1==0)
 		{
-			if(__counter1filter<10) __counter1filter++;
+			if(__counter1filter<5) __counter1filter++;
 			else
 			{
 				if(__counter1_bit_status_ago==1)//下降沿
@@ -746,7 +749,7 @@ void timer0_Isr() interrupt 1
 	#endif	//#ifdef KeyType	
 
 	ZD_T0IF_CLEAN;			//清中断标志位
-	}
+
 #endif	//#ifdef Ft0Clk
 
 }
