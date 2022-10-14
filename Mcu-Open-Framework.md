@@ -1,20 +1,20 @@
 <font size=15>小家电智能控制器开发平台<br/>低端MCU开源开发框架</font>
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
-## **Mcu-Open-Framework     V0.10**
+## **Mcu-Open-Framework     V0.11**
 <br/>
 当前适配 CMSIDE，FMDIDE，HDIDE，KEILC51。
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-<font size=5>发布日期 2021-12-09</font>
+<font size=5>发布日期 2022-10-14</font>
 <br/>
 
 <table>
 <tr>
-<td><font size=5></font></td>
+<td><font size=5>浙江智达电子科技有限公司</font></td>
 <td  rowspan="3"><font size=6>发布</font></td>
 </tr>
 <tr></tr>
-<td><font size=5></font></td>
+<td><font size=5>嘉兴慕链信息技术有限公司</font></td>
 </tr>
 </table>
 <div STYLE="page-break-after: always;"></div>
@@ -25,6 +25,14 @@
 <td>发布日期</td>
 <td>版本</td>
 <td>版本说明</td>
+</tr>
+<tr>
+<td>2022-10-14</td>
+<td>V0.11</td>
+<td><ul>
+<li>添加新增功能信息,调整内容为文件夹字母顺序</li>
+</ul></td>
+</tr>
 <tr>
 <td>2022-02-10</td>
 <td>V0.10</td>
@@ -53,6 +61,7 @@
 
 
 
+
 <div STYLE="page-break-after: always;"></div>
 
 ## **目录：**
@@ -66,6 +75,11 @@
 ## **二、文件目录介绍：**
 
 ### *<u>内核驱动：./core*</u>
+#### 比亚迪MCU内核专用驱动：./core/byd
+
+- byd_core.h：
+
+  比亚迪BF7512DMXXf单片机标准化头文件及标准接口宏定义
 
 #### 中微MCU内核专用驱动：./core/cms
 
@@ -105,58 +119,64 @@
 
 <div STYLE="page-break-after: always;"></div>
 ### *<u>外设驱动：./drv*</u>
+#### BUZZER模块：./drv/buzzer
 
-#### NTC模块：./drv/ntc
+- buzzer目录：
 
-- NTC__xxK_Bxxxx目录：
+  常规蜂鸣器驱动的软件实现，包含有源GPIO型、无源定时中断取反型、PWM输出型，其中定时中断取反型依赖 125uS 定时中断来实现，PWM输出型依赖MCU硬件PWM功能。
 
-  存放对应B值和K值的阻值宏定义文件及相关参考资料，宏定义值单位为KR
+- defineBuzzer_drv.h
 
-  ```c
-  #define NtcResVal_at23        109.3221
-  #define NtcResVal_at24        104.5415
-  #define NtcResVal_at25        100
-  ```
+  定义配置参数值，当新增可选Buzzer实现时必须在此文件同步更新相应的定义值，以便在项目中可通过该定义值配置使用
 
-  如上示例表示该NTC在23摄氏度时电阻值为 109.3221KR，在24摄氏度电阻值为104.5415KR，在25摄氏度时电阻值为100KR
+- loadBuzzer_drv.h
 
-- defineNtcRes_drv.h
-
-  定义配置参数值，当新增可选NTC时必须在此文件同步更新相应的定义值，以便在项目中可通过该定义值配置使用
-
-- ntc_adcval_calc.h
-
-  根据上下拉电阻等参数计算对应温度时ADC，该文件在loadNtcRes_drv.h被include方式引用。
-
-- loadNtcRes_drv.h
-
-  根据项目配置中定义的NTC，载入对应的阻值宏定义文件，并调用ntc_adcval_calc.h计算对应温度时ADC值，用于定义温度ADC值常量表。
-
-- ntc_table.c
-
-  温度ADC值常量数组表，数值由loadNtcRes_drv.h中调用ntc_adcval_calc.h计算而来，项目配置中的TEMPTABLE_BUFFER_LENGTH决定该常量数组表的长度，TableValueTyp决定该常量数组表的数据类型。该文件由ntc_sensor.c通过include方式引用。
-
-- ntc_sensor.c
-
-  与NTC应用相关的功能函数，可实现ADC值转换为摄氏温度，以温度值获取ADC值，摄氏温度转换为华氏温度。
-
-- ntc_sensor.h
-
-  定义ntc_sensor.c的外部接口函数。
+  根据项目配置中定义的Buzzer，载入对应的实现函数头文件。
   
-#### RTC模块：./drv/rtc
+#### COUNTER模块：./drv/counter
 
-- softrtc目录：
+- defineCounter_drv.h
 
-  软件RTC时钟实现，rtc时间产生，运行时间标志位产生，依赖 125uS 定时中断来实现
+  定义配置参数值，目前只支持中断中电平检测方式的软件计数器
 
-- defineRtc_drv.h
+#### DISPLAY模块：./drv/display
 
-  定义配置参数值，当新增可选RTC实现时必须在此文件同步更新相应的定义值，以便在项目中可通过该定义值配置使用
+- ic_led目录：
 
-- loadRtc_drv.h
+  段码式led驱动芯片相关驱动代码。
+  
+- ic_lcd目录：
 
-  根据项目配置中定义的RTC，载入对应的实现函数头文件。
+  段码式lcd驱动芯片相关驱动代码。
+  
+- softled_bits目录：
+
+  类流水灯的软件实现，可实现流水灯,柱状充电等效果。
+  
+- softled_dig8目录：
+
+  类LED数码管显示驱动的软件实现，推荐依赖 125uS 定时中断来实现，防止闪烁。
+
+- softled_dig8_bidir目录：
+
+  类LED数码管显示正反并联发光管驱动的软件实现，推荐依赖 125uS 定时中断来实现，防止闪烁。
+  
+- softled_dig8_withkeys目录：
+
+  类LED数码管显示驱动的软件实现合并按键检测,仅针对特定电路的按键检测方式,暂不作说明，待有更通用的方案再进行整理说明，推荐依赖 125uS 定时中断来实现。
+  
+- defineDisplay_drv.h
+
+  定义配置参数值，当新增可选Display实现时必须在此文件同步更新相应的定义值，以便在项目中可通过该定义值配置使用
+
+- loadDisplay_drv.h
+
+  根据项目配置中定义的Display，载入对应的实现函数头文件。
+#### INTERRUPT模块：./drv/inputerrupt
+
+- interrupt_drv.c 与 interrupt_drv.c：
+
+  MCU中断服务函数的集合，很多功能依赖该函数实现其功能。
   
 #### KEY模块：./drv/key
 
@@ -193,56 +213,6 @@
 
   多类型按键信号检测与触发标志位产生处理，依赖以上的各类按键信号接口方案。
   
-#### INTERRUPT模块：./drv/inputerrupt
-
-- interrupt_drv.c 与 interrupt_drv.c：
-
-  MCU中断服务函数的集合，很多功能依赖该函数实现其功能。
-  
-#### DISPLAY模块：./drv/display
-
-- softled_dig8目录：
-
-  类LED数码管显示驱动的软件实现，推荐依赖 125uS 定时中断来实现，防止闪烁。
-  
-- softled_dig8_withkeys目录：
-
-  类LED数码管显示驱动的软件实现合并按键检测,仅针对特定电路的按键检测方式,暂不作说明，待有更通用的方案再进行整理说明，推荐依赖 125uS 定时中断来实现。
-
-- softled_bits目录：
-
-  类流水灯的软件实现，可实现流水灯,柱状充电等效果。
-
-- ic_led目录：
-
-  段码式led驱动芯片相关驱动代码。
-  
-- ic_lcd目录：
-
-  段码式lcd驱动芯片相关驱动代码。
-  
-- defineDisplay_drv.h
-
-  定义配置参数值，当新增可选Display实现时必须在此文件同步更新相应的定义值，以便在项目中可通过该定义值配置使用
-
-- loadDisplay_drv.h
-
-  根据项目配置中定义的Display，载入对应的实现函数头文件。
-
-#### BUZZER模块：./drv/buzzer
-
-- buzzer目录：
-
-  常规蜂鸣器驱动的软件实现，包含有源GPIO型、无源定时中断取反型、PWM输出型，其中定时中断取反型依赖 125uS 定时中断来实现，PWM输出型依赖MCU硬件PWM功能。
-
-- defineBuzzer_drv.h
-
-  定义配置参数值，当新增可选Buzzer实现时必须在此文件同步更新相应的定义值，以便在项目中可通过该定义值配置使用
-
-- loadBuzzer_drv.h
-
-  根据项目配置中定义的Buzzer，载入对应的实现函数头文件。
-
 #### MOTOR模块：./drv/motor
 
 - stepmotor目录：
@@ -257,7 +227,67 @@
 
   根据项目配置中定义的Motor，载入对应的实现函数头文件。
   
-#### sensor模块：./drv/sensor
+#### NTC模块：./drv/ntc
+
+- NTC_xxK_Bxxxx目录：
+
+  存放对应B值和K值的阻值宏定义文件及相关参考资料，宏定义值单位为KR
+```c
+  #define NtcResVal_at23        109.3221
+  #define NtcResVal_at24        104.5415
+  #define NtcResVal_at25        100
+```
+  如上示例表示该NTC在23摄氏度时电阻值为 109.3221KR，在24摄氏度电阻值为104.5415KR，在25摄氏度时电阻值为100KR
+
+- defineNtcRes_drv.h
+
+  定义配置参数值，当新增可选NTC时必须在此文件同步更新相应的定义值，以便在项目中可通过该定义值配置使用
+
+- ntc_adcval_calc.h
+
+  根据上下拉电阻等参数计算对应温度时ADC，该文件在loadNtcRes_drv.h被include方式引用。
+
+- loadNtcRes_drv.h
+
+  根据项目配置中定义的NTC，载入对应的阻值宏定义文件，并调用ntc_adcval_calc.h计算对应温度时ADC值，用于定义温度ADC值常量表。
+
+- ntc_table.c
+
+  温度ADC值常量数组表，数值由loadNtcRes_drv.h中调用ntc_adcval_calc.h计算而来，项目配置中的TEMPTABLE_BUFFER_LENGTH决定该常量数组表的长度，TableValueTyp决定该常量数组表的数据类型。该文件由ntc_sensor.c通过include方式引用。
+
+- ntc_sensor.c
+
+  与NTC应用相关的功能函数，可实现ADC值转换为摄氏温度，以温度值获取ADC值，摄氏温度转换为华氏温度。
+
+- ntc_sensor.h
+
+  定义ntc_sensor.c的外部接口函数。
+  
+#### POWEROFFCHECK模块：./drv/poweroffcheck
+
+- definePowerOffCheck_drv.h
+
+  定义配置参数值，目前只支持单片机LVD方式的掉电检测
+  
+#### RTC模块：./drv/rtc
+
+- softrtc目录：
+
+  软件RTC时钟实现，rtc时间产生，运行时间标志位产生，依赖 125uS 定时中断来实现
+
+- defineRtc_drv.h
+
+  定义配置参数值，当新增可选RTC实现时必须在此文件同步更新相应的定义值，以便在项目中可通过该定义值配置使用
+
+- loadRtc_drv.h
+
+  根据项目配置中定义的RTC，载入对应的实现函数头文件。
+  
+#### SCR模块：./drv/scr
+
+可控硅导通角计算模块(暂未启用)
+
+#### sensor模块：./drv/sensor    (请使用app/general/signalfiltering替代)
 
 - sensor目录：
 
@@ -270,7 +300,13 @@
 - loadSensor_drv.h
 
   根据项目配置中定义的Sensor，载入对应的实现函数头文件。
+  
+#### ZEROCROSS模块：./drv/zerocross
 
+- defineZerocross_drv.h
+
+  定义配置参数值，目前只支持单片机IO方式的过零检测
+  
 <div STYLE="page-break-after: always;"></div>
 ### *<u>应用模块：./app*</u>
 
