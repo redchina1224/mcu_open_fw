@@ -68,20 +68,51 @@
 暂无
 <div STYLE="page-break-after: always;"></div>
 
-## **一、开发框架介绍：**
+## **一、开发框架库介绍：**
 暂无
 <div STYLE="page-break-after: always;"></div>
 
-## **二、文件目录介绍：**
+## **二、开发框架库目录介绍：**
 
-### *<u>内核驱动：./core*</u>
-#### 比亚迪MCU内核专用驱动：./core/byd
+### *<u>开发框架库文件目录结构*</u>
+<pre>
+mcu_open_fw
+├─app
+│  ├─appdefault
+│  └─general
+├─core
+│  ├─byd
+│  ├─cms
+│  ├─fmd
+│  ├─hd
+│  ├─soc
+│  ├─stc
+│  └─wxjz
+└─drv
+    ├─buzzer
+    ├─counter
+    ├─display
+    ├─interrupt
+    ├─key
+    ├─motor
+    ├─ntc
+    ├─poweroffcheck
+    ├─rtc
+    ├─scr
+    ├─sensor
+    └─zerocross
+</pre>
+
+<div STYLE="page-break-after: always;"></div>
+
+### *<u>内核驱动：mcu_open_fw/core*</u>
+#### 比亚迪MCU内核专用驱动：mcu_open_fw/core/byd
 
 - byd_core.h：
 
   比亚迪BF7512DMXXf单片机标准化头文件及标准接口宏定义
 
-#### 中微MCU内核专用驱动：./core/cms
+#### 中微MCU内核专用驱动：mcu_open_fw/core/cms
 
 - touch_79ft73x目录：
 
@@ -95,7 +126,7 @@
 
   中微80f的C51单片要m标准化头文件及标准接口宏定义
 
-#### 辉芒微MCU内核专用驱动：./core/fmd
+#### 辉芒微MCU内核专用驱动：mcu_open_fw/core/fmd
 
 - FT62F13X目录：
 
@@ -105,21 +136,22 @@
 
   辉芒微单片机标准化头文件及标准接口宏定义
 
-#### 汉达MCU内核专用驱动：./core/fmd
+#### 汉达MCU内核专用驱动：mcu_open_fw/core/fmd
 
 - hd_core.h：
 
   汉达单片机标准化头文件及标准接口宏定义
 
-#### 赛元微MCU内核专用驱动：./core/soc
+#### 赛元微MCU内核专用驱动：mcu_open_fw/core/soc
 
 - soc_core.h：
 
   赛元微单片机标准化头文件及标准接口宏定义
 
 <div STYLE="page-break-after: always;"></div>
-### *<u>外设驱动：./drv*</u>
-#### BUZZER模块：./drv/buzzer
+
+### *<u>外设驱动：mcu_open_fw/drv*</u>
+#### BUZZER模块：mcu_open_fw/drv/buzzer
 
 - buzzer目录：
 
@@ -133,13 +165,13 @@
 
   根据项目配置中定义的Buzzer，载入对应的实现函数头文件。
   
-#### COUNTER模块：./drv/counter
+#### COUNTER模块：mcu_open_fw/drv/counter
 
 - defineCounter_drv.h
 
   定义配置参数值，目前只支持中断中电平检测方式的软件计数器
 
-#### DISPLAY模块：./drv/display
+#### DISPLAY模块：mcu_open_fw/drv/display
 
 - ic_led目录：
 
@@ -172,13 +204,13 @@
 - loadDisplay_drv.h
 
   根据项目配置中定义的Display，载入对应的实现函数头文件。
-#### INTERRUPT模块：./drv/inputerrupt
+#### INTERRUPT模块：mcu_open_fw/drv/inputerrupt
 
 - interrupt_drv.c 与 interrupt_drv.c：
 
   MCU中断服务函数的集合，很多功能依赖该函数实现其功能。
   
-#### KEY模块：./drv/key
+#### KEY模块：mcu_open_fw/drv/key
 
 - irkey目录：
 
@@ -213,7 +245,7 @@
 
   多类型按键信号检测与触发标志位产生处理，依赖以上的各类按键信号接口方案。
   
-#### MOTOR模块：./drv/motor
+#### MOTOR模块：mcu_open_fw/drv/motor
 
 - stepmotor目录：
 
@@ -227,7 +259,7 @@
 
   根据项目配置中定义的Motor，载入对应的实现函数头文件。
   
-#### NTC模块：./drv/ntc
+#### NTC模块：mcu_open_fw/drv/ntc
 
 - NTC_xxK_Bxxxx目录：
 
@@ -263,13 +295,13 @@
 
   定义ntc_sensor.c的外部接口函数。
   
-#### POWEROFFCHECK模块：./drv/poweroffcheck
+#### POWEROFFCHECK模块：mcu_open_fw/drv/poweroffcheck
 
 - definePowerOffCheck_drv.h
 
   定义配置参数值，目前只支持单片机LVD方式的掉电检测
   
-#### RTC模块：./drv/rtc
+#### RTC模块：mcu_open_fw/drv/rtc
 
 - softrtc目录：
 
@@ -283,11 +315,11 @@
 
   根据项目配置中定义的RTC，载入对应的实现函数头文件。
   
-#### SCR模块：./drv/scr
+#### SCR模块：mcu_open_fw/drv/scr
 
 可控硅导通角计算模块(暂未启用)
 
-#### sensor模块：./drv/sensor    (请使用app/general/signalfiltering替代)
+#### sensor模块：mcu_open_fw/drv/sensor    (请使用app/general/signalfiltering替代)
 
 - sensor目录：
 
@@ -301,16 +333,17 @@
 
   根据项目配置中定义的Sensor，载入对应的实现函数头文件。
   
-#### ZEROCROSS模块：./drv/zerocross
+#### ZEROCROSS模块：mcu_open_fw/drv/zerocross
 
 - defineZerocross_drv.h
 
   定义配置参数值，目前只支持单片机IO方式的过零检测
   
 <div STYLE="page-break-after: always;"></div>
-### *<u>应用模块：./app*</u>
 
-#### 可共用的通用应用代码：./app/general
+### *<u>应用模块：mcu_open_fw/app*</u>
+
+#### 可共用的通用应用代码：mcu_open_fw/app/general
 
 - intervalwork目录：
 
@@ -332,5 +365,80 @@
 
   数值合规检测代码,实现数值的限幅，用于数据初始化后合规检测。
 
+<div STYLE="page-break-after: always;"></div>
 
+## **三、项目文件目录介绍：**
+
+### *<u>示例项目文件夹根目录结构：project*</u>
+
+<pre>
+project
+├─cd_2600
+│  ├─config
+│  ├─inc
+│  ├─src
+│  └─cd_2600.uvproj
+├─mcu_open_fw （开发框架库文件夹，这里不再展开）
+└─project.h
+</pre>
+
+<div STYLE="page-break-after: always;"></div>
+
+### *<u>以产品名称命名的用户项目代码目录：project/cd_2600*</u>
+#### 用户项目代码配置文件：project/cd_2600/config
+
+- project_cfg.h​ 文件：
+
+  对项目采用的MCU，开发平台，需要载入的板级、应用、用户定应头文件，进行配置
+
+- board_cfg.h 文件：
+
+  对板级资源进行配置，定义端口，及相关端口应用类型。
+
+- displayCode.h​ 文件：
+
+  定义数码管段码显示编码
+  
+#### 用户项目代码头文件：project/cd_2600/inc
+
+  存放用户代码的头文件。
+
+#### 用户项目代码源文件：project/cd_2600/src
+
+- board.c​ 文件：
+
+  板级资源初始化和统一应用控制接口
+
+- display.c​ 文件：
+
+  数码显示缓存及相关显示控制接口
+
+- main.c​ 文件：
+
+  用户功能逻辑代码
+  
+#### 用户项目工程文件：project/cd_2600/cd_2600.uvproj
+
+- cd_2600.uvproj​ 文件：
+
+  项目工程文件，不同的IDE会有不同的工程文件后缀
+  
+#### 开发框架库：project/mcu_open_fw
+
+  直接拷贝所需版本的开发框架库。
+
+#### 项目配置文件指向文件：project/project.h
+
+  - project.h​ 文件：
+
+  直接include指定项目的 project_cfg.h​ 文件，用于给开发框架提供项目配置信息
+
+```c
+#ifndef __PROJECTSET_H_
+#define __PROJECTSET_H_
+
+#include "cd_2600\config\project_cfg.h"
+
+#endif
+```
 
