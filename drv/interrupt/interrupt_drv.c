@@ -213,6 +213,63 @@ inline void softcounter1_in_isr(void)
 #endif //#ifdef Counter_IO_Channel1
 
 
+#ifdef Counter_IO_Channel2
+bit __counter2_bit_status_ago;
+unsigned int __counter2_val=0;
+unsigned char __counter2filter=0;
+unsigned int *T_Counter2_1sec=&__counter2_val;
+unsigned int *T_Counter2_Total=&__counter2_val;
+
+void softcounter2_reset(void)
+{
+	ZD_GIE_DISABLE;
+	(*T_Counter2_1sec)=0;
+	(*T_Counter2_Total)=0;
+	ZD_GIE_ENABLE;
+}
+
+#if (DevPlatform==DevPlatform_Keil_C51)
+void softcounter2_in_isr(void)
+#else
+inline void softcounter2_in_isr(void)
+#endif
+{
+		if(T_500ms_bit)//半秒周期,上升沿与下降沿都累加，所得累加值等同于1秒的值
+		{
+			(*T_Counter2_1sec)=__counter2_val; 
+			(*T_Counter2_Total)+=__counter2_val;
+			__counter2_val=0;
+		}
+
+		if(Counter_IO_Channel2==0)
+		{
+			if(__counter2filter<5) __counter2filter++;
+			else
+			{
+				if(__counter2_bit_status_ago==1)//下降沿
+				{
+					if(__counter2_val<64999)	__counter2_val++;
+					__counter2_bit_status_ago=0;
+				}
+			}
+		}
+		else
+		{
+			if(__counter2filter>0) __counter2filter--;
+			else
+			{ 
+				if(__counter2_bit_status_ago==0)//上升沿
+				{
+					if(__counter2_val<64999)	__counter2_val++;
+					__counter2_bit_status_ago=1;
+				}
+			}
+		}
+}
+
+#endif //#ifdef Counter_IO_Channel2
+
+
 #endif //#if (CounterType==CounterType_SoftCounter) 
 #endif //#ifdef CounterType
 			
@@ -367,11 +424,15 @@ void interrupt interrupt_Isr()
 	#ifdef CounterType
 		#if (CounterType==CounterType_SoftCounter) 
 			#if(SoftCounterTimer==0)
+			
 				#ifdef Counter_IO_Channel1
 					softcounter1_in_isr();//softcount1软件计数器内联函数
-					T_1s_bit=0;
-					T_500ms_bit=0;
 				#endif
+				
+				#ifdef Counter_IO_Channel2
+					softcounter2_in_isr();//softcount2软件计数器内联函数
+				#endif
+				
 			#endif //#if(SoftCounterTimer==0)
 		#endif
 	#endif //#ifdef CounterType
