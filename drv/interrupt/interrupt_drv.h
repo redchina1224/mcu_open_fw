@@ -16,6 +16,28 @@
 //声明外部变量******************************************************************
 
 
+
+#ifdef Uart0_Type
+extern unsigned char * Uart0_TxBuf;
+extern unsigned char Uart0_TxLen;
+extern unsigned char * Uart0_RxBuf;
+
+#endif
+
+#ifdef Uart1_Type
+extern unsigned char * Uart1_TxBuff_P;
+extern unsigned char * Uart1_RxBuff_P;
+
+extern unsigned char Uart1_Comm_TimeOut_x10msec;
+extern unsigned char Uart1_Recv_Byte_Length;
+extern unsigned char Uart1_Recv_Over_Checking;
+
+extern unsigned char Uart1_Sended_Byte_Length;
+extern unsigned char Uart1_NeedSend_Byte_Length;
+extern unsigned char Uart1_Send_Busy;
+
+#endif
+
 #ifdef PowerOffCheckType
 #if (PowerOffCheckType==PowerOffCheckType_MCULVD)
 extern bit M_PowerOff_bit;
