@@ -18,9 +18,16 @@
 
 
 #ifdef Uart0_Type
-extern unsigned char * Uart0_TxBuf;
-extern unsigned char Uart0_TxLen;
-extern unsigned char * Uart0_RxBuf;
+extern unsigned char * Uart0_TxBuff_P;
+extern unsigned char * Uart0_RxBuff_P;
+
+extern unsigned char Uart0_Comm_TimeOut_x10msec;
+extern unsigned char Uart0_Recv_Byte_Length;
+extern unsigned char Uart0_Recv_Over_Checking;
+
+extern unsigned char Uart0_Sended_Byte_Length;
+extern unsigned char Uart0_NeedSend_Byte_Length;
+extern unsigned char Uart0_Send_Busy;
 
 #endif
 

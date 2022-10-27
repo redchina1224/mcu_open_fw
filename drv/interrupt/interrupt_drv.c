@@ -47,9 +47,16 @@ void interrupt_SoftRtcConfig(unsigned char *T_ms,unsigned long *T_sec)
 */
 
 #ifdef Uart0_Type
-unsigned char * Uart0_TxBuff;
-unsigned char Uart0_TxLen=0;
-unsigned char * Uart0_RxBuff;
+unsigned char * Uart0_TxBuff_P;
+unsigned char * Uart0_RxBuff_P;
+
+unsigned char Uart0_Comm_TimeOut_x10msec=0;
+unsigned char Uart0_Recv_Byte_Length=0;
+unsigned char Uart0_Recv_Over_Checking=0;
+
+unsigned char Uart0_Sended_Byte_Length=0;
+unsigned char Uart0_NeedSend_Byte_Length=0;
+unsigned char Uart0_Send_Busy=0;
 
 #endif
 
@@ -598,24 +605,38 @@ void interrupt interrupt_Isr()
 #endif
 	
 #ifdef Uart0_Type
-	if(TX0IF)
+	if(TX0IE&&TX0IF)
 	{
-
-		TX0IF=0;
+		if(++Uart0_Sended_Byte_Length<Uart0_NeedSend_Byte_Length)
+		{
+			if(Uart0_Sended_Byte_Length<=(Uart0_SendBuffLength-1)) { TXREG0=Uart0_TxBuff_P[Uart0_Sended_Byte_Length]; }
+		}
+		else
+		{
+			Uart0_Send_Busy=0;
+			Uart0_NeedSend_Byte_Length=0;
+			TX0IE=0;
+		}
 	}
 	
 	if(RC0IF)
 	{	
-		
-		RC0IF=0;
+		if(Uart0_Recv_Over_Checking==0)//前次接收未处理完成时,不再接收接数据,以保护数据缓存
+		{
+			if(Uart0_Comm_TimeOut_x10msec==0||Uart0_RxBuff_P[0]!=ModebusSlaveDeviceID ) Uart0_Recv_Byte_Length=0;//超时或者设备地址不匹配时，从头开始接收
+			if(Uart0_Recv_Byte_Length<(Uart0_RecvBuffLength-1)) { Uart0_RxBuff_P[Uart0_Recv_Byte_Length] = RCREG0; Uart0_Recv_Byte_Length++; } //接收数据,超过缓冲区长度后不再接收
+			Uart0_Comm_TimeOut_x10msec=Uart0RecvTimeOut10ms; //重设接收超时时间
+		}
+		else
+		{
+			 RCREG0;
+		}
 	}
 #endif
 
 #ifdef Uart1_Type
-	if(TX1IF)
+	if(TX1IE&&TX1IF)
 	{
-		TX1IF=0;
-
 		if(++Uart1_Sended_Byte_Length<Uart1_NeedSend_Byte_Length)
 		{
 			if(Uart1_Sended_Byte_Length<=(Uart1_SendBuffLength-1)) { TXREG1=Uart1_TxBuff_P[Uart1_Sended_Byte_Length]; }
@@ -624,19 +645,21 @@ void interrupt interrupt_Isr()
 		{
 			Uart1_Send_Busy=0;
 			Uart1_NeedSend_Byte_Length=0;
+			TX1IE=0;
 		}
-
 	}
 	
 	if(RC1IF)
 	{	
-		RC1IF=0;
-
 		if(Uart1_Recv_Over_Checking==0)//前次接收未处理完成时,不再接收接数据,以保护数据缓存
 		{
 			if(Uart1_Comm_TimeOut_x10msec==0||Uart1_RxBuff_P[0]!=ModebusSlaveDeviceID ) Uart1_Recv_Byte_Length=0;//超时或者设备地址不匹配时，从头开始接收
 			if(Uart1_Recv_Byte_Length<(Uart1_RecvBuffLength-1)) { Uart1_RxBuff_P[Uart1_Recv_Byte_Length] = RCREG1; Uart1_Recv_Byte_Length++; } //接收数据,超过缓冲区长度后不再接收
 			Uart1_Comm_TimeOut_x10msec=Uart1RecvTimeOut10ms; //重设接收超时时间
+		}
+		else
+		{
+			 RCREG1;
 		}
 	}
 #endif
