@@ -360,19 +360,24 @@ inline void zerocross_in_isr(void)
 	{
 		if(0==__zerocross_bit_status_ago)
 		{
-			zeroCrossPassCntMax=zeroCrossPassCnt;
+			//zeroCrossPassCntMax=zeroCrossPassCnt;
 			zeroCrossPassCnt=0;
-			__zerocross_bit_status_ago=1;
 			Triac_IO_Ctrl(Triac_IO_OFF);
+			
+			__zerocross_bit_status_ago=1;
 		}
 		else
 		{
+			zeroCrossPassCntMax=zeroCrossPassCnt;
+			zeroCrossPassCnt=6;
+			Triac_IO_Ctrl(Triac_IO_OFF);
+			
 			__zerocross_bit_status_ago=0;
 		}
 	}
 
 	//可控硅控制
-	if(triacOnEnable==1&&zeroCrossPassCnt>triacOn_CrossPass)
+	if(triacOnEnable==1&&zeroCrossPassCnt>triacOn_CrossPass&&zeroCrossPassCnt<(triacOn_CrossPass+10))
 	{
 		Triac_IO_Ctrl(Triac_IO_ON);
 	}
@@ -414,11 +419,6 @@ void interrupt interrupt_Isr()
 		#endif
 	//---------------------------------------
 
-	if(++__125usCount_0>=80) 
-	{ 
-		__125usCount_0=0; 
-		M_10ms_bit=1;
-	}
 	//定时器蜂鸣驱动
 	#ifdef BuzzerType	
 		#if (BuzzerType==BuzzerType_TimerInv)
@@ -499,7 +499,7 @@ void interrupt interrupt_Isr()
 #endif	//#ifdef Ft0Clk
 	
 /*
-//#ifdef Ft1Clk	
+#ifdef Ft1Clk	
 	if(TMR1IF)
 	{
 	//---------------------------------------
@@ -517,7 +517,7 @@ void interrupt interrupt_Isr()
 	
 	TMR1IF = 0;				//清中断标志位
 	}
-//#endif
+#endif
 */
 
 #ifdef Ft2Clk	
