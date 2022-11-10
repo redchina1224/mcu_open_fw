@@ -371,11 +371,18 @@ void interrupt interrupt_Isr()
 		#endif
 	#endif	//#ifdef BuzzerType	
 
+
+	//软件时基系统
+	#if (BaseTimeType==BaseTimeType_CoreTimer) 
+		#if(BaseTime_CoreTimer==0)
+			basetime_in_isr();//时基内联函数
+		#endif //#if(BaseTime_CoreTimer==0)
+	#endif //#if (BaseTimeType==BaseTimeType_CoreTimer) 
+	
+	
 	//软件时钟系统
 	#if (RtcType==RtcType_TimerSoftRtc) 
 		#if(SoftRtcTimer==0)
-			T_1s_bit=0;
-			T_500ms_bit=0;
 			softrtc_in_isr();//RTC时钟内联函数
 		#endif //#if(SoftRtcTimer==0)
 	#endif //#if (RtcType==RtcType_TimerSoftRtc) 
@@ -482,6 +489,13 @@ void interrupt interrupt_Isr()
 			#endif
 		#endif
 	#endif	//#ifdef BuzzerType	
+
+	//软件时基系统
+	#if (BaseTimeType==BaseTimeType_CoreTimer) 
+		#if(BaseTime_CoreTimer==2)
+			basetime_in_isr();//时基内联函数
+		#endif //#if(BaseTime_CoreTimer==0)
+	#endif //#if (BaseTimeType==BaseTimeType_CoreTimer) 
 	
 	//软件时钟系统
 	#if (RtcType==RtcType_TimerSoftRtc) 

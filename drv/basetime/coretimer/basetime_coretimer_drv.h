@@ -2,16 +2,16 @@
 #define __BASETIMECORETIMER_DRV_H_
 
 
-extern bit mSec_x500_flashbit=0;
-extern bit mSec_x1000_workbit=0;
-extern bit mSec_x500_workbit=0;
-extern bit mSec_x100_workbit=0;
+extern bit mSec_x500_flashbit;
+extern bit mSec_x1000_workbit;
+extern bit mSec_x500_workbit;
+extern bit mSec_x100_workbit;
 
 
 #if(BaseTimeTargetUs==10000)
-extern bit mSec_x10_workbit=0;
+extern bit mSec_x10_workbit;
 #elif(BaseTimeTargetUs==20000)
-extern bit mSec_x20_workbit=0;
+extern bit mSec_x20_workbit;
 #endif
 
 

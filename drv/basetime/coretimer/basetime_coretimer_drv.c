@@ -32,8 +32,6 @@ void zd_basetime_init(void)
 void zd_basetime_run(void)
 {
 	//ZD_CLRWDT;
-
-	Sec_x1_workbit=0;
 		
 	mSec_x1000_workbit=0;
 	
@@ -67,7 +65,7 @@ void zd_basetime_run(void)
 		{
 			basetime_msec_cnt=0;
 
-			M_100ms_bit=1;
+			mSec_x100_workbit=1;
 			
 			if(++basetime_100msec_cnt>=10)
 			{
@@ -93,7 +91,7 @@ void zd_basetime_run(void)
 		{
 			basetime_msec_cnt=0;
 
-			M_100ms_bit=1;
+			mSec_x100_workbit=1;
 			
 			if(++basetime_100msec_cnt>=10)
 			{
