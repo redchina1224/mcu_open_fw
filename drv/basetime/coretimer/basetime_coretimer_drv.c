@@ -10,6 +10,7 @@ bit mSec_x500_flashbit=0;
 bit mSec_x1000_workbit=0;
 bit mSec_x500_workbit=0;
 bit mSec_x100_workbit=0;
+bit mSec_x50_workbit=0;
 
 
 #if(BaseTimeTargetUs==10000)
@@ -64,7 +65,7 @@ void zd_basetime_run(void)
 		if(++basetime_msec_cnt>=10) 
 		{
 			basetime_msec_cnt=0;
-
+			mSec_x50_workbit=1;
 			mSec_x100_workbit=1;
 			
 			if(++basetime_100msec_cnt>=10)
@@ -75,6 +76,10 @@ void zd_basetime_run(void)
 			}
 			else if(basetime_100msec_cnt==5) 
 				mSec_x500_workbit=1;
+		}
+		else if(basetime_msec_cnt==5)
+		{
+			mSec_x50_workbit=1;
 		}
 	}
 
@@ -90,7 +95,7 @@ void zd_basetime_run(void)
 		if(++basetime_msec_cnt>=5) 
 		{
 			basetime_msec_cnt=0;
-
+			mSec_x50_workbit=1;
 			mSec_x100_workbit=1;
 			
 			if(++basetime_100msec_cnt>=10)
@@ -101,6 +106,10 @@ void zd_basetime_run(void)
 			}
 			else if(basetime_100msec_cnt==5) 
 				mSec_x500_workbit=1;
+		}
+		else if(basetime_msec_cnt==2)
+		{
+			mSec_x50_workbit=1;
 		}
 	}
 

@@ -6,7 +6,7 @@ extern bit mSec_x500_flashbit;
 extern bit mSec_x1000_workbit;
 extern bit mSec_x500_workbit;
 extern bit mSec_x100_workbit;
-
+extern bit mSec_x50_workbit;
 
 #if(BaseTimeTargetUs==10000)
 extern bit mSec_x10_workbit;
