@@ -3,6 +3,7 @@
 
 #include "ntc\defineNtcRes_drv.h" //定义可选NTC清单
 #include "buzzer\defineBuzzer_drv.h" //定义可选蜂鸣器清单
+#include "basetime\defineBaseTime_drv.h" //定义可选时基系统清单
 #include "rtc\defineRtc_drv.h" //定义可选时间系统清单
 #include "display\defineDisplay_drv.h" //定义可选显示系统清单
 #include "key\defineKey_drv.h" //定义可选显示系统清单

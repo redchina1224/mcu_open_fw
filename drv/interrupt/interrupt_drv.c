@@ -111,73 +111,16 @@ inline void buzzer_in_isr(void)
 #endif
 
 
+
+//嵌入基础时基内联函数
+#ifdef BaseTimeType
+	#include "..\basetime\coretimer\basetime_coretimer_isr_include.c"
+#endif
+
+//嵌入实时时钟内联函数
 #ifdef RtcType
-#if (RtcType==RtcType_TimerSoftRtc) 
-
-bit T_500ms_bit=0;
-bit T_1s_bit=0;
-bit M_10ms_bit=0;
-bit M_20ms_bit=0;
-bit M_50ms_bit=0;
-bit M_100ms_bit=0;
-bit M_1s_bit=0;
- unsigned char __125usCount_0=0;
- unsigned char __125usCount=0;
- unsigned char __20msCount=0;
- unsigned char __10msCount=0;
- unsigned char __100msCount=0; 
- //unsigned long __SecCount=0;
- //unsigned long *T_SecCount=&__SecCount;
-
-#if (DevPlatform==DevPlatform_Keil_C51)
-void softrtc_in_isr(void)
-#else
-inline void softrtc_in_isr(void)
+	#include "..\rtc\softrtc\softrtc_coretimer_isr_include.c"
 #endif
-{
-
-#ifdef SoftRtcTimerBaseUs
-#if (SoftRtcTimerBaseUs<10000)
-	if(++__125usCount>=(10000/SoftRtcTimerBaseUs)) 
-	{ 
-		__125usCount=0; 
-#endif
-#endif
-		//M_20ms_bit=1;
-		M_10ms_bit=1;
-		if(++__10msCount>=10) 
-		{
-			__10msCount=0;
-			//M_50ms_bit=1;
-			M_100ms_bit=1;
-			
-			if(++__100msCount>=10)
-			{
-				__100msCount=0;
-				M_1s_bit=1;
-				T_1s_bit=1;
-				T_500ms_bit=1;
-				//(*T_SecCount)++;
-			}
-			else if(__100msCount==5) 
-				T_500ms_bit=1;
-
-		}
-		//else if(__20msCount==5)
-		//	M_50ms_bit=1;
-#ifdef SoftRtcTimerBaseUs			
-#if (SoftRtcTimerBaseUs<10000)
-	}
-	//else if(T_125usCount==40)
-	//	M_5ms_bit=1;
-#endif
-#endif
-
-}
-#endif
-#endif
-
-
 
 
 

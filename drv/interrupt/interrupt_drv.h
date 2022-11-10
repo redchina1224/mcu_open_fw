@@ -58,17 +58,14 @@ extern unsigned char *T_BuzzerEn;
 #endif
 #endif
 
-
-#ifdef RtcType
-#if (RtcType==RtcType_TimerSoftRtc) 
-extern bit M_10ms_bit;
-extern bit M_20ms_bit;
-extern bit M_40ms_bit;
-//extern bit M_50ms_bit;
-extern bit M_100ms_bit;
-extern bit M_1s_bit;
-//extern unsigned long *T_SecCount;
+//嵌入基础时基内联函数
+#ifdef BaseTimeType
+	#include "..\basetime\coretimer\basetime_coretimer_isr_include.h"
 #endif
+
+//嵌入实时时钟内联函数
+#ifdef RtcType
+	#include "..\rtc\softrtc\softrtc_coretimer_isr_include.h"
 #endif
 
 
