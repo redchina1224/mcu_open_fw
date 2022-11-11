@@ -3,6 +3,8 @@
 
 extern bit rtc_halfsec_flashbit;
 
+extern bit Sec_x1_workbit;
+
 extern unsigned char Rtc_timeNow[3];
 
 void zd_softrtc_init(void);

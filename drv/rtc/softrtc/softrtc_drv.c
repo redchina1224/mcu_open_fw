@@ -6,7 +6,8 @@ unsigned long utcsec=0;
 
 unsigned char Rtc_timeNow[3]={0,0,0};
 
-bit rtc_halfsec_flashbit=1;
+bit rtc_halfsec_flashbit=0;
+bit Sec_x1_workbit=0;
 
 #if(RtcType==RtcType_TimerSoftRtc)
 void zd_softrtc_init(void)
@@ -50,10 +51,11 @@ unsigned long GetUtcSecByHourMin(unsigned long hour,unsigned long min)
 
 void zd_softrtc_run(void)
 {
-
+Sec_x1_workbit=0;
 #if (RtcType==RtcType_TimerSoftRtc)	
 	if(R_1s_bit)
 	{
+		Sec_x1_workbit=1;
 		R_1s_bit=0;
 		utcsec++;
 	}
@@ -66,6 +68,7 @@ void zd_softrtc_run(void)
 #elif (RtcType==RtcType_BaseTimeSoftRtc)
 	if(mSec_x1000_workbit)
 	{
+		Sec_x1_workbit=1;
 		utcsec++;
 	}
 	if(mSec_x500_workbit)
