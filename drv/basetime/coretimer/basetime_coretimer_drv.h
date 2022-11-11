@@ -1,10 +1,11 @@
 #ifndef __BASETIMECORETIMER_DRV_H_
 #define __BASETIMECORETIMER_DRV_H_
 
-
+extern bit mSec_x250_flashbit;
 extern bit mSec_x500_flashbit;
 extern bit mSec_x1000_workbit;
 extern bit mSec_x500_workbit;
+extern bit mSec_x250_workbit;
 extern bit mSec_x100_workbit;
 extern bit mSec_x50_workbit;
 

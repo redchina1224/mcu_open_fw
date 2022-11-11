@@ -5,10 +5,13 @@
 
 unsigned char basetime_msec_cnt=0;
 unsigned char basetime_100msec_cnt=0;
+unsigned char basetime_50msec_cnt=0;
 
 bit mSec_x500_flashbit=0;
+bit mSec_x250_flashbit=0;
 bit mSec_x1000_workbit=0;
 bit mSec_x500_workbit=0;
+bit mSec_x250_workbit=0;
 bit mSec_x100_workbit=0;
 bit mSec_x50_workbit=0;
 
@@ -22,12 +25,12 @@ bit mSec_x20_workbit=0;
 
 void zd_basetime_init(void)
 {
-	//å…³ä¸­æ–­
-	ZD_GIE_DISABLE;  //ä¸­æ–­æ€»å…è®¸å¼€å…³
+	//¹ØÖÐ¶Ï
+	ZD_GIE_DISABLE;  //ÖÐ¶Ï×ÜÔÊÐí¿ª¹Ø
 	
-	zd_timerInit(BaseTime_CoreTimer); //åˆå§‹åŒ–å®šæ—¶å™¨125usä¸­æ–­`
+	zd_timerInit(BaseTime_CoreTimer); //³õÊ¼»¯¶¨Ê±Æ÷125usÖÐ¶Ï`
 
-	ZD_GIE_ENABLE; //ä¸­æ–­æ€»å…è®¸å¼€å…³
+	ZD_GIE_ENABLE; //ÖÐ¶Ï×ÜÔÊÐí¿ª¹Ø
 }
 
 void zd_basetime_run(void)
@@ -41,16 +44,16 @@ void zd_basetime_run(void)
 		mSec_x500_workbit=0;
 		mSec_x500_flashbit=~mSec_x500_flashbit;
 	}
-/*
+
 	if(mSec_x250_workbit)
 	{
 		mSec_x250_workbit=0;
 		mSec_x250_flashbit=~mSec_x250_flashbit;
 	}
-*/	
 
 	mSec_x100_workbit=0;
-
+	
+	mSec_x50_workbit=0;	
     
 
 #if(BaseTimeTargetUs==10000)
@@ -62,6 +65,7 @@ void zd_basetime_run(void)
 		mSec_x10_workbit=1;	
 		M_10ms_bit=0;
 
+		//50ms,100ms,500ms,1000ms±êÖ¾Î»²úÉú
 		if(++basetime_msec_cnt>=10) 
 		{
 			basetime_msec_cnt=0;
@@ -81,7 +85,20 @@ void zd_basetime_run(void)
 		{
 			mSec_x50_workbit=1;
 		}
+		
+		//250ms±êÖ¾Î»²úÉú
+		if(mSec_x50_workbit)
+		{
+			if(++basetime_50msec_cnt>=5)
+			{
+				basetime_50msec_cnt=0;
+				mSec_x250_workbit=1;
+			}
+		}
+		
+		
 	}
+	
 
 #elif(BaseTimeTargetUs==20000)
 
