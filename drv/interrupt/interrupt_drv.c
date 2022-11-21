@@ -448,7 +448,7 @@ void interrupt interrupt_Isr()
 	}
 #endif	//#ifdef Ft0Clk
 	
-/*
+
 #ifdef Ft1Clk	
 	if(TMR1IF)
 	{
@@ -468,7 +468,7 @@ void interrupt interrupt_Isr()
 	TMR1IF = 0;				//清中断标志位
 	}
 #endif
-*/
+
 
 #ifdef Ft2Clk	
 	if(ZD_T2IF_GRIGGER)

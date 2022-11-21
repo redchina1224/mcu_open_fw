@@ -69,6 +69,8 @@
 		
 	#endif	
 
+	//定时器1时钟配置
+	//#define Ft1Clk FsysClk/4/1
 
 	//定时器2时钟配置
 	#if ((ZD_TIMER2_CLKSET_DEFAULT&(BIT0|BIT1))==ZD_TIMER2_CLKSET_FSYS_DIV4_DIV1)

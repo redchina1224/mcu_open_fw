@@ -36,6 +36,14 @@ void zd_softled_run(void)
 		if(++LedDrvCaseSelect>=DisplaySoftLedBufferLength) LedDrvCaseSelect=0;
 		
 		Led_IO_SEG_CTRL(Led_WriteSegBuffer[LedDrvCaseSelect]);
+		
+		#ifdef DisplaySoftLedBrightBreath
+		if(LedBrightCnt==LedBreathBrightSet)
+		{
+			Led_IO_SEG_CLR(Led_WriteSegBreathMask[LedDrvCaseSelect]);
+		}
+		#endif 
+		
 		Led_IO_COM_CTRL(Led_WriteComBuffer[LedDrvCaseSelect]);
 	}
 	else if(LedBrightCnt==LedBrightSet)
@@ -46,7 +54,7 @@ void zd_softled_run(void)
 #ifdef DisplaySoftLedBrightBreath
 	else if(LedBrightCnt==LedBreathBrightSet)
 	{
-		Led_IO_SEG_CTRL((Led_WriteSegBuffer[LedDrvCaseSelect]&Led_WriteSegBreathMask[LedDrvCaseSelect]));
+		Led_IO_SEG_CLR(Led_WriteSegBreathMask[LedDrvCaseSelect]);
 	}
 #endif 	
 
@@ -92,7 +100,6 @@ void zd_softled_set_bright(unsigned char bright)
 void zd_softled_set_breathbright(unsigned char bright)	
 {
 	if(bright>DisplaySoftLedBrightMax) bright=DisplaySoftLedBrightMax;
-	if(bright<1) bright=1;
 	
 	LedBreathBrightSet=bright;
 }
