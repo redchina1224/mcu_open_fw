@@ -11,6 +11,10 @@
 	#define DisplayType_SoftLed_Dig8 (DisplayType_SoftLed+BIT2)
 	#define DisplayType_SoftLed_Bits (DisplayType_SoftLed+BIT3)
 
+	#define DisplayType_SoftLcd 0x020000
+	#define DisplayType_SoftLcd_Dig8 (DisplayType_SoftLcd+BIT2)
+
+
 	#define DisplayType_IcLed 0x040000
 	#define DisplayType_IcLed_tm1628 (DisplayType_IcLed+BIT0)
 	#define DisplayType_IcLed_tm1640 (DisplayType_IcLed+BIT1)

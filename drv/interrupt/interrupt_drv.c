@@ -396,6 +396,15 @@ void interrupt interrupt_Isr()
 				#endif //#if(SoftLedTimer==0)
 			#endif
 		#endif
+		
+		#if ((DisplayType&DisplayType_SoftLcd)==DisplayType_SoftLcd) 
+			#ifdef DisplayTypeSoftLcdModel
+				#if(SoftLcdTimer==0)
+					zd_softlcd_run();//软件LCD驱动函数
+				#endif //#if(SoftLcdTimer==0)
+			#endif
+		#endif
+		
 	#endif //#ifdef DisplayType
 
 	//软件计数系统
