@@ -72,67 +72,67 @@ const unsigned char _CMS_Table_KeyChannel[] = {
 //灵敏度阈值设定必须大于噪声阈值VOL_VALUE
 const unsigned int _CMS_Table_KeyDown[] = {
 #if(C_KEY_TOTAL>0)
-	50,//Key1
+	150,//Key1
 #endif
 
 #if(C_KEY_TOTAL>1)
-	50,//Key2
+	150,//Key2
 #endif
 
 #if(C_KEY_TOTAL>2)
-	50,//Key3
+	150,//Key3
 #endif
 
 #if(C_KEY_TOTAL>3)
-	50,//Key4
+	150,//Key4
 #endif
 
 #if(C_KEY_TOTAL>4)
-	50,//Key5
+	150,//Key5
 #endif
 
 #if(C_KEY_TOTAL>5)
-	50,//Key6
+	150,//Key6
 #endif
 
 #if(C_KEY_TOTAL>6)
-	50,//Key7
+	150,//Key7
 #endif
 
 #if(C_KEY_TOTAL>7)
-	50,//Key8
+	150,//Key8
 #endif
 
 #if(C_KEY_TOTAL>8)
-	50,//Key9
+	150,//Key9
 #endif
 
 #if(C_KEY_TOTAL>9)
-	50,//Key10
+	150,//Key10
 #endif
 
 #if(C_KEY_TOTAL>10)
-	50,//Key11
+	150,//Key11
 #endif
 
 #if(C_KEY_TOTAL>11)
-	50,//Key12
+	150,//Key12
 #endif
 
 #if(C_KEY_TOTAL>12)
-	50,//Key13
+	150,//Key13
 #endif
 
 #if(C_KEY_TOTAL>13)
-	50,//Key14
+	150,//Key14
 #endif
 
 #if(C_KEY_TOTAL>14)
-	50,//Key15
+	150,//Key15
 #endif
 
 #if(C_KEY_TOTAL>15)
-	50,//Key16
+	150,//Key16
 #endif
 };
 
