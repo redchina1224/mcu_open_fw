@@ -11,8 +11,8 @@
 unsigned char LedDrvCaseSelect;
 unsigned char *Led_WriteSegBuffer;
 const unsigned char *Led_WriteComBuffer;
-unsigned char LedBrightSet_Rel=20;
-unsigned char LedBrightSet=20;
+unsigned char LedBreathBrightSet_Rel=0;
+unsigned char LedBrightSet=0;
 unsigned char LedBrightCnt;
 //unsigned char LedBlinkSegTempVal;
 unsigned long softledkey;
@@ -36,27 +36,33 @@ void zd_softled_run(void)
 	if(++LedBrightCnt>DisplaySoftLedBrightMax)
 	{
 		LedBrightCnt=0;
-		LedBrightSet_Rel=LedBrightSet;
-		
+		LedBreathBrightSet_Rel=LedBreathBrightSet;
 		Led_IO_COM_CTRL_OFF;
+		Led_IO_SEG_OUTPUT;
 		Led_IO_SEG_CTRL_OFF;
 
 		if(++LedDrvCaseSelect>=DisplaySoftLedBufferLength) LedDrvCaseSelect=0;
 		
 		Led_IO_SEG_CTRL(Led_WriteSegBuffer[LedDrvCaseSelect]);
-/*		
+
 		#ifdef DisplaySoftLedBrightBreath
-		if(LedBrightCnt==LedBreathBrightSet)
+		if(LedBrightCnt==LedBreathBrightSet_Rel)
 		{
 			Led_IO_SEG_CLR(Led_WriteSegBreathMask[LedDrvCaseSelect]);
 		}
 		#endif 
-*/		
+	
 		Led_IO_COM_CTRL(Led_WriteComBuffer[LedDrvCaseSelect]);
 	}
-	else if(LedBrightCnt>=LedBrightSet_Rel)
+	else if(LedBrightCnt>=LedBrightSet)
 	{
-		if(LedBrightCnt>LedBrightSet_Rel)
+		if(LedBrightCnt==LedBrightSet)
+		{
+			Led_IO_COM_CTRL_OFF;
+			KEYS_IO_FORCE_PULL;
+			KEYS_IO_INIT;
+		}
+		else
 		{
 #ifdef SoftLed_Dig8WithKeysFilterEnhanced
 			//多次取值去抖--按键在LedBrightSet时被置为输入,从LedBrightSet+1持续计数至DisplaySoftLedBrightMax时被判定计数值不小于SoftLed_Dig8WithKeysFilterEnhanced时取值,显示在DisplaySoftLedBrightMax+1时被更新
@@ -82,16 +88,10 @@ void zd_softled_run(void)
 			}
 #endif
 		}
-		else
-		{
-			Led_IO_COM_CTRL_OFF;
-			Led_IO_SEG_CTRL_OFF;
-			//KEYS_IO_FORCE_PULL;
-			KEYS_IO_INIT;
-		}
+
 	}
 #ifdef DisplaySoftLedBrightBreath
-	else if(LedBrightCnt==LedBreathBrightSet)
+	else if(LedBrightCnt==LedBreathBrightSet_Rel)
 	{
 		Led_IO_SEG_CLR(Led_WriteSegBreathMask[LedDrvCaseSelect]);
 	}
