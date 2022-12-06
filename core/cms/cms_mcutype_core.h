@@ -7,6 +7,7 @@
 #define McuType_CmsSemicon_CMS79F738 (McuType_CmsSemicon_CMS79F+0x01)
 #define McuType_CmsSemicon_CMS79F726 (McuType_CmsSemicon_CMS79F+0x02)
 #define McuType_CmsSemicon_CMS79F113 (McuType_CmsSemicon_CMS79F+0x03)
+#define McuType_CmsSemicon_CMS79F623 (McuType_CmsSemicon_CMS79F+0x04)
 
 /////////////////////////////////////////////////////////////////////////
 #define McuType_CmsSemicon_CMS89F (McuType_CmsSemicon+0x0200)
