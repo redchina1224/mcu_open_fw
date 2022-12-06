@@ -11,7 +11,7 @@
 unsigned char LedDrvCaseSelect;
 unsigned char *Led_WriteSegBuffer;
 const unsigned char *Led_WriteComBuffer;
-unsigned char LedBreathBrightSet_Rel=0;
+
 unsigned char LedBrightSet=0;
 unsigned char LedBrightCnt;
 //unsigned char LedBlinkSegTempVal;
@@ -20,6 +20,7 @@ unsigned long softledkey;
 #ifdef DisplaySoftLedBrightBreath
 unsigned char *Led_WriteSegBreathMask;
 unsigned char LedBreathBrightSet;
+unsigned char LedBreathBrightSet_Rel=0;
 #endif 
 
 #ifdef SoftLed_Dig8WithKeysFilterEnhanced
@@ -36,7 +37,9 @@ void zd_softled_run(void)
 	if(++LedBrightCnt>DisplaySoftLedBrightMax)
 	{
 		LedBrightCnt=0;
+#ifdef DisplaySoftLedBrightBreath
 		LedBreathBrightSet_Rel=LedBreathBrightSet;
+#endif
 		Led_IO_COM_CTRL_OFF;
 		Led_IO_SEG_OUTPUT;
 		Led_IO_SEG_CTRL_OFF;
