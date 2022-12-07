@@ -26,8 +26,7 @@ void zd_key_init(void)
 
 
 	#if ((KeyType&KeyType_Gpio)==KeyType_Gpio)
-		KEYS_IO_INPUT; //所有按键设置为输入
-		KEYS_IO_WPUA; //打开IO口上拉
+		KEYS_IO_INIT; //所有按键设置为输入//打开IO口上拉
 	#endif
 	
 	#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)
