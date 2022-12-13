@@ -289,7 +289,7 @@ void zd_softlcd_run(void)
 void zd_softlcd_run(void)	
 {
 	LcdBrightCnt++;
-	if(LcdBrightCnt>30)
+	if(LcdBrightCnt>6)
 	{
 		LcdBrightCnt=0;
 
@@ -325,7 +325,7 @@ void zd_softlcd_run(void)
 void zd_softlcd_init(void)
 {
 	LEDCON0 = 0B10000000;				//使能LCD模块
-	LEDCON1 = 0x03;//LCD_CUR;					//设置LCD输出电流				
+	LEDCON1 = 0x00;//LCD_CUR;					//设置LCD输出电流				
 	Lcd_IO_COM_INPUT;
 	Lcd_IO_SEG_OUTPUT;
 	LcdDrvCaseSelect=0;	
