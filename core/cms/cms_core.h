@@ -278,8 +278,26 @@
 	#define ZD_TIMER0_INIT ZD_TIMER0_CLKSET(ZD_TIMER0_CLKSET_DEFAULT),ZD_TIMER0_CLKPSASET(ZD_TIMER0_CLKPSASET_DEFAULT)
 
 	////////////////////////////////////////////////////////////////
+	#define ZD_TIMER1_LOAD ((TMR1H<<8)|TMR1L)
 	#define ZD_TIMER1_LOAD_SET(x) TMR1H=(x>>8);TMR1L=(x>>8);
 	#define ZD_TIMER1_LOAD_ADD_SET(x) TMR1H=(x>>8);TMR1L+=(x>>8);
+	
+	#define ZD_TIMER1_CLKSET_FSYS_DIV1 0x00
+	#define ZD_TIMER1_CLKSET_FSYS_DIV2 0x10
+	#define ZD_TIMER1_CLKSET_FSYS_DIV4 0x20
+	#define ZD_TIMER1_CLKSET_FSYS_DIV8 0x30
+
+	#define ZD_TIMER1_CLKSET_XTLP_DIV1 0x0A
+	#define ZD_TIMER1_CLKSET_XTLP_DIV2 0x1A
+	#define ZD_TIMER1_CLKSET_XTLP_DIV4 0x2A
+	#define ZD_TIMER1_CLKSET_XTLP_DIV8 0x3A
+
+
+	#define ZD_TIMER1_CLKSET_DEFAULT (ZD_TIMER1_CLKSET_XTLP_DIV1)
+
+	#define ZD_TIMER1_CLKSET(clkset) T1CON=0;T1CON|=(clkset);
+
+	#define ZD_TIMER1_INIT ZD_TIMER1_CLKSET(ZD_TIMER1_CLKSET_DEFAULT)
 
 	
 	////////////////////////////////////////////////////////////////

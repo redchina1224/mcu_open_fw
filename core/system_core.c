@@ -84,8 +84,25 @@ void zd_timerInit(unsigned char timerChannel)
 		 break;
 		case 1:
 		#ifdef Ft1Clk
-		ZD_T1IE_ENABLE;
-		T1CON=0x31;
+
+		#ifdef T1_RELOAD_DEFAULT
+			#ifdef ZD_TIMER0_LOAD_RELOAD
+				ZD_TIMER1_LOAD_RELOAD(T1_RELOAD_DEFAULT);		//ÖØÐÂ¸³³õÖµ
+			#else
+				T1L_Reload=T1_RELOAD_DEFAULT;
+				T1H_Reload=T1_RELOAD_DEFAULT>>8;
+			#endif	
+			
+		#endif
+	
+			ZD_TIMER1_INIT;
+
+			ZD_T1IE_ENABLE;
+
+			ZD_T1_ENABLE;
+
+		//ZD_T1IE_ENABLE;
+		//T1CON=0x31;
 		
 		 //T1H_Reload = (65536 - ((unsigned int)((_Us*1.0)*((Ft1Clk*1.0)/1000000))))>>8;
 		 //T1L_Reload = (65536 - ((unsigned int)((_Us*1.0)*((Ft1Clk*1.0)/1000000))));

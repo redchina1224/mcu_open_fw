@@ -2,7 +2,7 @@
 #define __CORECONFIG_LOAD_H_
 
 //按芯片载入对应头文件 并定义标准化接口
-#if ((McuType==McuType_CmsSemicon_CMS79F738)||(McuType==McuType_CmsSemicon_CMS79F726))
+#if ((McuType==McuType_CmsSemicon_CMS79F738)||(McuType==McuType_CmsSemicon_CMS79F726)||(McuType==McuType_CmsSemicon_CMS79F623))
 
 	//晶体时钟配置
 	#define FocsClk 16000000
@@ -18,6 +18,14 @@
 
 	//IO定义标准化	
 	#include "cms\cms79f726_core.h"
+
+	//触摸库宏定义
+	//#include "cms\touch_79ft72x\CMS_CheckTouch_PT_79F72x_V1.01.h"
+
+	#elif (McuType==McuType_CmsSemicon_CMS79F623)
+
+	//IO定义标准化	
+	#include "cms\cms79f623_core.h"
 
 	//触摸库宏定义
 	//#include "cms\touch_79ft72x\CMS_CheckTouch_PT_79F72x_V1.01.h"
@@ -69,6 +77,8 @@
 		
 	#endif	
 
+	//定时器1时钟配置
+	//#define Ft1Clk FsysClk/4/1
 
 	//定时器2时钟配置
 	#if ((ZD_TIMER2_CLKSET_DEFAULT&(BIT0|BIT1))==ZD_TIMER2_CLKSET_FSYS_DIV4_DIV1)

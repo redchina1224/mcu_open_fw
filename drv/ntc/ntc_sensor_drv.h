@@ -5,7 +5,7 @@ TableValueType GetTempAdcVal(unsigned char temp);
 
 unsigned char TmpC_to_TmpF(unsigned char tmpc);
 
-unsigned char CalcTmpC(unsigned char adc_agval,unsigned char TempC_realtime);
+unsigned char CalcTmpC(TableValueType adc_agval,unsigned char TempC_realtime);
 
 
 #endif

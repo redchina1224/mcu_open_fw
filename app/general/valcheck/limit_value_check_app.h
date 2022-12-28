@@ -12,10 +12,10 @@
 #define __APPSTDLIB_LIMIT_VALUE_CHECK_APP_H__
 //******************************************************************
 
-void ucharLimitValueCheck(unsigned char *setval,unsigned char min,unsigned char max);
-void uintLimitValueCheck(unsigned int *setval,unsigned int min,unsigned int max);
-void charLimitValueCheck(signed char *setval,signed char min,signed char max);
-void intLimitValueCheck(signed int *setval,signed int min,signed int max);
+unsigned char ucharLimitValueCheck(unsigned char *setval,unsigned char min,unsigned char max);
+unsigned int uintLimitValueCheck(unsigned int *setval,unsigned int min,unsigned int max);
+signed char charLimitValueCheck(signed char *setval,signed char min,signed char max);
+signed int intLimitValueCheck(signed int *setval,signed int min,signed int max);
 
 
 //Ê¹ÓÃÊ¾Àý

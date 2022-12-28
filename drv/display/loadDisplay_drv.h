@@ -30,6 +30,12 @@
 		#endif
 	#endif
 
+	#if ((DisplayType&DisplayType_SoftLcd)==DisplayType_SoftLcd)
+		#if ((DisplayTypeSoftLcdModel&DisplayType_SoftLcd_Dig8)==DisplayType_SoftLcd_Dig8) 
+			#include "softlcd_dig8\softlcd_dig8_drv.h"
+		#endif
+	#endif
+
 
 	#if ((DisplayType&DisplayType_IcLed)==DisplayType_IcLed)
 		#if ((DisplayTypeIcLedModel&DisplayType_IcLed_tm1640)== DisplayType_IcLed_tm1640)

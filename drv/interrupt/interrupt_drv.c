@@ -111,73 +111,16 @@ inline void buzzer_in_isr(void)
 #endif
 
 
+
+//嵌入基础时基内联函数
+#ifdef BaseTimeType
+	#include "..\basetime\coretimer\basetime_coretimer_isr_include.c"
+#endif
+
+//嵌入实时时钟内联函数
 #ifdef RtcType
-#if (RtcType==RtcType_TimerSoftRtc) 
-
-bit T_500ms_bit=0;
-bit T_1s_bit=0;
-bit M_10ms_bit=0;
-bit M_20ms_bit=0;
-bit M_50ms_bit=0;
-bit M_100ms_bit=0;
-bit M_1s_bit=0;
- unsigned char __125usCount_0=0;
- unsigned char __125usCount=0;
- unsigned char __20msCount=0;
- unsigned char __10msCount=0;
- unsigned char __100msCount=0; 
- //unsigned long __SecCount=0;
- //unsigned long *T_SecCount=&__SecCount;
-
-#if (DevPlatform==DevPlatform_Keil_C51)
-void softrtc_in_isr(void)
-#else
-inline void softrtc_in_isr(void)
+	#include "..\rtc\softrtc\softrtc_coretimer_isr_include.c"
 #endif
-{
-
-#ifdef SoftRtcTimerBaseUs
-#if (SoftRtcTimerBaseUs<10000)
-	if(++__125usCount>=(10000/SoftRtcTimerBaseUs)) 
-	{ 
-		__125usCount=0; 
-#endif
-#endif
-		//M_20ms_bit=1;
-		M_10ms_bit=1;
-		if(++__10msCount>=10) 
-		{
-			__10msCount=0;
-			//M_50ms_bit=1;
-			M_100ms_bit=1;
-			
-			if(++__100msCount>=10)
-			{
-				__100msCount=0;
-				M_1s_bit=1;
-				T_1s_bit=1;
-				T_500ms_bit=1;
-				//(*T_SecCount)++;
-			}
-			else if(__100msCount==5) 
-				T_500ms_bit=1;
-
-		}
-		//else if(__20msCount==5)
-		//	M_50ms_bit=1;
-#ifdef SoftRtcTimerBaseUs			
-#if (SoftRtcTimerBaseUs<10000)
-	}
-	//else if(T_125usCount==40)
-	//	M_5ms_bit=1;
-#endif
-#endif
-
-}
-#endif
-#endif
-
-
 
 
 
@@ -428,11 +371,18 @@ void interrupt interrupt_Isr()
 		#endif
 	#endif	//#ifdef BuzzerType	
 
+
+	//软件时基系统
+	#if (BaseTimeType==BaseTimeType_CoreTimer) 
+		#if(BaseTime_CoreTimer==0)
+			basetime_in_isr();//时基内联函数
+		#endif //#if(BaseTime_CoreTimer==0)
+	#endif //#if (BaseTimeType==BaseTimeType_CoreTimer) 
+	
+	
 	//软件时钟系统
 	#if (RtcType==RtcType_TimerSoftRtc) 
 		#if(SoftRtcTimer==0)
-			T_1s_bit=0;
-			T_500ms_bit=0;
 			softrtc_in_isr();//RTC时钟内联函数
 		#endif //#if(SoftRtcTimer==0)
 	#endif //#if (RtcType==RtcType_TimerSoftRtc) 
@@ -446,6 +396,15 @@ void interrupt interrupt_Isr()
 				#endif //#if(SoftLedTimer==0)
 			#endif
 		#endif
+		
+		#if ((DisplayType&DisplayType_SoftLcd)==DisplayType_SoftLcd) 
+			#ifdef DisplayTypeSoftLcdModel
+				#if(SoftLcdTimer==0)
+					zd_softlcd_run();//软件LCD驱动函数
+				#endif //#if(SoftLcdTimer==0)
+			#endif
+		#endif
+		
 	#endif //#ifdef DisplayType
 
 	//软件计数系统
@@ -498,7 +457,7 @@ void interrupt interrupt_Isr()
 	}
 #endif	//#ifdef Ft0Clk
 	
-/*
+
 #ifdef Ft1Clk	
 	if(TMR1IF)
 	{
@@ -518,7 +477,7 @@ void interrupt interrupt_Isr()
 	TMR1IF = 0;				//清中断标志位
 	}
 #endif
-*/
+
 
 #ifdef Ft2Clk	
 	if(ZD_T2IF_GRIGGER)
@@ -539,6 +498,13 @@ void interrupt interrupt_Isr()
 			#endif
 		#endif
 	#endif	//#ifdef BuzzerType	
+
+	//软件时基系统
+	#if (BaseTimeType==BaseTimeType_CoreTimer) 
+		#if(BaseTime_CoreTimer==2)
+			basetime_in_isr();//时基内联函数
+		#endif //#if(BaseTime_CoreTimer==0)
+	#endif //#if (BaseTimeType==BaseTimeType_CoreTimer) 
 	
 	//软件时钟系统
 	#if (RtcType==RtcType_TimerSoftRtc) 

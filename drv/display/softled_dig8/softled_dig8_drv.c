@@ -12,11 +12,14 @@
 unsigned char LedDrvCaseSelect;
 unsigned char *Led_WriteSegBuffer;
 const unsigned char *Led_WriteComBuffer;
-
 unsigned char LedBrightSet=0;
 unsigned char LedBrightCnt;
 //unsigned char LedBlinkSegTempVal;
 
+#ifdef DisplaySoftLedBrightBreath
+unsigned char *Led_WriteSegBreathMask;
+unsigned char LedBreathBrightSet=0;
+#endif 
 
 
 //在bsp_run中调用，或在中断中调用
@@ -33,6 +36,14 @@ void zd_softled_run(void)
 		if(++LedDrvCaseSelect>=DisplaySoftLedBufferLength) LedDrvCaseSelect=0;
 		
 		Led_IO_SEG_CTRL(Led_WriteSegBuffer[LedDrvCaseSelect]);
+		
+		#ifdef DisplaySoftLedBrightBreath
+		if(LedBrightCnt==LedBreathBrightSet)
+		{
+			Led_IO_SEG_CLR(Led_WriteSegBreathMask[LedDrvCaseSelect]);
+		}
+		#endif 
+		
 		Led_IO_COM_CTRL(Led_WriteComBuffer[LedDrvCaseSelect]);
 	}
 	else if(LedBrightCnt==LedBrightSet)
@@ -40,7 +51,12 @@ void zd_softled_run(void)
 		Led_IO_COM_CTRL_OFF;
 		Led_IO_SEG_CTRL_OFF;
 	}
-	
+#ifdef DisplaySoftLedBrightBreath
+	else if(LedBrightCnt==LedBreathBrightSet)
+	{
+		Led_IO_SEG_CLR(Led_WriteSegBreathMask[LedDrvCaseSelect]);
+	}
+#endif 	
 
 
 /*
@@ -65,8 +81,7 @@ void zd_softled_init(void)
 	Led_IO_COM_CTRL_OFF;
 	Led_IO_SEG_OUTPUT;
 	Led_IO_SEG_CTRL_OFF;
-	LedDrvCaseSelect=0;
-	
+	LedDrvCaseSelect=0;	
 }
 
 
@@ -78,6 +93,19 @@ void zd_softled_set_bright(unsigned char bright)
 	
 	LedBrightSet=bright;
 }
+
+
+
+#ifdef DisplaySoftLedBrightBreath
+void zd_softled_set_breathbright(unsigned char bright)	
+{
+	if(bright>DisplaySoftLedBrightMax) bright=DisplaySoftLedBrightMax;
+	
+	LedBreathBrightSet=bright;
+}
+#endif 
+
+
 
 #endif
 #endif

@@ -8,18 +8,15 @@
 	#define ZD_CLRWDT asm("clrwdt");
 	#define ZD_NOP asm("nop");
 
-
+	#define ZD_GIE GIE
 	#define ZD_GIE_ENABLE GIE=1
 	#define ZD_GIE_DISABLE GIE=0
 	//#define ZD_GIE(x) GIE=(x)
 
-
 	#define ZD_T0IE_ENABLE T0IE=1
 	#define ZD_T0IE_DISABLE T0IE=0
 	
-	
 	#define ZD_T0IE(x) T0IE=(x)
-	
 	
 	#define ZD_T0IF_CLEAN T0IF=0
 	#define ZD_T0IF_GRIGGER (T0IF==1)
@@ -27,8 +24,27 @@
 	#define ZD_LVDIF_CLEAN LVDIF=0
 	#define ZD_LVDIF_GRIGGER (LVDIF==1)
 
-	#define ZD_T0_ENABLE TR0=1;
-	#define ZD_T0_DISABLE TR0=0;
+	#define ZD_T0_ENABLE TMR1ON=1;
+	#define ZD_T0_DISABLE TMR1ON=0;
+
+	#define ZD_T1IE_ENABLE PEIE=1;TMR1IE=1;
+	#define ZD_T1IE_DISABLE TMR1IE=0
+
+	#define ZD_T1IF_CLEAN TMR1IF=0
+	#define ZD_T1IF_GRIGGER (TMR1IF==1)
+
+	#define ZD_T1_ENABLE TMR1ON=1;
+	#define ZD_T1_DISABLE TMR1ON=0;
+
+	#define ZD_T2IE_ENABLE PEIE=1;TMR2IE=1;
+	#define ZD_T2IE_DISABLE TMR2IE=0
+	
+	
+	#define ZD_T2IF_CLEAN TMR2IF=0
+	#define ZD_T2IF_GRIGGER (TMR2IF==1)
+
+	#define ZD_T2_ENABLE TMR2ON=1;
+	#define ZD_T2_DISABLE TMR2ON=0;
 	
 	#define ZD_INTERRUPT_INIT ZD_NOP//临时解决方案,需替换为关所有中断功能
 	#define ZD_PORT_INIT ZD_NOP;//临时解决方案,需替换为初始化所有IO的功能
@@ -207,9 +223,8 @@
 	
 
 	#define ZD_TIMER0_LOAD TMR0
-	
-	
-	
+	#define ZD_TIMER0_LOAD_SET(x) TMR0=(x);
+	#define ZD_TIMER0_LOAD_ADD_SET(x) TMR0+=(x);
 	
 	#define ZD_TIMER0_CLKSET_FSYS_DIV4 0x00
 	#define ZD_TIMER0_CLKSET_T0CKI 0x20
@@ -250,6 +265,7 @@
 	
 	#define ZD_IAP_READ_START 		RD=1
 	#define ZD_IAP_WRITE_START 		EECON1|=0x30,WREN=1,EECON2=0x55,EECON2=0xaa,WR=1
+	#define ZD_IAP_WRITE_NOT_OVER 		(WR==1)
 	
 	#define ZD_IAP_DATAREAD(x) 		ZD_IAP_READADDR_SET(x),ZD_IAP_READ_START
 	#define ZD_IAP_DATA EEDAT

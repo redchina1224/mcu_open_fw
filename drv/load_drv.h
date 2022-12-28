@@ -1,9 +1,14 @@
 #ifndef __LOADDRV_H_
 #define __LOADDRV_H_
 
+	//载入基础时钟系统
+	#ifdef BaseTimeType
+		#include "basetime\loadBaseTime_drv.h" //载入基础时钟系统接口信息
+	#endif
+
 	//载入时钟计时系统
 	#ifdef RtcType
-	#include "rtc\loadRtc_drv.h" //载入时钟系统驱动接口信息
+		#include "rtc\loadRtc_drv.h" //载入时钟系统驱动接口信息
 	#endif
 
 	//载入NTC传感器系统

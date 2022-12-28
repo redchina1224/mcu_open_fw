@@ -11,34 +11,74 @@
 //头文件************************************************************************
 #include "..\..\com_include_app.h"
 
-void ucharLimitValueCheck(unsigned char *setval,unsigned char min,unsigned char max)
+unsigned char ucharLimitValueCheck(unsigned char *setval,unsigned char min,unsigned char max)
 {
-		if((*setval)>max)
-			(*setval)=max;
+	if((*setval)>max)
+	{
+		(*setval)=max;
+		return min;
+	}
 	else if((*setval)<min)
-			(*setval)=min;	
+	{
+		(*setval)=min;
+		return max;
+	}
+	else
+	{
+		return (*setval);
+	}
 }
 
-void uintLimitValueCheck(unsigned int *setval,unsigned int min,unsigned int max)
+unsigned int uintLimitValueCheck(unsigned int *setval,unsigned int min,unsigned int max)
 {
-		if((*setval)>max)
-			(*setval)=max;
+	if((*setval)>max)
+	{
+		(*setval)=max;
+		return min;
+	}
 	else if((*setval)<min)
-			(*setval)=min;	
+	{
+		(*setval)=min;
+		return max;
+	}
+	else
+	{
+		return (*setval);
+	}
 }
 
-void charLimitValueCheck(signed char *setval,signed char min,signed char max)
+signed char charLimitValueCheck(signed char *setval,signed char min,signed char max)
 {
-		if((*setval)>max)
-			(*setval)=max;
+	if((*setval)>max)
+	{
+		(*setval)=max;
+		return min;
+	}
 	else if((*setval)<min)
-			(*setval)=min;	
+	{
+		(*setval)=min;
+		return max;
+	}
+	else
+	{
+		return (*setval);
+	}
 }
 
-void intLimitValueCheck(signed int *setval,signed int min,signed int max)
+signed int intLimitValueCheck(signed int *setval,signed int min,signed int max)
 {
-		if((*setval)>max)
-			(*setval)=max;
+	if((*setval)>max)
+	{
+		(*setval)=max;
+		return min;
+	}
 	else if((*setval)<min)
-			(*setval)=min;	
+	{
+		(*setval)=min;
+		return max;
+	}
+	else
+	{
+		return (*setval);
+	}
 }
