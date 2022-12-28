@@ -71,13 +71,12 @@ void zd_timerInit(unsigned char timerChannel)
 				T0H_Reload=T0_RELOAD_DEFAULT>>8;
 			#endif	
 			
+			ZD_TIMER0_LOAD_SET(T0_RELOAD_DEFAULT);
 		#endif
 	
-			ZD_TIMER0_INIT;
+		 ZD_TIMER0_INIT;
 
-			ZD_T0IE_ENABLE;
-
-			ZD_T0_ENABLE;
+		 ZD_T0IE_ENABLE;
 		
 		 cfgerr=0; 
 		#endif

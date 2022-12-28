@@ -54,13 +54,6 @@ extern bit M_1s_bit;
 	#endif
 
 
-	#ifdef Counter_IO_Channel2
-	void softcounter2_reset(void);
-	extern unsigned int *T_Counter2_1sec;
-	extern unsigned int *T_Counter2_Total;
-	#endif
-
-
 #endif
 #endif
 
