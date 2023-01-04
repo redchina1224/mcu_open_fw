@@ -52,12 +52,6 @@ extern bit M_PowerOff_bit;
 #endif
 
 
-#ifdef BuzzerType
-#if (BuzzerType==BuzzerType_TimerInv)
-extern unsigned char *T_BuzzerEn;
-#endif
-#endif
-
 //嵌入基础时基内联函数
 #ifdef BaseTimeType
 	#include "..\basetime\coretimer\basetime_coretimer_isr_include.h"
@@ -68,6 +62,12 @@ extern unsigned char *T_BuzzerEn;
 	#include "..\rtc\softrtc\softrtc_coretimer_isr_include.h"
 #endif
 
+//嵌入软件蜂鸣发生器内联函数
+#ifdef BuzzerType
+#if (BuzzerType==BuzzerType_TimerInv)
+	#include "..\buzzer\buzzer\buzzer_timerinv_isr_include.h"
+#endif
+#endif
 
 
 #ifdef CounterType
