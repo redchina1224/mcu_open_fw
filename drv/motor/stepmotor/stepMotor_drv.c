@@ -94,6 +94,11 @@ void zd_motorStep_work(unsigned char dir,unsigned long stepCount,unsigned char s
 	motorWorkStep_cnt=stepCount;
 	motorWorkSpeed_repeat=speed;
 	motorWorkSpeed_x50ms_cnt=0;
+	MotorStep_IO_Output;
+	MotorStepA_IO_Channel=MotorStep_IO_OFF;
+	MotorStepB_IO_Channel=MotorStep_IO_OFF;
+	MotorStepC_IO_Channel=MotorStep_IO_OFF;
+	MotorStepD_IO_Channel=MotorStep_IO_OFF;
 }
 
 
@@ -131,7 +136,12 @@ void zd_motorStep_run(void)//每50ms调用一次
 	else
 	{
 		motorWorkEn=0;
-		zd_motorStep_select(0);
+		//zd_motorStep_select(0);
+		MotorStepA_IO_Channel=MotorStep_IO_OFF;
+		MotorStepB_IO_Channel=MotorStep_IO_OFF;
+		MotorStepC_IO_Channel=MotorStep_IO_OFF;
+		MotorStepD_IO_Channel=MotorStep_IO_OFF;
+		//MotorStep_IO_Input;
 	}
 }
 
