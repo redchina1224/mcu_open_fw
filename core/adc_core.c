@@ -63,7 +63,7 @@ void Adc_DelayUs(unsigned char Time)
 *函数参数 		: adcChannel:采集通道,*callback:采集周期完成后的回调函数
 *函数返回值 	: 无
 ***************************************************/
-unsigned char zd_adcChannelInit(unsigned char adcChannel)
+unsigned char mof_adcChannelInit(unsigned char adcChannel)
 {
 	unsigned char cfgerr=1;
 	switch(adcChannel)
@@ -161,24 +161,24 @@ unsigned char zd_adcChannelInit(unsigned char adcChannel)
 ***************************************************/
 #ifdef ADC_COLLECTION_CH_MAX
 #if(ADC_COLLECTION_CH_MAX>0)
-void zd_adcInit(unsigned char adcChannel,void (*callback)(unsigned int))
+void mof_adcInit(unsigned char adcChannel,void (*callback)(unsigned int))
 #endif
 #else
-void zd_adcInit(void)
+void mof_adcInit(void)
 #endif
 {
 
 #ifdef ADC_COLLECTION_CH_MAX
 #if(ADC_COLLECTION_CH_MAX>0)
 	//配置相应端口为ADC输入
-	if(0==zd_adcChannelInit(adcChannel))
+	if(0==mof_adcChannelInit(adcChannel))
 #endif
 #endif
 	{
 		//配置ADC时钟
-		ZD_ADC_CLKSET(ZD_ADC_CLKSET_DEFAULT);
+		ZD_ADC_CLKSET(MOF_ADC_CLKSET_DEFAULT);
 		//配置ADC开启
-		ZD_ADC_INIT;
+		MOF_ADC_INIT;
 		
 		#ifdef ADC_COLLECTION_CH_MAX
 		#if(ADC_COLLECTION_CH_MAX>0)
@@ -189,7 +189,7 @@ void zd_adcInit(void)
 		//通道数递增（标识需采集的通道总数）
 		adc_ch_select_max++;
 		
-		ZD_ADC_CH_SELECT(adcChannel);				//重新加载通道值
+		MOF_ADC_CH_SELECT(adcChannel);				//重新加载通道值
 				
 		#endif
 		#endif

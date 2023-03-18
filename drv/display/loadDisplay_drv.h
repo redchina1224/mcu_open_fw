@@ -42,6 +42,8 @@
 			#include "ic_led\tm1640\tm1640_drv.h"
 		#elif ((DisplayTypeIcLedModel&DisplayType_IcLed_tm1628)== DisplayType_IcLed_tm1628)
 			#include "ic_led\tm1628\tm1628_drv.h"
+		#elif ((DisplayTypeIcLedModel&DisplayType_IcLed_tm1650)== DisplayType_IcLed_tm1650)
+			#include "ic_led\tm1650\tm1650_drv.h"
 		#endif
 	#endif
 
