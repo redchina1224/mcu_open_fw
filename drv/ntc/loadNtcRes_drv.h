@@ -10,6 +10,8 @@
 		#include "NTC_100K_B3950\Ntc_100K_B3950.h"
 	#elif (NtcType==NtcType_100K_CM207E)
 		#include "NTC_100K_CM207E\Ntc_100K_CM207E.h"
+	#elif (NtcType==NtcType_10K_B3950)
+		#include "NTC_10K_B3950\NTC_10K_25C_B3950_RES.h"
 	#elif (NtcType==NtcType_Unkonw)
 	
 	#endif

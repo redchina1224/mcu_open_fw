@@ -68,83 +68,83 @@ unsigned char mof_adcChannelInit(unsigned char adcChannel)
 	unsigned char cfgerr=1;
 	switch(adcChannel)
 	{
-		#ifdef ZD_ADC_CH0_ENABLE 
-		case 0:ZD_ADC_CH0_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH0_ENABLE 
+		case 0:MOF_ADC_CH0_ENABLE; cfgerr=0; break;
 		#endif
-		#ifdef ZD_ADC_CH1_ENABLE 
-		case 1:ZD_ADC_CH1_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH1_ENABLE 
+		case 1:MOF_ADC_CH1_ENABLE; cfgerr=0; break;
 		#endif
-		#ifdef ZD_ADC_CH2_ENABLE 		
-		case 2:ZD_ADC_CH2_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH2_ENABLE 		
+		case 2:MOF_ADC_CH2_ENABLE; cfgerr=0; break;
 		#endif
-		#ifdef ZD_ADC_CH3_ENABLE 		
-		case 3:ZD_ADC_CH3_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH3_ENABLE 		
+		case 3:MOF_ADC_CH3_ENABLE; cfgerr=0; break;
 		#endif
-		#ifdef ZD_ADC_CH4_ENABLE 		
-		case 4:ZD_ADC_CH4_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH4_ENABLE 		
+		case 4:MOF_ADC_CH4_ENABLE; cfgerr=0; break;
 		#endif
-		#ifdef ZD_ADC_CH5_ENABLE 		
-		case 5:ZD_ADC_CH5_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH5_ENABLE 		
+		case 5:MOF_ADC_CH5_ENABLE; cfgerr=0; break;
 		#endif
-		#ifdef ZD_ADC_CH6_ENABLE 		
-		case 6:ZD_ADC_CH6_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH6_ENABLE 		
+		case 6:MOF_ADC_CH6_ENABLE; cfgerr=0; break;
 		#endif
-		#ifdef ZD_ADC_CH7_ENABLE 
-		case 7:ZD_ADC_CH7_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH7_ENABLE 
+		case 7:MOF_ADC_CH7_ENABLE; cfgerr=0; break;
 		#endif
-		#ifdef ZD_ADC_CH8_ENABLE 
-		case 8:ZD_ADC_CH8_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH8_ENABLE 
+		case 8:MOF_ADC_CH8_ENABLE; cfgerr=0; break;
 		#endif
-		#ifdef ZD_ADC_CH9_ENABLE 
-		case 9:ZD_ADC_CH9_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH9_ENABLE 
+		case 9:MOF_ADC_CH9_ENABLE; cfgerr=0; break;
 		#endif
-		#ifdef ZD_ADC_CH10_ENABLE 
-		case 10:ZD_ADC_CH10_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH10_ENABLE 
+		case 10:MOF_ADC_CH10_ENABLE; cfgerr=0; break;
 		#endif
-		#ifdef ZD_ADC_CH11_ENABLE 
-		case 11:ZD_ADC_CH11_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH11_ENABLE 
+		case 11:MOF_ADC_CH11_ENABLE; cfgerr=0; break;
 		#endif
-		#ifdef ZD_ADC_CH12_ENABLE 
-		case 12:ZD_ADC_CH12_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH12_ENABLE 
+		case 12:MOF_ADC_CH12_ENABLE; cfgerr=0; break;
 		#endif		
-		#ifdef ZD_ADC_CH13_ENABLE 
-		case 13:ZD_ADC_CH13_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH13_ENABLE 
+		case 13:MOF_ADC_CH13_ENABLE; cfgerr=0; break;
 		#endif
-		#ifdef ZD_ADC_CH14_ENABLE 
-		case 14:ZD_ADC_CH14_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH14_ENABLE 
+		case 14:MOF_ADC_CH14_ENABLE; cfgerr=0; break;
 		#endif
-		#ifdef ZD_ADC_CH15_ENABLE 
-		case 15:ZD_ADC_CH15_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH15_ENABLE 
+		case 15:MOF_ADC_CH15_ENABLE; cfgerr=0; break;
 		#endif 
-		#ifdef ZD_ADC_CH16_ENABLE 
-		case 16:ZD_ADC_CH16_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH16_ENABLE 
+		case 16:MOF_ADC_CH16_ENABLE; cfgerr=0; break;
 		#endif 
-		#ifdef ZD_ADC_CH17_ENABLE 
-		case 17:ZD_ADC_CH17_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH17_ENABLE 
+		case 17:MOF_ADC_CH17_ENABLE; cfgerr=0; break;
 		#endif 
-		#ifdef ZD_ADC_CH18_ENABLE 
-		case 18:ZD_ADC_CH18_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH18_ENABLE 
+		case 18:MOF_ADC_CH18_ENABLE; cfgerr=0; break;
 		#endif 
-		#ifdef ZD_ADC_CH19_ENABLE 
-		case 19:ZD_ADC_CH19_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH19_ENABLE 
+		case 19:MOF_ADC_CH19_ENABLE; cfgerr=0; break;
 		#endif 
-		#ifdef ZD_ADC_CH20_ENABLE 
-		case 20:ZD_ADC_CH20_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH20_ENABLE 
+		case 20:MOF_ADC_CH20_ENABLE; cfgerr=0; break;
 		#endif 
-		#ifdef ZD_ADC_CH21_ENABLE 
-		case 21:ZD_ADC_CH21_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH21_ENABLE 
+		case 21:MOF_ADC_CH21_ENABLE; cfgerr=0; break;
 		#endif 
-		#ifdef ZD_ADC_CH22_ENABLE 
-		case 22:ZD_ADC_CH22_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH22_ENABLE 
+		case 22:MOF_ADC_CH22_ENABLE; cfgerr=0; break;
 		#endif 
-		#ifdef ZD_ADC_CH23_ENABLE 
-		case 23:ZD_ADC_CH23_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH23_ENABLE 
+		case 23:MOF_ADC_CH23_ENABLE; cfgerr=0; break;
 		#endif 
-		#ifdef ZD_ADC_CH24_ENABLE 
-		case 24:ZD_ADC_CH24_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH24_ENABLE 
+		case 24:MOF_ADC_CH24_ENABLE; cfgerr=0; break;
 		#endif 
-		#ifdef ZD_ADC_CH25_ENABLE 
-		case 25:ZD_ADC_CH25_ENABLE; cfgerr=0; break;
+		#ifdef MOF_ADC_CH25_ENABLE 
+		case 25:MOF_ADC_CH25_ENABLE; cfgerr=0; break;
 		#endif 
 
 		default:break;
@@ -176,7 +176,7 @@ void mof_adcInit(void)
 #endif
 	{
 		//配置ADC时钟
-		ZD_ADC_CLKSET(MOF_ADC_CLKSET_DEFAULT);
+		MOF_ADC_CLKSET(MOF_ADC_CLKSET_DEFAULT);
 		//配置ADC开启
 		MOF_ADC_INIT;
 		
@@ -205,7 +205,7 @@ void mof_adcInit(void)
 *函数参数 		: 无
 *函数返回值 	: 无
 ***************************************************/
-void zd_getAdc_async_reset(void)
+void mof_getAdc_async_reset(void)
 {
 	adcChannel_sync=255;
 	adc_working=0;
@@ -217,23 +217,23 @@ void zd_getAdc_async_reset(void)
 *函数参数 		: adcChannel:采集通道,*adcValue:采集后存放数据的指针
 *函数返回值 	: uchar:当数据更新时返回1，否则返回0
 ***************************************************/
-unsigned char zd_getAdc_async(unsigned char adcChannel,unsigned int *adcValue)
+unsigned char mof_getAdc_async(unsigned char adcChannel,unsigned int *adcValue)
 {
 
 	if(adc_working==0)
 	{
-		if(0!=zd_adcChannelInit(adcChannel)) return 0;
+		if(0!=mof_adcChannelInit(adcChannel)) return 0;
 		adcChannel_sync=adcChannel;
-		ZD_ADC_CH_SELECT(adcChannel);				//重新加载通道值
+		MOF_ADC_CH_SELECT(adcChannel);				//重新加载通道值
 		Adc_DelayUs(40);                        	//廷时等待电压稳定 Tst >10us
-		ZD_ADC_START;             					//启动ADC 
+		MOF_ADC_START;             					//启动ADC 
 		adc_working=1;
 	}
-	else if((ZD_ADC_ISNOTBUSY))
+	else if((MOF_ADC_ISNOTBUSY))
 	{
 		if(adcChannel_sync==adcChannel)
 		{
-			*adcValue=(unsigned int)(ZD_ADC_GETVAL); 
+			*adcValue=(unsigned int)(MOF_ADC_GETVAL); 
 			adcChannel_sync=255;
 			adc_working=0;
 			return 1;
@@ -251,28 +251,28 @@ unsigned char zd_getAdc_async(unsigned char adcChannel,unsigned int *adcValue)
 *函数参数 		: adcChannel:采集通道,*adcValue:采集后存放数据的指针
 *函数返回值 	: uchar:当数据更新时返回1，否则返回0
 ***************************************************/
-unsigned char zd_getAdc_sync(unsigned char adcChannel,unsigned int *adcValue)
+unsigned char mof_getAdc_sync(unsigned char adcChannel,unsigned int *adcValue)
 {
 	unsigned char delay=100;
 
-		if(0!=zd_adcChannelInit(adcChannel)) return 0;
-		ZD_ADC_CH_SELECT(adcChannel);				//重新加载通道值
+		if(0!=mof_adcChannelInit(adcChannel)) return 0;
+		MOF_ADC_CH_SELECT(adcChannel);				//重新加载通道值
 		Adc_DelayUs(40);                        	//廷时等待电压稳定 Tst >10us
 	
-		ZD_ADC_START;             					//启动ADC 
+		MOF_ADC_START;             					//启动ADC 
 
-		//while((ZD_ADC_ISNOTBUSY))
+		//while((MOF_ADC_ISNOTBUSY))
 		//{
 		//	if(delay>0) delay--; else return 0;
 		//}	
 		
-		while((ZD_ADC_ISBUSY))
+		while((MOF_ADC_ISBUSY))
 		{
 			if(delay>0) delay--; else return 0;
 		}
 	
 	
-		*adcValue=(unsigned int)(ZD_ADC_GETVAL); 
+		*adcValue=(unsigned int)(MOF_ADC_GETVAL); 
 
     return 1;
 } 
@@ -287,9 +287,9 @@ unsigned char zd_getAdc_sync(unsigned char adcChannel,unsigned int *adcValue)
 ***************************************************/
 #ifdef ADC_COLLECTION_CH_MAX
 #if(ADC_COLLECTION_CH_MAX>0)
-void zd_adcRun(void)
+void mof_adcRun(void)
 {
-	if(0!=zd_getAdc_async(adc_ch[adc_ch_select],&(adc_value_list[adc_ch_select][adc_ch_collection_times])))  
+	if(0!=mof_getAdc_async(adc_ch[adc_ch_select],&(adc_value_list[adc_ch_select][adc_ch_collection_times])))  
 	{
 		if(++adc_ch_collection_times>=ADC_COLLECTION_LIST_TIMES) 
 		{

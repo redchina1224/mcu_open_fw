@@ -58,7 +58,7 @@ unsigned char mof_getAdc_async(unsigned char adcChannel,unsigned int *adcValue);
 *函数参数 		: adcChannel:采集通道,*adcValue:采集后存放数据的指针
 *函数返回值 	: uchar:当数据更新时返回1，否则返回0
 ***************************************************/
-unsigned char zd_getAdc_sync(unsigned char adcChannel,unsigned int *adcValue);
+unsigned char mof_getAdc_sync(unsigned char adcChannel,unsigned int *adcValue);
 	
 
 /***************************************************
@@ -69,7 +69,7 @@ unsigned char zd_getAdc_sync(unsigned char adcChannel,unsigned int *adcValue);
 ***************************************************/
 #ifdef ADC_COLLECTION_CH_MAX
 #if(ADC_COLLECTION_CH_MAX>0)
-void zd_adcRun(void);
+void mof_adcRun(void);
 #endif
 #endif
 
