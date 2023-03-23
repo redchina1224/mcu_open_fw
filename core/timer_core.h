@@ -20,7 +20,7 @@
 				  unsigned long _Us：定时器时间
 *函数返回值 	: 无
 ***********************************************************************************************/
-void zd_timerInit(unsigned char timerChannel,unsigned long _Us);
+void mof_timerInit(unsigned char timerChannel);
 
 
 #endif 

@@ -23,17 +23,17 @@ bit mSec_x20_workbit=0;
 #endif
 
 
-void zd_basetime_init(void)
+void mof_basetime_init(void)
 {
 	//关中断
-	ZD_GIE_DISABLE;  //中断总允许开关
+	MOF_GIE_DISABLE;  //中断总允许开关
 	
-	zd_timerInit(BaseTime_CoreTimer); //初始化定时器125us中断`
+	mof_timerInit(BaseTime_CoreTimer); //初始化定时器125us中断`
 
-	ZD_GIE_ENABLE; //中断总允许开关
+	MOF_GIE_ENABLE; //中断总允许开关
 }
 
-void zd_basetime_run(void)
+void mof_basetime_run(void)
 {
 	//ZD_CLRWDT;
 		

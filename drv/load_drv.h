@@ -53,6 +53,11 @@
 		#include "motor\loadMotor_drv.h" //载入显示系统驱动接口信息
 	#endif
 
+	//载入通讯系统
+	#ifdef CommunicationType
+		#include "communication\loadCommunication_drv.h" //载入通讯系统驱动接口信息
+	#endif
+
 	#include "interrupt\interrupt_drv.h" //载入中断服务接口信息
 
 #endif

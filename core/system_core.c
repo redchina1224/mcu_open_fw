@@ -27,7 +27,7 @@ void core_DelayUs(unsigned char dl_t)
 *函数参数 		: 无
 *函数返回值 	: 无
 ***********************************************************************************************/
-void systemInit(void)
+void mof_systemInit(void)
 {
 	//关闭总中断
 	MOF_GIE_DISABLE;

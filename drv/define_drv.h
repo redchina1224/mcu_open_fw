@@ -12,5 +12,7 @@
 #include "zerocross\defineZerocross_drv.h" //定义可选过零检测系统清单
 #include "motor\defineMotor_drv.h" //定义电机系统清单
 #include "poweroffcheck\definePowerOffCheck_drv.h" //定义掉电检测系统清单
+#include "communication\defineCommunication_drv.h" //定义通讯协议系统清单
+
 
 #endif

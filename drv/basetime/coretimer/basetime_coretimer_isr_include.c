@@ -56,7 +56,7 @@ M_20ms_bit=1;
 	}
 #endif
 #endif
-
+T_500ms_bit=1;
 }
 
 

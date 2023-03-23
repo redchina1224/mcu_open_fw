@@ -27,7 +27,7 @@ unsigned char *S1WriteBuffer;
 */
 
 extern bit S1_Busy;
-extern unsigned char S1ReadStartChar;
+extern unsigned char S1ReadStartChar[2];
 extern unsigned char S1ReadPtr;
 extern unsigned char S1WritePtr;
 extern unsigned char S1ReadLength;
@@ -37,13 +37,18 @@ extern unsigned char S1Reading;
 extern unsigned char *S1ReadBuffer;
 extern unsigned char *S1WriteBuffer;
 
+extern unsigned char S1ReadChecksumAdj;
+extern unsigned char S1WriteChecksumAdj;
 
+extern unsigned char gucv_data_recv_length;
 
 //声明外部函数******************************************************************
-void Uart1Init(void);
+unsigned char mof_UartInit(unsigned char uartNumber,unsigned char uartChannel,unsigned long baudrate);
 void Uart1Send(unsigned char writelength);
-void UART1_TxIsr(unsigned char *TxReg);
-void UART1_RxIsr(unsigned char *RxReg);
+//void UART1_TxIsr(unsigned char *TxReg);
+//void UART1_RxIsr(unsigned char *RxReg);
+void UART1_TxIsr(void);
+void UART1_RxIsr(void);
 
 
 #endif 

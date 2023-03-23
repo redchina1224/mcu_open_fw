@@ -19,7 +19,7 @@ void core_DelayUs(unsigned char dl_t);
 *函数参数 		: 无
 *函数返回值 	: 无
 ***********************************************************************************************/
-void zd_systemInit(void);
+void mof_systemInit(void);
 
 
 /***********************************************************************************************
@@ -29,7 +29,7 @@ void zd_systemInit(void);
 		  unsigned long _Us：定时器时间
 *函数返回值 	: 无
 ***********************************************************************************************/
-void zd_timerInit(unsigned char timerChannel);
+//void zd_timerInit(unsigned char timerChannel);
 
 
 #endif

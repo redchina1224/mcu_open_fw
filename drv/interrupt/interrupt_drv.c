@@ -725,83 +725,7 @@ void timer0_Isr() interrupt 1
 {
 #ifdef Ft0Clk	
 
-	//---------------------------------------
-		#ifndef ZD_TIMER0_LOAD_RELOAD
-			//ZD_TIMER0_LOAD += T0_Reload;		//重新赋初值，在赋值前Timer0已有计数，故在该基础上加初值
-		#endif
-	//---------------------------------------
 
-
-	//定时器蜂鸣驱动
-	#ifdef BuzzerType	
-		#if (BuzzerType==BuzzerType_TimerInv)
-			#if(BuzzeTimer==0)
-				buzzer_in_isr();
-			#endif
-		#endif
-	#endif	//#ifdef BuzzerType	
-
-	//软件时钟系统
-	#if (RtcType==RtcType_TimerSoftRtc) 
-		#if(SoftRtcTimer==0)
-			T_1s_bit=0;
-			T_500ms_bit=0;
-			softrtc_in_isr();//RTC时钟内联函数
-		#endif //#if(SoftRtcTimer==0)
-	#endif //#if (RtcType==RtcType_TimerSoftRtc) 
-
-	//软件显示驱动			
-	#ifdef DisplayType
-		#if ((DisplayType&DisplayType_SoftLed)==DisplayType_SoftLed) 
-			#ifdef DisplayTypeSoftLedModel
-				#if(SoftLedTimer==0)
-					zd_softled_run();//软件LED驱动函数
-				#endif //#if(SoftLedTimer==0)
-			#endif
-		#endif
-	#endif //#ifdef DisplayType
-
-	//软件计数系统
-	#ifdef CounterType
-		#if (CounterType==CounterType_SoftCounter) 
-			#if(SoftCounterTimer==0)
-				#ifdef Counter_IO_Channel1
-					softcounter1_in_isr();//softcount1软件计数器内联函数
-					T_1s_bit=0;
-					T_500ms_bit=0;
-				#endif
-			#endif //#if(SoftCounterTimer==0)
-		#endif
-	#endif //#ifdef CounterType
-
-			
-	//可控硅过零系统	
-	#ifdef ZeroCrossType
-		#if (ZeroCrossType==ZeroCrossType_Gpio) 
-			#if(ZeroCrossTimer==0)
-				zerocross_in_isr();//zerocross过零与可控硅驱动内联函数
-			#endif //#if(ZeroCrossTimer==0)
-		#endif
-	#endif //#ifdef ZeroCrossType
-
-	//按键系统
-	#ifdef KeyType
-		#if ((KeyType&KeyType_IR)==KeyType_IR)
-
-		#endif
-		
-		#if ((KeyType&KeyType_RF)==KeyType_RF)
-			__ZD_GetRfKeyValue();//射频遥控接收函数
-		#endif					
-
-		#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)
-			#if(McuTouchTimer==0)
-				#if ((McuType&McuType_Mask)==McuType_CmsSemicon_CMS79F)
-				//__CMS_GetTouchKeyValue();//中微单片机触摸库函数,此函数放在中断,建议中断扫描时间 125us	
-				#endif	
-			#endif //#if(McuTouchTimer==0)		
-		#endif //#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)		
-	#endif	//#ifdef KeyType	
 
 	ZD_T0IF_CLEAN;			//清中断标志位
 
@@ -814,9 +738,31 @@ void timer1_Isr() interrupt 3
 
 }
 
-void timer2_Isr() interrupt 12
+void timer2_Isr() interrupt 5
 {
-    //AUXINTIF &= ~T2IF; //清中断标志
+#ifdef Ft2Clk	
+	if(MOF_T2IF_GRIGGER)
+	{
+		//通讯系统
+		comm_handle();
+		
+		//软件时基系统
+		#if (BaseTimeType==BaseTimeType_CoreTimer) 
+			#if(BaseTime_CoreTimer==2)
+				basetime_in_isr();//时基内联函数
+			#endif //#if(BaseTime_CoreTimer==0)
+		#endif //#if (BaseTimeType==BaseTimeType_CoreTimer) 
+
+	MOF_T2IF_CLEAN;	//清中断标志位
+		
+	}
+#endif
+	
+	if(T2MOD & BIT5)		  //定时器2重载中断
+	{
+		T2MOD |= BIT5;
+		
+	}
 }
 
 
@@ -830,6 +776,23 @@ void timer4_Isr() interrupt 20
 {
 	//AUXINTIF &= ~T4IF; //清中断标志
 
+}
+
+
+void UART1_ISR (void) interrupt 6	
+{
+	if(MOF_UART1_RXIF_GRIGGER)
+	{
+		MOF_UART1_RXIF_CLEAN;			 
+
+		UART1_RxIsr();
+	}
+	if(MOF_UART1_TXIF_GRIGGER)
+	{
+		MOF_UART1_TXIF_CLEAN;	
+
+		UART1_TxIsr();
+	}
 }
 
 

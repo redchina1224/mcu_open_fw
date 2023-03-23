@@ -16,9 +16,9 @@ extern bit mSec_x20_workbit;
 #endif
 
 
-void zd_basetime_init(void);
+void mof_basetime_init(void);
 
-void zd_basetime_run(void);
+void mof_basetime_run(void);
 
 #endif
 
