@@ -36,7 +36,7 @@ void mof_systemInit(void)
 
 
 	//系统时钟初始化
-	//ZD_FSYS_CLKSET(ZD_FSYS_CLKSET_DEFAULT);
+	MOF_FSYS_INIT;
 	
 	//中断初始化清零
 	MOF_INTERRUPT_INIT;  					//暂禁止所有中断
