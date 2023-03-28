@@ -203,7 +203,13 @@ void UART1_RxIsr(void)
 		//获取帧长度
 		if(S1ReadPtr==0)
 		{
-			S1ReadLength=S1ReadBuffer[0]+2;//此数据长度为数据+校验和的长度,不包含CRC校验数据,实际接收数据需在此基础上加2
+			//如果带CRC校验,长度为帧长加2
+			//S1ReadLength=S1ReadBuffer[0]+2;//此数据长度为数据+校验和的长度,不包含CRC校验数据,实际接收数据需在此基础上加2
+
+			//如果不带CRC校验,长度为帧长
+			S1ReadLength=S1ReadBuffer[0];//此数据长度为数据+校验和的长度,不包含CRC校验数据,实际接收数据需在此基础上加2
+			
+			
 			S1ReadChecksumAdj=0;//初始化校验和修正值
 		}
 		else if(S1ReadCharAgo==0xff) //判定前一个数据是FF

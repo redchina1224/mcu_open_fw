@@ -752,7 +752,14 @@ void timer2_Isr() interrupt 5
 				basetime_in_isr();//时基内联函数
 			#endif //#if(BaseTime_CoreTimer==0)
 		#endif //#if (BaseTimeType==BaseTimeType_CoreTimer) 
-
+/*
+		//步进电机脉冲输出
+		if(++step_isr_count>step_motor_rate)
+		{
+			step_motor_pulse();
+			step_isr_count=0;
+		}
+*/
 	MOF_T2IF_CLEAN;	//清中断标志位
 		
 	}
@@ -785,13 +792,13 @@ void UART1_ISR (void) interrupt 6
 	{
 		MOF_UART1_RXIF_CLEAN;			 
 
-		UART1_RxIsr();
+		//UART1_RxIsr();
 	}
 	if(MOF_UART1_TXIF_GRIGGER)
 	{
 		MOF_UART1_TXIF_CLEAN;	
 
-		UART1_TxIsr();
+		//UART1_TxIsr();
 	}
 }
 

@@ -11,9 +11,9 @@
 #ifndef __ONEWIRE_DENG_PROTOCOL_DRV_H__
 #define __ONEWIRE_DENG_PROTOCOL_DRV_H__
 
-#define SEND_DATA_HIGH   	                P04 = 1
-#define SEND_DATA_LOW                       P04 = 0
-#define RECEIVE_DATA_READ                   P04
+#define SEND_DATA_HIGH   	                ONEWIRE_DIO_H
+#define SEND_DATA_LOW                       ONEWIRE_DIO_L
+#define RECEIVE_DATA_READ                   ONEWIRE_DIO
 
 
 #define SEND_DATA_COUNT                     1   //发送数据的次数。

@@ -48,9 +48,9 @@ static unsigned char check_sum(unsigned char* Buf, unsigned char len)
 *******************************************************************************/
 void send_mode(void)
 {
-	P04F = 0x02;
-	P04C = 0x00;
-	
+	//P33F = 0x02;
+	//P33C = 0x00;
+	ONEWIRE_DIO_OUT;
     comm_direction_flag = 1;
 }
 
@@ -62,9 +62,9 @@ void send_mode(void)
 *******************************************************************************/
 void receive_mode(void)
 {
-	P04F = 0x01;
-	P04C = 0x00;
-	
+//	P33F = 0x01;
+//	P33C = 0x00;
+	ONEWIRE_DIO_IN;
     comm_direction_flag = 0;
 }
 
