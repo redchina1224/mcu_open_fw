@@ -7,6 +7,7 @@ unsigned char basetime_msec_cnt=0;
 unsigned char basetime_100msec_cnt=0;
 unsigned char basetime_50msec_cnt=0;
 
+bit mSec_x1000_flashbit=0;
 bit mSec_x500_flashbit=0;
 bit mSec_x250_flashbit=0;
 bit mSec_x1000_workbit=0;
@@ -77,6 +78,7 @@ void mof_basetime_run(void)
 				basetime_100msec_cnt=0;
 				mSec_x1000_workbit=1;
 				mSec_x500_workbit=1;
+				mSec_x1000_flashbit=~mSec_x1000_flashbit;
 			}
 			else if(basetime_100msec_cnt==5) 
 				mSec_x500_workbit=1;
@@ -120,6 +122,7 @@ void mof_basetime_run(void)
 				basetime_100msec_cnt=0;
 				mSec_x1000_workbit=1;
 				mSec_x500_workbit=1;
+				mSec_x1000_flashbit=~mSec_x1000_flashbit;
 			}
 			else if(basetime_100msec_cnt==5) 
 				mSec_x500_workbit=1;
