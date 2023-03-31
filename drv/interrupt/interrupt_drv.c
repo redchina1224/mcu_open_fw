@@ -792,13 +792,13 @@ void UART1_ISR (void) interrupt 6
 	{
 		MOF_UART1_RXIF_CLEAN;			 
 
-		//UART1_RxIsr();
+		UART1_RxIsr();
 	}
 	if(MOF_UART1_TXIF_GRIGGER)
 	{
 		MOF_UART1_TXIF_CLEAN;	
 
-		//UART1_TxIsr();
+		UART1_TxIsr();
 	}
 }
 

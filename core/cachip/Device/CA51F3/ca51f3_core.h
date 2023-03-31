@@ -69,11 +69,11 @@
 	#define MOF_TIMER2_INIT {T2CON=(BIT5|BIT3); T2MOD=0;} ////设置定时器为重载模式0	
 	
 	//ADC配置
-	#define MOF_ADC_INIT ADCON&=(~0xff),ADCON|=(BIT0) //参考电压为外部VDD
+	#define MOF_ADC_INIT ADCON&=(~0xff),ADCON|=(BIT0|(7<<2)) //参考电压为外部VDD，采样时间设置, 时间为2的HTME次方的时钟周期
 	
-	#define MOF_ADC_CLKSET_DEFAULT 0 //0默认不分频,1为2分频，2为4分频，，，，，7为14分频
+	#define MOF_ADC_CLKSET_DEFAULT 7 //0默认不分频,1为2分频，2为4分频，，，，，7为14分频
 	
-	#define MOF_ADC_CLKSET(x) ADCFGL|=((x<<5)&(BIT7|BIT6|BIT5))
+	#define MOF_ADC_CLKSET(x) ADCFGL&=(BIT7|BIT6|BIT5);ADCFGL|=((x<<5)&(BIT7|BIT6|BIT5))
 	
 	#define MOF_ADC_GETVAL ((unsigned int)((ADCDH<<4)|(ADCDL>>4))) //左对齐12位
 	
