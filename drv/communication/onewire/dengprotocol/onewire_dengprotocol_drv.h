@@ -17,8 +17,8 @@
 
 
 #define SEND_DATA_COUNT                     1   //发送数据的次数。
-#define RECEIVE_DATA_SIZE		            3	//接收数据大小。
-#define SEND_DATA_SIZE                      3   //发送数据的大小。
+#define RECEIVE_DATA_SIZE		          ONEWIRE_RECEIVE_DATA_SIZE	//接收数据大小。
+#define SEND_DATA_SIZE                ONEWIRE_SEND_DATA_SIZE   //发送数据的大小。
 
 #define SEND_BIT_WIDTH_TIME 			    20	//BIT总波时间。
 #define SEND_LONG_WAVE_TIME 			    15	//长波时间。
