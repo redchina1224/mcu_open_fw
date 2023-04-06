@@ -23,7 +23,7 @@
 	//系统时钟初始化
 	#define MOF_FSYS_CLKPLL_MULTIPLE_DEFAULT 6
 	#define MOF_FSYS_CLKPLL_SET(x) PLLCON=(BIT7|((x-2)<<3)) //设置倍频倍数并使能PLL
-	#define MOF_FSYS_CLKPLL_WAITE while((PLLCON & BIT0)) //等待PLL时钟稳定
+	#define MOF_FSYS_CLKPLL_WAITE while((PLLCON & BIT0)==0) //等待PLL时钟稳定
 		
 	//切换系统时钟
 	#define MOF_FSYS_CLK_SWITCH_TO_IRCH		0	
