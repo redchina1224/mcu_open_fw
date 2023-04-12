@@ -792,13 +792,37 @@ void UART1_ISR (void) interrupt 6
 	{
 		MOF_UART1_RXIF_CLEAN;			 
 
-		UART1_RxIsr();
+		#if ((CommunicationType&CommunicationType_Uart)==CommunicationType_Uart)
+		
+			#if((CommunicationTypeUartModel&CommunicationType_Uart_HaierUplus)==CommunicationType_Uart_HaierUplus)
+				#if (UART_UPLUS_PORT_NUM==1)
+					uart_haier_uplus_rx_in_isr();
+				#endif
+		 
+			//#elif ((CommunicationTypeUartModel&CommunicationType_Uart_HaierUplus)==CommunicationType_Uart_HaierUplus)
+		
+			#endif
+		
+		#endif
+				
+		
 	}
 	if(MOF_UART1_TXIF_GRIGGER)
 	{
 		MOF_UART1_TXIF_CLEAN;	
 
-		UART1_TxIsr();
+		#if ((CommunicationType&CommunicationType_Uart)==CommunicationType_Uart)
+		
+			#if((CommunicationTypeUartModel&CommunicationType_Uart_HaierUplus)==CommunicationType_Uart_HaierUplus)
+				#if (UART_UPLUS_PORT_NUM==1)
+					uart_haier_uplus_tx_in_isr();
+				#endif
+		 
+			//#elif ((CommunicationTypeUartModel&CommunicationType_Uart_HaierUplus)==CommunicationType_Uart_HaierUplus)
+		
+			#endif
+		
+		#endif
 	}
 }
 

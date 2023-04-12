@@ -20,6 +20,9 @@ volatile unsigned char send_data_buff[SEND_DATA_SIZE]; //待发送的数据。
 volatile unsigned char receive_data_flag = 0; //接收标志位。
 volatile unsigned char receive_data_buff[RECEIVE_DATA_SIZE]; //接收的数据
 
+		#define ONEWIRE_DIO_H ONEWIRE_DIO=1
+		#define ONEWIRE_DIO_L ONEWIRE_DIO=0		
+
 /*******************************************************************************
   * @brief   check_sum:和校验。
   * @param   Buf:需要校验的数据。

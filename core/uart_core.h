@@ -8,47 +8,14 @@
 //Description:    TIME时间处理
 //History:
 //******************************************************************************
-#ifndef __USER_UART_H__
-#define __USER_UART_H__
+#ifndef __MOF_UART_CORE_H__
+#define __MOF_UART_CORE_H__
 
-/*
-struct struct_uartdata
-{
-unsigned char S1ReadStartChar;
-unsigned char S1ReadPtr;
-unsigned char S1WritePtr;
-unsigned char S1ReadLength;
-unsigned char S1ReadTimeout;
-unsigned char S1WriteLength;
-unsigned char S1Reading;
-unsigned char *S1ReadBuffer;
-unsigned char *S1WriteBuffer;
-};
-*/
 
-extern bit S1_Busy;
-extern unsigned char S1ReadStartChar[2];
-extern unsigned char S1ReadPtr;
-extern unsigned char S1WritePtr;
-extern unsigned char S1ReadLength;
-extern unsigned char S1ReadTimeout;
-extern unsigned char S1WriteLength;
-extern unsigned char S1Reading;
-extern unsigned char *S1ReadBuffer;
-extern unsigned char *S1WriteBuffer;
-
-extern unsigned char S1ReadChecksumAdj;
-extern unsigned char S1WriteChecksumAdj;
-
-extern unsigned char gucv_data_recv_length;
 
 //声明外部函数******************************************************************
 unsigned char mof_UartInit(unsigned char uartNumber,unsigned char uartChannel,unsigned long baudrate);
-void Uart1Send(unsigned char writelength);
-//void UART1_TxIsr(unsigned char *TxReg);
-//void UART1_RxIsr(unsigned char *RxReg);
-void UART1_TxIsr(void);
-void UART1_RxIsr(void);
+
 
 
 #endif 
