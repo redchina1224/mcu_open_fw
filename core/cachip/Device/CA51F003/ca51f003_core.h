@@ -197,8 +197,10 @@ code unsigned int BR_SET_TAB[][2]=
 	#define MOF_PWM_CYCLE(md,x) 	INDEX=(md);PWMDIVH	= (unsigned char)((x)>>8);PWMDIVL	= (unsigned char)(x);	
 			//初始化占空比
 	#define MOF_PWM_DUTY(md,x) 	INDEX=(md);PWMDUTH	= (unsigned char)((x)>>8);PWMDUTL	= (unsigned char)(x);PWMUPD=(1<<(md));while(PWMUPD);	
+	#define MOF_PWM_RGB_DUTY(Ridx,Gidx,Bidx,Rval,Gval,Bval) 	INDEX=(Ridx);PWMDUTH	= (unsigned char)((Rval)>>8);PWMDUTL	= (unsigned char)(Rval);INDEX=(Gidx);PWMDUTH	= (unsigned char)((Gval)>>8);PWMDUTL	= (unsigned char)(Gval);INDEX=(Bidx);PWMDUTH	= (unsigned char)((Bval)>>8);PWMDUTL	= (unsigned char)(Bval);PWMUPD=((1<<(Ridx))|(1<<(Gidx))|(1<<(Bidx)));while(PWMUPD);	
+	
 			//配置PWM开启
-	#define MOF_PWM_INIT(md)  PWMEN |= (1<<(md));
+	#define MOF_PWM_INIT(md)  while(PWMUPD);PWMEN |= (1<<(md));
 			
 			
 	

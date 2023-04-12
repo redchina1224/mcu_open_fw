@@ -12,6 +12,7 @@
 //#include "spi.h"
 #include "iap_core.h"
 #include "adc_core.h"
+#include "pwm_core.h"
 #include "uart_core.h"
 #include "timer_core.h"
 //#include "touchkey_core.h"
