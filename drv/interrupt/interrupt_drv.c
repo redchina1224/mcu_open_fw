@@ -752,14 +752,22 @@ void timer2_Isr() interrupt 5
 				basetime_in_isr();//时基内联函数
 			#endif //#if(BaseTime_CoreTimer==0)
 		#endif //#if (BaseTimeType==BaseTimeType_CoreTimer) 
-/*
+
 		//步进电机脉冲输出
-		if(++step_isr_count>step_motor_rate)
-		{
-			step_motor_pulse();
-			step_isr_count=0;
-		}
-*/
+		#ifdef MotorType
+			#if (MotorType==MotorType_Step)
+				#if(BaseTime_CoreTimer==2)
+					mof_motor_step_plus_in_isr();//步进电机脉冲输出函数
+				#endif //#if(BaseTime_CoreTimer==2)
+			#endif //#if (MotorType==MotorType_Step)
+		#endif //#ifdef MotorType
+		
+//		if(++step_isr_count>step_motor_rate)
+//		{
+//			step_motor_pulse();
+//			step_isr_count=0;
+//		}
+
 	MOF_T2IF_CLEAN;	//清中断标志位
 		
 	}

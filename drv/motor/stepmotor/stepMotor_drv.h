@@ -12,13 +12,36 @@
 #define __MOTORSTEP_DRV_H__
 //声明外部函数******************************************************************
 
+
+typedef struct
+{
+unsigned char WorkEn;
+signed int WorkStepCurrent;
+signed int WorkStep_cnt;
+unsigned char WorkSpeed_cnt;
+unsigned char WorkSpeed;
+unsigned char StepSelectCase;
+//unsigned char Step_Case_Max;
+//unsigned char *Step_List;
+} mof_motor_step_t;
+
+
+
+#ifdef MOTOR_STEP_TOTAL_NUM
+	extern mof_motor_step_t MotorStep_Object[MOTOR_STEP_TOTAL_NUM];
+#else
+	extern mof_motor_step_t MotorStep_Object[1];
+#endif
+
+
+
 /***********************************************************************************************
 *函数名 		: void zd_motorStep_isbusy(void)
 *函数功能描述 	: 步进驱动忙标志位
 *函数参数 		: 无，
 *函数返回值 	: 无
 ***********************************************************************************************/
-unsigned char zd_motorStep_isbusy(void);
+unsigned char mof_motorStep_isbusy(mof_motor_step_t *obj);
 
 /***********************************************************************************************
 *函数名 		: void zd_motorStep_work(unsigned char dir,unsigned long stepCount,unsigned char speed)
@@ -28,7 +51,8 @@ unsigned char zd_motorStep_isbusy(void);
 				  speed=脉冲间隔时间,转速 (x50ms)
 *函数返回值 	: 无
 ***********************************************************************************************/
-void zd_motorStep_work(unsigned char dir,unsigned long stepCount,unsigned char speed);
+//void mof_motorStep_work(mof_motor_step_t *obj,signed int stepCount,unsigned char speed);
+void mof_motorStep_work(unsigned char motor_n,signed int stepCount,unsigned char speed);
 
 /***********************************************************************************************
 *函数名 			: void zd_buzzerRun(void)
@@ -36,7 +60,7 @@ void zd_motorStep_work(unsigned char dir,unsigned long stepCount,unsigned char s
 *函数参数 			: 无
 *函数返回值 		: 无
 ***********************************************************************************************/
-void zd_motorStep_run(void);
+//void zd_motorStep_run(void);
 
 
 /***********************************************************************************************
@@ -45,8 +69,15 @@ void zd_motorStep_run(void);
 *函数参数 			: 无
 *函数返回值 		: 无
 ***********************************************************************************************/
-void zd_motorStep_init(void);
+void mof_motorStep_init(void);
 
+/***********************************************************************************************
+*函数名 		: void zd_motorStep_select(unsigned char stepcase)
+*函数功能描述 	: 步进驱动位
+*函数参数 		: stepcase=步进驱动步位置，
+*函数返回值 	: 无
+***********************************************************************************************/
+void mof_motor_step_plus_in_isr(void);
 
 #endif 
 
