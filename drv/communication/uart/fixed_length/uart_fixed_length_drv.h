@@ -26,6 +26,19 @@ unsigned char *p_WriteBuffer;
 } mof_fix_length_uart_port_t;
 
 
+
+extern mof_fix_length_uart_port_t fixed_length_port;
+
+
+#ifdef UART_FIXED_LENGTH_RX_LENGTH
+void uart_fixed_length_init(unsigned char *txbuf,unsigned char *rxbuf);
+void uart_fixed_length_send(unsigned char writelength);
+#else
+void uart_fixed_length_init(unsigned char *txbuf,unsigned char *rxbuf,unsigned char rxlen);
+void uart_fixed_length_send(unsigned char writelength,unsigned char readlength);
+#endif
+void uart_fixed_length_read_reset(void);
+unsigned char uart_fixed_length_ReadOverCheck(void);
 void uart_fixed_length_tx_in_isr(void);
 
 void uart_fixed_length_rx_in_isr(void);
