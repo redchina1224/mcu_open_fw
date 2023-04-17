@@ -59,13 +59,13 @@ void mof_motor_step_plus_in_isr(void)
 				{
 					if(MotorStep_Object[MotorStep_Select].StepSelectCase<(MotorStepTotal-1)) MotorStep_Object[MotorStep_Select].StepSelectCase++; else MotorStep_Object[MotorStep_Select].StepSelectCase=0;
 					MotorStep_Object[MotorStep_Select].WorkStep_cnt--;
-					MotorStep_Object[MotorStep_Select].WorkStepCurrent--;
+					MotorStep_Object[MotorStep_Select].WorkStepCurrent++;
 				}
 				else if(MotorStep_Object[MotorStep_Select].WorkStep_cnt<0)
 				{
 					if(MotorStep_Object[MotorStep_Select].StepSelectCase>0) MotorStep_Object[MotorStep_Select].StepSelectCase--; else MotorStep_Object[MotorStep_Select].StepSelectCase=(MotorStepTotal-1);
 					MotorStep_Object[MotorStep_Select].WorkStep_cnt++;
-					MotorStep_Object[MotorStep_Select].WorkStepCurrent++;
+					MotorStep_Object[MotorStep_Select].WorkStepCurrent--;
 				}
 								
 				//输出对应位
