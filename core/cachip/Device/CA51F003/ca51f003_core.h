@@ -7,7 +7,8 @@
 
 	//清看门狗定义
 	#define MOF_CLRWDT WDFLG=0xA5;
-
+	#define MOF_WDT_CLR WDFLG=0xA5;
+	#define MOF_WDT_INIT WDCON =  0x21;WDVTHH = 0x1e; WDVTHL = 0x84; 
 	//空指令定义
 	#define MOF_NOP _nop_();
 
@@ -36,6 +37,11 @@
 	#define MOF_PORT_BIT_AIN(p,b) MOF_PORT_BIT_CONFIG(p,b,F)=3
 	#define MOF_PORT_BIT_UART(p,b) MOF_PORT_BIT_CONFIG(p,b,F)=4
 	#define MOF_PORT_BIT_PWM(p,b) MOF_PORT_BIT_CONFIG(p,b,F)=5
+	
+	#define MOF_PORT_BIT_PHRES(p,b) MOF_PORT_BIT_CONFIG(p,b,F)|=0x80
+	#define MOF_PORT_BIT_PDRES(p,b) MOF_PORT_BIT_CONFIG(p,b,F)|=0x40
+	
+	
 	
 	//TIMER配置
 
