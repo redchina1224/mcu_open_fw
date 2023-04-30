@@ -79,7 +79,7 @@ unsigned char Value;
 		unsigned char bit6:1;
 		unsigned char bit7:1;		
 	}Bits;
-} zd_charbits_t;
+} mof_char8bits_t;
 
 
 typedef union {
@@ -102,7 +102,7 @@ unsigned int Value;
 		unsigned int bit14:1;
 		unsigned int bit15:1;
 	}Bits;
-} zd_intbits_t;
+} mof_int16bits_t;
 
 
 /*
@@ -143,7 +143,9 @@ unsigned long Value;
 		unsigned long bit31:1;
 
 	}Bits;
-} zd_longbits_t;
+} mof_long32bits_t;
+
+
 
 */
 

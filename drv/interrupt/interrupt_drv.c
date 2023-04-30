@@ -744,7 +744,13 @@ void timer2_Isr() interrupt 5
 	if(MOF_T2IF_GRIGGER)
 	{
 		//通讯系统
-		comm_handle();
+		#ifdef CommunicationTypeOneWireModel
+			#if(CommunicationTypeOneWireModel==CommunicationType_OneWire_DengProtocol)
+					#if(CommunicationOneWire_CoreTimer==2)
+								comm_handle();
+					#endif //#if(CommunicationOneWire_CoreTimer==2)
+			#endif //#if(CommunicationTypeOneWireModel==CommunicationType_OneWire_DengProtocol)
+		#endif //#ifdef CommunicationTypeOneWireModel
 		
 		//软件时基系统
 		#if (BaseTimeType==BaseTimeType_CoreTimer) 
