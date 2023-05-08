@@ -38,6 +38,9 @@ void mof_systemInit(void)
 	//系统时钟初始化
 	MOF_FSYS_INIT;
 	
+	//初始化看门狗
+	MOF_WDT_INIT;
+	
 	//中断初始化清零
 	MOF_INTERRUPT_INIT;  					//暂禁止所有中断
 	
