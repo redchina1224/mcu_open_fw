@@ -85,9 +85,19 @@ void mof_motor_step_plus_in_isr(void)
 			{
 				MotorStep_Object[MotorStep_Select].WorkEn=0;
 				
-				//关闭输出,不需要锁定保持
-				MOTOR_STEP_CTRL_OFF;
-
+				//输出对应位
+				if(MotorStep_Select==0)
+				{
+					//关闭输出,不需要锁定保持
+					MOTOR_STEP_CTRL_OFF;
+				}
+	#if(MOTOR_STEP_TOTAL_NUM>1)
+				else if(MotorStep_Select==1)
+				{
+					//关闭输出,不需要锁定保持
+					MOTOR2_STEP_CTRL_OFF;
+				}
+	#endif
 			}
 
 	}
