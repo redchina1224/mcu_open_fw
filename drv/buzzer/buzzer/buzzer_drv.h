@@ -16,38 +16,38 @@ typedef struct {
 unsigned char beepCnt;
 unsigned char beepton_x50ms;
 unsigned char beeptoff_x50ms;
-} zd_buzzer_t;
+} mof_buzzer_t;
 */
 
 
 
 /***********************************************************************************************
-*函数名 		: void zd_buzzer_beep(unsigned char beepCnt,unsigned char beepton_x50ms,unsigned char beeptoff_x50ms)
+*函数名 		: void mof_buzzer_beep(unsigned char beepCnt,unsigned char beepton_x50ms,unsigned char beeptoff_x50ms)
 *函数功能描述 	: 蜂鸣器鸣响工作
 *函数参数 		: beepCnt=蜂鸣次数，
 				  beepton=鸣响的时长 (x50ms) ,
 				  beeptoff=中间停止鸣响的时长 (x50ms)
 *函数返回值 	: 无
 ***********************************************************************************************/
-void zd_buzzer_beep(unsigned char beepCnt,unsigned char beepton_x50ms,unsigned char beeptoff_x50ms);
+void mof_buzzer_beep(unsigned char beepCnt,unsigned char beepton_x50ms,unsigned char beeptoff_x50ms);
 
 
 
 /***********************************************************************************************
-*函数名 			: void zd_buzzerRun(void)
+*函数名 			: void mof_buzzerRun(void)
 *函数功能描述 		: 蜂鸣器鸣响自动控制(鸣响时间，次数),需每50ms调用一次
 *函数参数 			: 无
 *函数返回值 		: 无
 ***********************************************************************************************/
-void zd_buzzerRun(void);
+void mof_buzzerRun(void);
 
 /***********************************************************************************************
-*函数名 			: void zd_buzzer_init(void)
+*函数名 			: void mof_buzzer_init(void)
 *函数功能描述 		: 蜂鸣初始化
 *函数参数 			: 无
 *函数返回值 		: 无
 ***********************************************************************************************/
-void zd_buzzer_init(void);
+void mof_buzzer_init(void);
 
 
 #endif 

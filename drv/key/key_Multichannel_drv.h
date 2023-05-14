@@ -14,7 +14,7 @@
 
 
 
-struct  zd_userkey_t {
+struct  mof_userkey_t {
 unsigned int UserKeyRepeatDelay;
 unsigned char KeyQuickPressCount;
 unsigned int KeyLongPressCount;
@@ -37,19 +37,23 @@ unsigned char UserKeyPressed_up;
 //#if ((KeyType&KeyType_MultiChannel)==KeyType_MultiChannel)
 
 	#if ((KeyType&KeyType_Gpio)==KeyType_Gpio||(KeyType&KeyType_SoftLedWithGpio)==KeyType_SoftLedWithGpio)
-extern struct zd_userkey_t gpioKeys;
+extern struct mof_userkey_t gpioKeys;
 	#endif
 	
 	#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)
-extern struct zd_userkey_t mcuTouchKeys;
+extern struct mof_userkey_t mcuTouchKeys;
 	#endif
 	
 	#if ((KeyType&KeyType_IR)==KeyType_IR)
-extern struct zd_userkey_t irKeys;
+extern struct mof_userkey_t irKeys;
 	#endif
 	
 	#if ((KeyType&KeyType_RF)==KeyType_RF)
-extern struct zd_userkey_t rfKeys;	
+extern struct mof_userkey_t rfKeys;	
+	#endif
+
+	#if ((KeyType&KeyType_USER)==KeyType_USER)
+extern struct mof_userkey_t userKeys;	
 	#endif
 	
 //#endif
@@ -57,11 +61,11 @@ extern struct zd_userkey_t rfKeys;
 
 
 //声明外部函数******************************************************************
-void zd_key_init(void);
-void zd_key_clear(struct zd_userkey_t *ukey);
-void zd_keyRun(void);
+void mof_key_init(void);
+void mof_key_clear(struct mof_userkey_t *ukey);
+void mof_keyRun(void);
 
-void zd_keyCheck(struct zd_userkey_t* ukey,unsigned long keysnotpress);
+void mof_keyCheck(struct mof_userkey_t* ukey,unsigned long keysnotpress);
 
 
 #endif 

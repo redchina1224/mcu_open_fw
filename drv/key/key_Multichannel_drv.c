@@ -4,24 +4,30 @@
 //#if ((KeyType&KeyType_MultiChannel)==KeyType_MultiChannel)
 
 	#if ((KeyType&KeyType_Gpio)==KeyType_Gpio||(KeyType&KeyType_SoftLedWithGpio)==KeyType_SoftLedWithGpio)
-struct zd_userkey_t gpioKeys;
+struct mof_userkey_t gpioKeys;
 	#endif
 	
 	#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)
-struct zd_userkey_t mcuTouchKeys;
+struct mof_userkey_t mcuTouchKeys;
 	#endif
 	
 	#if ((KeyType&KeyType_IR)==KeyType_IR)
-struct zd_userkey_t irKeys;
+struct mof_userkey_t irKeys;
 	#endif
 	
 	#if ((KeyType&KeyType_RF)==KeyType_RF)
-struct zd_userkey_t rfKeys;	
+struct mof_userkey_t rfKeys;	
 	#endif
-	
+
+
+	#if ((KeyType&KeyType_USER)==KeyType_USER)
+struct mof_userkey_t userKeys;	
+	#endif
+
+
 //#endif
 
-void zd_key_init(void)
+void mof_key_init(void)
 {
 
 
@@ -30,7 +36,7 @@ void zd_key_init(void)
 	#endif
 	
 	#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)
-		zd_touchkeyInit();
+		mof_touchkeyInit();
 	#endif
 	
 	#if ((KeyType&KeyType_IR)==KeyType_IR)
@@ -38,7 +44,7 @@ void zd_key_init(void)
 	#endif
 	
 	#if ((KeyType&KeyType_RF)==KeyType_RF)
-		zd_rfkeyInit();
+		mof_rfkeyInit();
 	#endif
 	
 
@@ -46,7 +52,7 @@ void zd_key_init(void)
 
 }
 
-void zd_key_clear(struct zd_userkey_t* ukey)
+void mof_key_clear(struct mof_userkey_t* ukey)
 {
 	ukey->UserKeyPressed=0;
 	ukey->UserKeyPressed_down=0;
@@ -55,7 +61,7 @@ void zd_key_clear(struct zd_userkey_t* ukey)
 }
 
 
-void zd_keyCheck(struct zd_userkey_t* ukey,unsigned long keysnotpress)
+void mof_keyCheck(struct mof_userkey_t* ukey,unsigned long keysnotpress)
 {
 	if(keysnotpress!=ukey->KeyVal)
 	{
@@ -111,11 +117,11 @@ void zd_keyCheck(struct zd_userkey_t* ukey,unsigned long keysnotpress)
 	else {ukey->KeyQuickPressCount=0;}	
 }
 
-void zd_keyRun(void)
+void mof_keyRun(void)
 {
 #if ((KeyType&KeyType_Gpio)==KeyType_Gpio)
 		gpioKeys.KeyVal=KEYS_IO_VALUE; //获取按键值
-		zd_keyCheck(&gpioKeys,KEYS_IO_NOTPRESS);
+		mof_keyCheck(&gpioKeys,KEYS_IO_NOTPRESS);
 #endif	
 
 #if ((KeyType&KeyType_SoftLedWithGpio)==KeyType_SoftLedWithGpio)
@@ -124,7 +130,7 @@ void zd_keyRun(void)
 	#ifdef DisplayTypeSoftLedModel
 		#if (DisplayTypeSoftLedModel==DisplayType_SoftLed_Dig8WithKeys) 
 			gpioKeys.KeyVal=softledkey;
-            zd_keyCheck(&gpioKeys,KEYS_IO_NOTPRESS);
+            mof_keyCheck(&gpioKeys,KEYS_IO_NOTPRESS);
 		#endif
     #endif
     #endif
@@ -134,16 +140,16 @@ void zd_keyRun(void)
 
 #if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)
 
-	zd_touchkeyRead(&(mcuTouchKeys.KeyVal));
-	zd_keyCheck(&mcuTouchKeys,KEYS_IO_NOTPRESS);
+	mof_touchkeyRead(&(mcuTouchKeys.KeyVal));
+	mof_keyCheck(&mcuTouchKeys,KEYS_IO_NOTPRESS);
 #endif	
 #if ((KeyType&KeyType_IR)==KeyType_IR)
 	
-	zd_keyCheck(&irKeys,KEYS_IO_NOTPRESS);
+	mof_keyCheck(&irKeys,KEYS_IO_NOTPRESS);
 #endif	
 #if ((KeyType&KeyType_RF)==KeyType_RF)
-	zd_rfkeyRead(&(rfKeys.KeyVal));
-	zd_keyCheck(&rfKeys,KEYS_IO_NOTPRESS);	
+	mof_rfkeyRead(&(rfKeys.KeyVal));
+	mof_keyCheck(&rfKeys,KEYS_IO_NOTPRESS);	
 			
 #endif
 	

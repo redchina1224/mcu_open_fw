@@ -24,14 +24,14 @@ unsigned char beetofftime_repeat;
 
 
 /***********************************************************************************************
-*函数名 		: void zd_buzzer_beep(unsigned char beepCnt,unsigned char beepton_x50ms,unsigned char beeptoff_x50ms)
+*函数名 		: void mof_buzzer_beep(unsigned char beepCnt,unsigned char beepton_x50ms,unsigned char beeptoff_x50ms)
 *函数功能描述 	: 蜂鸣器鸣响工作
 *函数参数 		: beepCnt=蜂鸣次数，
 				  beepton=鸣响的时长 (x50ms) ,
 				  beeptoff=中间停止鸣响的时长 (x50ms)
 *函数返回值 	: 无
 ***********************************************************************************************/
-void zd_buzzer_beep(unsigned char beepCnt,unsigned char beepton_x50ms,unsigned char beeptoff_x50ms)
+void mof_buzzer_beep(unsigned char beepCnt,unsigned char beepton_x50ms,unsigned char beeptoff_x50ms)
 {
 	beetontime_repeat=beepton_x50ms;
 	beetofftime_repeat=beeptoff_x50ms;
@@ -41,12 +41,12 @@ void zd_buzzer_beep(unsigned char beepCnt,unsigned char beepton_x50ms,unsigned c
 
 
 /***********************************************************************************************
-*函数名 			: void zd_buzzerRun(void)
+*函数名 			: void mof_buzzerRun(void)
 *函数功能描述 		: 蜂鸣器鸣响自动控制(鸣响时间，次数),需每50ms调用一次
 *函数参数 			: 无
 *函数返回值 		: 无
 ***********************************************************************************************/
-void zd_buzzerRun(void)//每50ms调用一次
+void mof_buzzerRun(void)//每50ms调用一次
 {
 	if(beeptime_cnt>0)
 	{
@@ -58,7 +58,7 @@ void zd_buzzerRun(void)//每50ms调用一次
 			#if (BuzzerType==BuzzerType_Gpio)
 				Buzzer_IO_Ctrl(Buzzer_IO_ON);
 			#elif (BuzzerType==BuzzerType_PWM)
-				zd_pwmEnable(Buzzer_PWM_Channel);
+				mof_pwmEnable(Buzzer_PWM_Channel);
 			#endif
 			if(0==beetontime) 
 			{
@@ -68,7 +68,7 @@ void zd_buzzerRun(void)//每50ms调用一次
 				#if (BuzzerType==BuzzerType_Gpio)
 					Buzzer_IO_Ctrl(Buzzer_IO_OFF);
 				#elif (BuzzerType==BuzzerType_PWM)
-					zd_pwmDisable(Buzzer_PWM_Channel);
+					mof_pwmDisable(Buzzer_PWM_Channel);
 				#endif
 				
 			}
@@ -78,7 +78,11 @@ void zd_buzzerRun(void)//每50ms调用一次
 		{
 			beetofftime--;
 			beepEn=0;
+			#ifdef Buzzer_IO_Input
 			Buzzer_IO_Input;
+			#else
+			Buzzer_IO_Ctrl(Buzzer_IO_OFF);
+			#endif
 			if(0==beetofftime) beetontime=beetontime_repeat;
 		}
 	}
@@ -97,12 +101,12 @@ void zd_buzzerRun(void)//每50ms调用一次
 
 
 /***********************************************************************************************
-*函数名 			: void zd_buzzer_init(void)
+*函数名 			: void mof_buzzer_init(void)
 *函数功能描述 		: 蜂鸣初始化
 *函数参数 			: 无
 *函数返回值 		: 无
 ***********************************************************************************************/
-void zd_buzzer_init(void)
+void mof_buzzer_init(void)
 {
 	
 #if (BuzzerType==BuzzerType_Gpio)
@@ -110,17 +114,17 @@ void zd_buzzer_init(void)
 	 Buzzer_IO_Ctrl(Buzzer_IO_OFF);
 #elif (BuzzerType==BuzzerType_TimerInv)
 	//关中断
-	ZD_GIE_DISABLE;  //中断总允许开关
+	mof_GIE_DISABLE;  //中断总允许开关
    beepEn=0;
    T_BuzzerEn=&beepEn;
 	 Buzzer_IO_Output;
 	 Buzzer_IO_Ctrl(Buzzer_IO_OFF);
-	 zd_timerInit(BuzzeTimer); //初始化定时器125us中断
+	 mof_timerInit(BuzzeTimer); //初始化定时器125us中断
 	//开中断
-	 ZD_GIE_ENABLE; //中断总允许开关
+	 mof_GIE_ENABLE; //中断总允许开关
 #elif (BuzzerType==BuzzerType_PWM)
-	zd_pwmInit(Buzzer_PWM_Channel,4000);//配置蜂鸣器通道为4KHz
-	zd_pwmDisable(Buzzer_PWM_Channel);//关闭输出
+	mof_pwmInit(Buzzer_PWM_Channel,4000);//配置蜂鸣器通道为4KHz
+	mof_pwmDisable(Buzzer_PWM_Channel);//关闭输出
 #endif
 }
 
