@@ -15,7 +15,6 @@
 #define SEND_DATA_LOW                       ONEWIRE_DIO_L
 #define RECEIVE_DATA_READ                   ONEWIRE_DIO
 
-
 #define SEND_DATA_COUNT                     1   //发送数据的次数。
 #define RECEIVE_DATA_SIZE		          ONEWIRE_RECEIVE_DATA_SIZE	//接收数据大小。
 #define SEND_DATA_SIZE                ONEWIRE_SEND_DATA_SIZE   //发送数据的大小。
@@ -34,11 +33,12 @@
 #define RECEIVE_MAX_SHORT_WAVE_TIME         7	//最大短波时间。
 #define RECEIVE_MIN_SHORT_WAVE_TIME         3	//最小短波时间。
 
-extern volatile unsigned char send_data_flag; //发送标志位。
-extern volatile unsigned char send_data_buff[SEND_DATA_SIZE]; //待发送的数据。
 
-extern volatile unsigned char receive_data_flag; //接收标志位。
-extern volatile unsigned char receive_data_buff[RECEIVE_DATA_SIZE]; //接收的数据
+extern volatile unsigned char xdata send_data_flag; //发送标志位。
+extern volatile unsigned char xdata send_data_buff[SEND_DATA_SIZE]; //待发送的数据。
+
+extern volatile unsigned char xdata receive_data_flag; //接收标志位。
+extern volatile unsigned char xdata receive_data_buff[RECEIVE_DATA_SIZE]; //接收的数据
 
 extern void send_mode(void);
 extern void receive_mode(void);
@@ -46,5 +46,39 @@ extern void send_data(void);
 extern void receive_data(void);
 extern void comm_handle(void);
 
+
+#define SEND2_DATA_HIGH   	                ONEWIRE2_DIO_H
+#define SEND2_DATA_LOW                      ONEWIRE2_DIO_L
+#define RECEIVE2_DATA_READ                  ONEWIRE2_DIO
+
+#define SEND2_DATA_COUNT                    1   //发送数据的次数。
+#define RECEIVE2_DATA_SIZE				    3	//接收数据大小。
+#define SEND2_DATA_SIZE                     3   //发送数据的大小。
+
+#define SEND2_BIT_WIDTH_TIME 			    20	//BIT总波时间。
+#define SEND2_LONG_WAVE_TIME 			    15	//长波时间。
+#define SEND2_MEDIUM_WAVE_TIME 		        10	//中波时间。
+#define SEND2_SHORT_WAVE_TIME 			    5	//短波时间。
+#define SEND2_DEAD_ZREA_TIME 			    100	//死区时间。
+
+#define RECEIVE2_TIME_OUT			        20	//最大波长时间。
+#define RECEIVE2_MAX_LONG_WAVE_TIME 	    17	//最大长波时间。
+#define RECEIVE2_MIN_LONG_WAVE_TIME 	    13	//最小长波时间。
+#define RECEIVE2_MAX_MEDIUM_WAVE_TIME 	    12	//最大中波时间。
+#define RECEIVE2_MIN_MEDIUM_WAVE_TIME 	    8	//最小中波时间。
+#define RECEIVE2_MAX_SHORT_WAVE_TIME        7	//最大短波时间。
+#define RECEIVE2_MIN_SHORT_WAVE_TIME        3	//最小短波时间。
+
+extern volatile unsigned char xdata send2_data_flag; //发送标志位。
+extern volatile unsigned char xdata send2_data_buff[SEND2_DATA_SIZE]; //待发送的数据。
+
+extern volatile unsigned char xdata receive2_data_flag; //接收标志位。
+extern volatile unsigned char xdata receive2_data_buff[RECEIVE2_DATA_SIZE]; //接收的数据
+
+extern void send2_mode(void);
+extern void receive2_mode(void);
+extern void send2_data(void);
+extern void receive2_data(void);
+extern void comm2_handle(void);
 
 #endif
