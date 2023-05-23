@@ -32,8 +32,8 @@ void mof_systemInit(void)
 	//关闭总中断
 	MOF_GIE_DISABLE;
 
-	//BOR默认打开无需配置
-
+	//BOR(LVR)配置
+	MOF_LVR_INIT;
 
 	//系统时钟初始化
 	MOF_FSYS_INIT;

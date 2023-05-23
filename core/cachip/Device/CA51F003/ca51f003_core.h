@@ -5,6 +5,9 @@
 	#include "include/ca51f003xsfr.h"
 	#include <intrins.h>
 
+	//低电压复位定义
+	#define MOF_LVR_INIT LVDCON=0xE1
+
 	//清看门狗定义
 	#define MOF_CLRWDT WDFLG=0xA5;
 	#define MOF_WDT_CLR WDFLG=0xA5;
