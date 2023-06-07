@@ -49,58 +49,64 @@ unsigned char mof_motorStep_isbusy(mof_motor_step_t *obj)
 ***********************************************************************************************/
 void mof_motor_step_plus_in_isr(void)
 {
-		if(MotorStep_Object[MotorStep_Select].WorkEn!=0&&(++(MotorStep_Object[MotorStep_Select].WorkSpeed_cnt)>=MotorStep_Object[MotorStep_Select].WorkSpeed))
+		if(MotorStep_Object[MotorStep_Select].WorkEn!=0)
 		{
-			MotorStep_Object[MotorStep_Select].WorkSpeed_cnt=0;
-			
-			if(MotorStep_Object[MotorStep_Select].WorkStep_cnt!=0)
+			if((++(MotorStep_Object[MotorStep_Select].WorkSpeed_cnt)>=MotorStep_Object[MotorStep_Select].WorkSpeed))
 			{
-				if(MotorStep_Object[MotorStep_Select].WorkStep_cnt>0)
-				{
-					if(MotorStep_Object[MotorStep_Select].StepSelectCase<(MotorStepTotal-1)) MotorStep_Object[MotorStep_Select].StepSelectCase++; else MotorStep_Object[MotorStep_Select].StepSelectCase=0;
-					MotorStep_Object[MotorStep_Select].WorkStep_cnt--;
-					MotorStep_Object[MotorStep_Select].WorkStepCurrent++;
-				}
-				else if(MotorStep_Object[MotorStep_Select].WorkStep_cnt<0)
-				{
-					if(MotorStep_Object[MotorStep_Select].StepSelectCase>0) MotorStep_Object[MotorStep_Select].StepSelectCase--; else MotorStep_Object[MotorStep_Select].StepSelectCase=(MotorStepTotal-1);
-					MotorStep_Object[MotorStep_Select].WorkStep_cnt++;
-					MotorStep_Object[MotorStep_Select].WorkStepCurrent--;
-				}
-								
-				//输出对应位
-				if(MotorStep_Select==0)
-				{
-					MOTOR_STEP_CTRL(Motor_Step_Ctrl_List[MotorStep_Object[MotorStep_Select].StepSelectCase]);
-				}
-	#if(MOTOR_STEP_TOTAL_NUM>1)
-				else if(MotorStep_Select==1)
-				{
-					MOTOR2_STEP_CTRL(Motor_Step_Ctrl_List[MotorStep_Object[MotorStep_Select].StepSelectCase]);
-				}
-	#endif
-
-			}
-			else
-			{
-				MotorStep_Object[MotorStep_Select].WorkEn=0;
+				MotorStep_Object[MotorStep_Select].WorkSpeed_cnt=0;
 				
-				//输出对应位
-				if(MotorStep_Select==0)
+				if(MotorStep_Object[MotorStep_Select].WorkStep_cnt!=0)
 				{
-					//关闭输出,不需要锁定保持
-					MOTOR_STEP_CTRL_OFF;
-				}
-	#if(MOTOR_STEP_TOTAL_NUM>1)
-				else if(MotorStep_Select==1)
-				{
-					//关闭输出,不需要锁定保持
-					MOTOR2_STEP_CTRL_OFF;
-				}
-	#endif
-			}
+					if(MotorStep_Object[MotorStep_Select].WorkStep_cnt>0)
+					{
+						if(MotorStep_Object[MotorStep_Select].StepSelectCase<(MotorStepTotal-1)) MotorStep_Object[MotorStep_Select].StepSelectCase++; else MotorStep_Object[MotorStep_Select].StepSelectCase=0;
+						MotorStep_Object[MotorStep_Select].WorkStep_cnt--;
+						MotorStep_Object[MotorStep_Select].WorkStepCurrent++;
+					}
+					else if(MotorStep_Object[MotorStep_Select].WorkStep_cnt<0)
+					{
+						if(MotorStep_Object[MotorStep_Select].StepSelectCase>0) MotorStep_Object[MotorStep_Select].StepSelectCase--; else MotorStep_Object[MotorStep_Select].StepSelectCase=(MotorStepTotal-1);
+						MotorStep_Object[MotorStep_Select].WorkStep_cnt++;
+						MotorStep_Object[MotorStep_Select].WorkStepCurrent--;
+					}
+									
+					//输出对应位
+					if(MotorStep_Select==0)
+					{
+						MOTOR_STEP_CTRL(Motor_Step_Ctrl_List[MotorStep_Object[MotorStep_Select].StepSelectCase]);
+					}
+		#if(MOTOR_STEP_TOTAL_NUM>1)
+					else if(MotorStep_Select==1)
+					{
+						MOTOR2_STEP_CTRL(Motor_Step_Ctrl_List[MotorStep_Object[MotorStep_Select].StepSelectCase]);
+					}
+		#endif
 
-	}
+				}
+				else
+				{
+					MotorStep_Object[MotorStep_Select].WorkEn=0;
+				}
+			}
+		}
+		else
+		{
+			
+			//输出对应位
+			if(MotorStep_Select==0)
+			{
+				//关闭输出,不需要锁定保持
+				MOTOR_STEP_CTRL_OFF;
+			}
+#if(MOTOR_STEP_TOTAL_NUM>1)
+			else if(MotorStep_Select==1)
+			{
+				//关闭输出,不需要锁定保持
+				MOTOR2_STEP_CTRL_OFF;
+			}
+#endif
+		}
+
 		
 	if(++MotorStep_Select>=MOTOR_STEP_TOTAL_NUM) MotorStep_Select=0;
 }
