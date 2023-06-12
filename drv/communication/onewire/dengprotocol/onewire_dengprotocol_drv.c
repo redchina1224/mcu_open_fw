@@ -12,16 +12,8 @@
 #include "..\..\..\com_include_drv.h"
 //******************************************************************************
 
-volatile unsigned char comm_direction_flag = 0;//0:接收，1：发送。
-
-volatile unsigned char send_data_flag = 0;//发送标志位。
-volatile unsigned char send_data_buff[SEND_DATA_SIZE]; //待发送的数据。
-
-volatile unsigned char receive_data_flag = 0; //接收标志位。
-volatile unsigned char receive_data_buff[RECEIVE_DATA_SIZE]; //接收的数据
-
-		#define ONEWIRE_DIO_H ONEWIRE_DIO=1
-		#define ONEWIRE_DIO_L ONEWIRE_DIO=0		
+mof_fix_length_onewire_deng_t xdata fixed_length_onewire_deng[ONEWIRE_DENG_TOTAL_NUM];
+unsigned char xdata onewire_object_select=0;
 
 /*******************************************************************************
   * @brief   check_sum:和校验。
@@ -43,449 +35,472 @@ static unsigned char check_sum(unsigned char* Buf, unsigned char len)
     return Sum;
 }
 
-/*******************************************************************************
-  * @brief   send_mode:设置成发送模式。
-  * @param   无。
-  * @retval  无。
-  * @note    无
-*******************************************************************************/
-void send_mode(void)
+/***********************************************************************************************
+*函数名 		: void onewrite_fixed_length_in_isr(void)
+*函数功能描述 	: 单线通讯邓氏接收服务程序(用于数据连续接收和发送)
+*函数参数 		: unsigned char *RxReg：串口硬件接收缓存地址指针
+*函数返回值 	: 无
+***********************************************************************************************/
+void onewrite_fixed_length_init(unsigned char i,unsigned char *sendbuf,unsigned char *recvbuf,unsigned char recv_len)
 {
-	//P33F = 0x02;
-	//P33C = 0x00;
-	ONEWIRE_DIO_OUT;
-    comm_direction_flag = 1;
-}
-
-/*******************************************************************************
-  * @brief   receive_mode:设置成接收模式。
-  * @param   无。
-  * @retval  无。
-  * @note    无
-*******************************************************************************/
-void receive_mode(void)
-{
-//	P33F = 0x01;
-//	P33C = 0x00;
-	ONEWIRE_DIO_IN;
-    comm_direction_flag = 0;
+		fixed_length_onewire_deng[i].p_WriteBuffer=(sendbuf);
+		fixed_length_onewire_deng[i].p_ReadBuffer=(recvbuf);
+		fixed_length_onewire_deng[i].ReadLength=recv_len;
+		fixed_length_onewire_deng[i].SendEnSw=0;
+		fixed_length_onewire_deng[i].Reading=0;
+		fixed_length_onewire_deng[i].Reading_BitCount=0;	
+		fixed_length_onewire_deng[i].ReadPtr=0;
+		fixed_length_onewire_deng[i].Reading_HighTimerCount=0;
+		fixed_length_onewire_deng[i].Reading_LowTimerCount=0;
+		fixed_length_onewire_deng[i].Reading_BaseTimerCount=0;
 }
 
 
-/*******************************************************************************
-  * @brief   Comm_Send1:发送数据。
-  * @param   无。
-  * @retval  无。
-  * @note    间隔50us调用一次，CPU在16MHz的情况下执行一次，平均3.75us,最大5us,最小3.125us。
-*******************************************************************************/
-void send_data(void)
+
+/***********************************************************************************************
+*函数名 		: void onewrite_fixed_length_in_isr(void)
+*函数功能描述 	: 单线通讯邓氏接收服务程序(用于数据连续接收和发送)
+*函数参数 		: unsigned char *RxReg：串口硬件接收缓存地址指针
+*函数返回值 	: 无
+***********************************************************************************************/
+void onewrite_fixed_length_send(unsigned char i,unsigned char writelength)//,unsigned char readlength)
 {
-    unsigned char i_t = 0;
-    static 	unsigned char send_data_time = 0;//发送时间计数。
-    static  unsigned char send_data_temp[SEND_DATA_SIZE + 1]; //暂存数据。
-    static	unsigned char send_data_bit_count = 0;//计算发送的位数。
-    static	unsigned char send_data_byte_count = 0;//计算发送的字节数。
-    static  unsigned char send_data_count = 0;//计算发送的次数。
-    static 	unsigned char send_data_state = 0;
-    
-    send_data_time++;
-    
-    switch(send_data_state) 
-    {
-        case 0://检测是否有待发数据。
-        {
-            if(send_data_flag != 0)
-            {
-                //添加数据。
-                for(i_t = 0; i_t < SEND_DATA_SIZE; i_t++)
-                    send_data_temp[i_t] = send_data_buff[i_t];
-                
-                //添加校验数据。
-                send_data_temp[SEND_DATA_SIZE] = check_sum((unsigned char*)send_data_buff, SEND_DATA_SIZE);
-                
-                //开始发送数据。
-                SEND_DATA_HIGH;
-                send_data_time = 0;
-                send_data_state = 6;
-            }
-            else
-            {
-                SEND_DATA_LOW;
-            }
-        }
-        break;
-        
-		
-		
-		case 6:
+
+	fixed_length_onewire_deng[i].Busy=1;	
+	fixed_length_onewire_deng[i].Writing=1;
+	fixed_length_onewire_deng[i].Writing_BitCount=0;
+	//fixed_length_onewire_deng[i].ReadLength=readlength;
+	fixed_length_onewire_deng[i].WriteLength=writelength;
+	fixed_length_onewire_deng[i].WritePtr=0;
+	fixed_length_onewire_deng[i].SendEnSw=1;
+	
+	//复位接收变量
+	fixed_length_onewire_deng[i].ReadPtr=0;
+	fixed_length_onewire_deng[i].Reading=0;
+	fixed_length_onewire_deng[i].Reading_BitCount=0;	
+	fixed_length_onewire_deng[i].ReadPtr=0;
+}
+
+
+/***********************************************************************************************
+*函数名 		: void onewrite_fixed_length_in_isr(void)
+*函数功能描述 	: 单线通讯邓氏接收服务程序(用于数据连续接收和发送)
+*函数参数 		: unsigned char *RxReg：串口硬件接收缓存地址指针
+*函数返回值 	: 无
+***********************************************************************************************/
+void onewrite_fixed_length_in_isr(void)
+{
+	for(onewire_object_select=0;onewire_object_select<(ONEWIRE_DENG_TOTAL_NUM);onewire_object_select++)
+	{
+		if(fixed_length_onewire_deng[onewire_object_select].SendEnSw!=0) //发送
 		{
-			if(send_data_time > (SEND_BIT_WIDTH_TIME * 3 - 1))
-            {
-                SEND_DATA_HIGH;
-                send_data_time = 0;
-                send_data_state = 1;
-            }
-            else
-            {
-                if(send_data_time < SEND_BIT_WIDTH_TIME)
-                    SEND_DATA_HIGH;
-                else
-                    SEND_DATA_LOW;
-            }	
-		}
-		break;
+			
+			fixed_length_onewire_deng[onewire_object_select].Writing_BaseTimerCount++;
+
+			//发送缓存区数据
 		
-        case 1://发送前导码。
-        {
-            if(send_data_time > (SEND_BIT_WIDTH_TIME - 1))
-            {
-                SEND_DATA_HIGH;
-                send_data_time = 0;
-                send_data_state = 2;
-            }
-            else
-            {
-                if(send_data_time < SEND_MEDIUM_WAVE_TIME)
-                    SEND_DATA_HIGH;
-                else
-                    SEND_DATA_LOW;
-            }
-        }
-        break;
-        
-        case 2://发送数据帧。
-        {
-            if(send_data_time > (SEND_BIT_WIDTH_TIME - 1))
-            {
-                send_data_time = 0;
-                SEND_DATA_HIGH;
-                
-                send_data_temp[send_data_byte_count] >>= 1;
-                send_data_bit_count++;
-                
-                if(send_data_bit_count >= 8)
-                {
-                    send_data_bit_count = 0;
-                    send_data_byte_count++;
-                    
-                    if(send_data_byte_count >= SEND_DATA_SIZE + 1)
-                    {
-                        send_data_byte_count = 0;
-                        send_data_state = 3;
-                    }
-                }
-                
-            }
-            else
-            {
-                if(send_data_temp[send_data_byte_count] & 0x01)
-                {
-                    if(send_data_time < SEND_LONG_WAVE_TIME)
-                        SEND_DATA_HIGH;
-                    else
-                        SEND_DATA_LOW;
-                }
-                else
-                {
-                    if(send_data_time < SEND_SHORT_WAVE_TIME)
-                        SEND_DATA_HIGH;
-                    else
-                        SEND_DATA_LOW;
-                }
-            }
-        }
-        break;
-        
-        case 3://发送结束符。
-        {
-            if(send_data_time > (SEND_BIT_WIDTH_TIME - 1))
-            {
-                SEND_DATA_LOW;
-                send_data_time = 0;
-                send_data_state = 4;
-            }
-            else
-            {
-                if(send_data_time < SEND_MEDIUM_WAVE_TIME)
-                    SEND_DATA_HIGH;
-                else
-                    SEND_DATA_LOW;
-            }
-        }
-        break;
-        
-        case 4://发送死区。
-        {
-            if(send_data_time > SEND_DEAD_ZREA_TIME)
-            {
-                send_data_time = 0;
-                
-                send_data_count++;
-                
-                if(send_data_count >= SEND_DATA_COUNT)
-                {
-                    send_data_count = 0;
-                    send_data_state = 5;
-                }
-                else
-                {
-                    send_data_state = 0;
-                }
-            }
-            else
-            {
-                SEND_DATA_LOW;
-            }
-        }
-        break;
-        
-        case 5://结束发送。
-        {
-            send_data_flag = 0;
-            send_data_state = 0;
-        }
-        break;
-        
-        default:
-        {
-            send_data_state = 5;
-        }
-        break;
-    }
-}
+					switch(fixed_length_onewire_deng[onewire_object_select].Writing)
+					{
+						case 1: //发送复位帧,1个数据位宽度高电平,2个数据位低电平
+						{
+								if(fixed_length_onewire_deng[onewire_object_select].Writing_BaseTimerCount < SEND_BIT_WIDTH_TIME) //1个数据位宽度高电平
+								{
+										fixed_length_onewire_deng[onewire_object_select].Write_IO=1;
+								}
+								else if(fixed_length_onewire_deng[onewire_object_select].Writing_BaseTimerCount < (SEND_BIT_WIDTH_TIME * 3)) //2个数据位低电平
+								{
+										fixed_length_onewire_deng[onewire_object_select].Write_IO=0;
+								}
+								else //复位帧发送完成
+								{
+									fixed_length_onewire_deng[onewire_object_select].Writing_BaseTimerCount = 0;
+									
+									fixed_length_onewire_deng[onewire_object_select].Writing++;
+									
+									fixed_length_onewire_deng[onewire_object_select].Write_IO=1;
+								}
 
-/*******************************************************************************
-  * @brief   receive_data:接收数据。
-  * @param   无。
-  * @retval  无。
-  * @note    间隔50us调用一次,CPU在16MHz的情况下执行一次，平均3.5us,最大7.5us,最小3.125us。。
-*******************************************************************************/
-void receive_data(void)
-{
-    unsigned char i_t = 0;
-    static 	unsigned char high_count = 0, low_count = 0;//高低电平计数。
-    static 	unsigned char high_flag = 0,  low_flag  = 0;//高低电平种类。       
-    static  unsigned char receive_data_time = 0;//接收时间计数。
-    static  unsigned char receive_data_temp[RECEIVE_DATA_SIZE + 1]; //暂存数据。
-    static  unsigned char receive_data_frame_flag = 0;//
-    static 	unsigned char receive_data_bit_flag = 0;//数据位的种类。
-    static	unsigned char receive_data_byte_count = 0;//计算接收的位数。
-    static	unsigned char receive_data_bit_count = 0;//计算接收的字节数。
-    static 	unsigned char receive_data_state = 0;
-    
-    receive_data_time++;
-    
-    switch(receive_data_state)
-    {
-        case 0://循环检测高电平。
-        {
-            if((RECEIVE_DATA_READ != 0) && (RECEIVE_DATA_READ != 0))
-            {
-                receive_data_time = 0;
-                receive_data_state = 1;
-            }
-        }
-        break;
-        
-        case 1://检测高电平种类。
-        {
-            if(receive_data_time > RECEIVE_TIME_OUT)
-            {
-                receive_data_state = 6;//接收错误。
-            }
-            else if((RECEIVE_DATA_READ == 0) && (RECEIVE_DATA_READ == 0))
-            {
-                high_count = receive_data_time;
-                receive_data_time = 0;
-                
-                if((high_count <= RECEIVE_MAX_SHORT_WAVE_TIME) && (high_count >= RECEIVE_MIN_SHORT_WAVE_TIME))
-                    high_flag = 1;
-                else if((high_count <= RECEIVE_MAX_MEDIUM_WAVE_TIME) && (high_count >= RECEIVE_MIN_MEDIUM_WAVE_TIME))
-                    high_flag = 2;
-                else if((high_count <= RECEIVE_MAX_LONG_WAVE_TIME) && (high_count >= RECEIVE_MIN_LONG_WAVE_TIME))
-                    high_flag = 3;
-                else
-                    high_flag = 0;
+						}
+						break;
+					
+						case 2://发送起始帧（与结束帧相同）,半个数据位宽度高电平,半个数据位低电平
+						{
+							
+								if(fixed_length_onewire_deng[onewire_object_select].Writing_BaseTimerCount < (SEND_BIT_WIDTH_TIME/2)) //半个数据位宽度高电平
+								{
+										fixed_length_onewire_deng[onewire_object_select].Write_IO=1;
+								}
+								else if(fixed_length_onewire_deng[onewire_object_select].Writing_BaseTimerCount < (SEND_BIT_WIDTH_TIME)) //半个数据位低电平
+								{
+										fixed_length_onewire_deng[onewire_object_select].Write_IO=0;
+								}
+								else //起始帧发送完成
+								{
+									fixed_length_onewire_deng[onewire_object_select].Writing_BaseTimerCount = 0;
+									
+									fixed_length_onewire_deng[onewire_object_select].Writing++;
+									
+									fixed_length_onewire_deng[onewire_object_select].Write_IO=1;
+								}
 
-                receive_data_state = 2;
-            }
-            else
-            {
-                //检测中。
-            }
-                
-        }
-        break;
-        
-        case 2://检测低电平种类。
-        {
-            if(receive_data_time > RECEIVE_TIME_OUT)
-            {
-                receive_data_state = 6;//接收错误。
-            }
-            else if((RECEIVE_DATA_READ != 0) && (RECEIVE_DATA_READ != 0))
-            {
-                low_count = receive_data_time;
-                receive_data_time = 0;
-                
-                if((low_count <= RECEIVE_MAX_SHORT_WAVE_TIME) && (low_count >= RECEIVE_MIN_SHORT_WAVE_TIME))
-                    low_flag = 1;
-                else if((low_count <= RECEIVE_MAX_MEDIUM_WAVE_TIME) && (low_count >= RECEIVE_MIN_MEDIUM_WAVE_TIME))
-                    low_flag = 2;
-                else if((low_count <= RECEIVE_MAX_LONG_WAVE_TIME) && (low_count >= RECEIVE_MIN_LONG_WAVE_TIME))
-                    low_flag = 3;
-                else
-                    low_flag = 0;
+						}
+						break;
+							
+							case 3://发送数据帧,
+							{
+								
+								if(fixed_length_onewire_deng[onewire_object_select].Writing_BaseTimerCount < (SEND_BIT_WIDTH_TIME)) //发送一个数据位未完成
+								{
+											if(fixed_length_onewire_deng[onewire_object_select].p_WriteBuffer[fixed_length_onewire_deng[onewire_object_select].WritePtr] & 0x01)
+											{
+													if(fixed_length_onewire_deng[onewire_object_select].Writing_BaseTimerCount < SEND_LONG_WAVE_TIME)
+															fixed_length_onewire_deng[onewire_object_select].Write_IO=1;
+													else
+															fixed_length_onewire_deng[onewire_object_select].Write_IO=0;
+											}
+											else
+											{
+													if(fixed_length_onewire_deng[onewire_object_select].Writing_BaseTimerCount < SEND_SHORT_WAVE_TIME)
+															fixed_length_onewire_deng[onewire_object_select].Write_IO=1;
+													else
+															fixed_length_onewire_deng[onewire_object_select].Write_IO=0;
+											}
+								}
+								else //一个数据位发送完成
+								{
+									
+									fixed_length_onewire_deng[onewire_object_select].Writing_BaseTimerCount = 0;
+															
+									fixed_length_onewire_deng[onewire_object_select].Write_IO=1;
+											
+									fixed_length_onewire_deng[onewire_object_select].Writing_BitCount++;
+											
+									if(fixed_length_onewire_deng[onewire_object_select].Writing_BitCount < 8) //未发送完一个字节
+									{
+											fixed_length_onewire_deng[onewire_object_select].p_WriteBuffer[fixed_length_onewire_deng[onewire_object_select].WritePtr] >>= 1; //移位后继续发送数据位
 
-                receive_data_state = 3;
-            }
-            else
-            {
-                //检测中。
-            }
-        }
-        break;
-        
-        case 3://分析接收一位数据。
-        {
-            if((high_flag == 1) && (low_flag == 3))
-            {
-                receive_data_bit_flag = 1;
-                receive_data_state = 4;
-            }
-            else if((high_flag == 2) && (low_flag == 2))
-            {
-                receive_data_bit_flag = 2;
-                receive_data_state = 4;
-            }
-            else if((high_flag == 3) && (low_flag == 1))
-            {
-                receive_data_bit_flag = 3;
-                receive_data_state = 4;
-            }
-            else
-            {
-                receive_data_bit_flag = 0;
-                receive_data_state = 6;
-            }
-        }
-        break;
+									}
+									else //已发送完一个字节
+									{
+											fixed_length_onewire_deng[onewire_object_select].Writing_BitCount = 0;
+										
+											fixed_length_onewire_deng[onewire_object_select].WritePtr++; //发送下一个字节
+											
+											if(fixed_length_onewire_deng[onewire_object_select].WritePtr>=fixed_length_onewire_deng[onewire_object_select].WriteLength) //所有数据发送完成
+											{
+												fixed_length_onewire_deng[onewire_object_select].Writing_BaseTimerCount = 0;
+												
+												fixed_length_onewire_deng[onewire_object_select].Writing++;
+												
+												fixed_length_onewire_deng[onewire_object_select].Write_IO=1;
+											}
 
-        case 4://分析接收有效数据。
-        {
-            if(receive_data_frame_flag == 0)//检测起始帧。
-            {
-                if(receive_data_bit_flag == 2)
-                {
-                    receive_data_frame_flag = 1;
-                    receive_data_state = 1;
-                }
-                else
-                {
-                    receive_data_state = 6;
-                }
-            }
-            else if(receive_data_frame_flag == 1)//接收数据
-            {
-                if(receive_data_bit_flag != 0x02)
-                {
-                    if(receive_data_bit_flag == 0x01)//低电平。
-                    {
-                        receive_data_temp[receive_data_byte_count] &= ~(1 << receive_data_bit_count++);
-                    }
-                    else
-                    {
-                        receive_data_temp[receive_data_byte_count] |= (1 << receive_data_bit_count++);
-                    }
+									}
+											
+								}
+								
+							}
+							break;
 
-                    if(receive_data_bit_count == 8)
-                    {
-                        receive_data_bit_count = 0;
-                        receive_data_byte_count++;
+						case 4://发送结束帧（与起始帧相同）,半个数据位宽度高电平,半个数据位低电平
+						{
+							
+								if(fixed_length_onewire_deng[onewire_object_select].Writing_BaseTimerCount < (SEND_BIT_WIDTH_TIME/2)) //半个数据位宽度高电平
+								{
+										fixed_length_onewire_deng[onewire_object_select].Write_IO=1;
+								}
+								else if(fixed_length_onewire_deng[onewire_object_select].Writing_BaseTimerCount < (SEND_BIT_WIDTH_TIME)) //半个数据位低电平
+								{
+										fixed_length_onewire_deng[onewire_object_select].Write_IO=0;
+								}
+								else //起始帧发送完成
+								{
+									fixed_length_onewire_deng[onewire_object_select].Writing_BaseTimerCount = 0;
+									
+									fixed_length_onewire_deng[onewire_object_select].Writing++;
+									
+									fixed_length_onewire_deng[onewire_object_select].Write_IO=0;
+								}
 
-                        if(receive_data_byte_count == RECEIVE_DATA_SIZE + 1)
-                        {
-                            receive_data_byte_count = 0;
+						}
+						break;        
 
-                            receive_data_frame_flag = 2;
-                        }
-                        else
-                        {
-                            receive_data_state = 1;
-                        }
-                    }
-                    else
-                    {
-                        receive_data_state = 1;
-                    }
-                }
-                else
-                {
-                    receive_data_state = 6;
-                }
-            }
-            else if(receive_data_frame_flag == 2)//校验数据。
-            {
-                if(check_sum((unsigned char*)receive_data_temp, RECEIVE_DATA_SIZE) == receive_data_temp[RECEIVE_DATA_SIZE])
-                    receive_data_state = 5;
-                else
-                    receive_data_state = 6;
-            }
-            else
-            {
-                //预留。
-            }
-        }
-        break;
-        
-        case 5://接收数据成功，重新开始接收。
-        {
-            
-            for(i_t = 0; i_t < RECEIVE_DATA_SIZE; i_t++)
-                receive_data_buff[i_t] = receive_data_temp[i_t];
-                        
-            receive_data_flag = 1;//加收成功。
+							
+	//					case 5://发送死区。
+	//					{
+	//							if(fixed_length_onewire_deng[onewire_object_select].Writing_BaseTimerCount > SEND_DEAD_ZREA_TIME)
+	//							{
+	//								fixed_length_onewire_deng[onewire_object_select].Writing_BaseTimerCount = 0;
+	//								
+	//								fixed_length_onewire_deng[onewire_object_select].Writing++;
+	//								
+	//								fixed_length_onewire_deng[onewire_object_select].Write_IO=0;
+	//							}
+	//							else
+	//							{
+	//								fixed_length_onewire_deng[onewire_object_select].Write_IO=0;
+	//							}
+	//					}
+	//					break;
+							
+							
+						default: //结束发送
+						{
+							fixed_length_onewire_deng[onewire_object_select].Write_IO=0;
+							fixed_length_onewire_deng[onewire_object_select].Busy=0;
+							fixed_length_onewire_deng[onewire_object_select].SendEnSw=0;
+							//mof_buzzer_beep(1,2,3);	
+							//发送结束切换为输入
+							if(onewire_object_select==0)
+							{
+								ONEWIRE_DIO_IN;
+							}
+		#if (ONEWIRE_DENG_TOTAL_NUM>1)
+							else if(onewire_object_select==1)
+							{
+								ONEWIRE2_DIO_IN;
+							}	
+		#endif
 
-            receive_data_frame_flag = 0;//帧状态。
-            receive_data_byte_count = 0;//数据帧位数。
-            receive_data_bit_count = 0;//数据帧字节数
+						}
+						break;
+					}
+					
+					//切换为输出并发送电平
+					if(fixed_length_onewire_deng[onewire_object_select].SendEnSw)
+					{
+						if(onewire_object_select==0)
+						{
+							ONEWIRE_DIO=fixed_length_onewire_deng[onewire_object_select].Write_IO;
+							ONEWIRE_DIO_OUT;
+						}
+		#if (ONEWIRE_DENG_TOTAL_NUM>1)
+						else if(onewire_object_select==1)
+						{
+							ONEWIRE2_DIO=fixed_length_onewire_deng[onewire_object_select].Write_IO;
+							ONEWIRE2_DIO_OUT;
+						}
+		#endif
 
-            receive_data_state = 0;
-        }
-        break;
+					}
 
-        case 6://接收数据错误，重新开始接收。
-        {
-            receive_data_frame_flag = 0;//帧状态。
-            receive_data_byte_count = 0;//数据帧位数。
-            receive_data_bit_count = 0;//数据帧字节数
+					
+		}
+		else //接收
+		{
 
-            receive_data_state = 0;
-        }
-        break;
-        
-        default:
-        {
-            receive_data_state = 6;
-        }
-        break;
-    }
-}
+			//切换为输入并接收电平
+			if(onewire_object_select==0)
+			{
+				ONEWIRE_DIO_IN;
+				fixed_length_onewire_deng[onewire_object_select].Read_IO=ONEWIRE_DIO;
+			}
+#if (ONEWIRE_DENG_TOTAL_NUM>1)
+			else if(onewire_object_select==1)
+			{
+				ONEWIRE2_DIO_IN;
+				fixed_length_onewire_deng[onewire_object_select].Read_IO=ONEWIRE2_DIO;
+			}
+#endif
 
-/*******************************************************************************
-  * @brief   comm_handle:处理接收和发送。
-  * @param   无。
-  * @retval  无。
-  * @note    间隔50us调用一次。
-*******************************************************************************/
-void comm_handle(void)
-{
-    if(comm_direction_flag)
-    {
-        send_data();
-    }
-    else
-    {
-        receive_data();
-    }
+	
+			//数据位计时
+			if(fixed_length_onewire_deng[onewire_object_select].Reading_BaseTimerCount<255) fixed_length_onewire_deng[onewire_object_select].Reading_BaseTimerCount++;
+			
+			//信号沿处理
+			if(fixed_length_onewire_deng[onewire_object_select].Read_IO_Last!=fixed_length_onewire_deng[onewire_object_select].Read_IO)
+			{
+				
+				if(fixed_length_onewire_deng[onewire_object_select].Read_IO==1) //电平上升沿
+				{
+					//取出低电平时间
+					fixed_length_onewire_deng[onewire_object_select].Reading_LowTimerCount=fixed_length_onewire_deng[onewire_object_select].Reading_BaseTimerCount;
+					
+					//if(fixed_length_onewire_deng[onewire_object_select].Reading_HighTimerCount>200) mof_buzzer_beep(1,2,3);	
+				}
+				else if(fixed_length_onewire_deng[onewire_object_select].Read_IO==0) //电平下降沿
+				{
+					//取出高电平时间
+					fixed_length_onewire_deng[onewire_object_select].Reading_HighTimerCount=fixed_length_onewire_deng[onewire_object_select].Reading_BaseTimerCount;
+				}
+				else //信号干扰
+				{
+					//电平变化计时时基清零
+					fixed_length_onewire_deng[onewire_object_select].Reading_BaseTimerCount=0;
+					return;
+				}
+				
+				//
+				fixed_length_onewire_deng[onewire_object_select].Read_IO_Last=fixed_length_onewire_deng[onewire_object_select].Read_IO;
+				
+				//电平变化计时时基清零
+				fixed_length_onewire_deng[onewire_object_select].Reading_BaseTimerCount=0;
+				
+			}
+
+			
+			//如果前一次接收未处理,停止接收以免缓存区被破坏
+			if(fixed_length_onewire_deng[onewire_object_select].Reading==200) return;
+			
+//			//如果接收已超时,重新开始接收
+//			if(fixed_length_onewire_deng[onewire_object_select].ReadTimeout==0) fixed_length_onewire_deng[onewire_object_select].ReadPtr=0;
+
+//			//设置接收超时时间
+//			fixed_length_onewire_deng[onewire_object_select].ReadTimeout=3;
+
+			
+			//接收流程
+			switch(fixed_length_onewire_deng[onewire_object_select].Reading)
+			{
+					case 0://检测复位帧,1个数据位宽度高电平(实测不到此宽度,待后期验证),2个数据位低电平
+					{
+//						if(fixed_length_onewire_deng[onewire_object_select].Reading_BaseTimerCount==0)
+//						{
+//								if(fixed_length_onewire_deng[onewire_object_select].Read_IO==1) //电平上升沿
+//								{
+//										if(
+//											fixed_length_onewire_deng[onewire_object_select].Reading_HighTimerCount>=(10)&&fixed_length_onewire_deng[onewire_object_select].Reading_HighTimerCount<=(22)&&
+//											fixed_length_onewire_deng[onewire_object_select].Reading_LowTimerCount>=(SEND_BIT_WIDTH_TIME+SEND_BIT_WIDTH_TIME-2)&&fixed_length_onewire_deng[onewire_object_select].Reading_LowTimerCount<=(SEND_BIT_WIDTH_TIME+SEND_BIT_WIDTH_TIME+2)
+//										)
+//										{
+//											fixed_length_onewire_deng[onewire_object_select].Reading++;
+//											//mof_buzzer_beep(1,2,3);	
+//										}
+//										else
+//										{
+//											fixed_length_onewire_deng[onewire_object_select].Reading=0;
+//										}
+
+//								}
+//								else //电平下降沿
+//								{
+
+//								}
+//						}
+
+							fixed_length_onewire_deng[onewire_object_select].Reading++;
+					}
+					break;
+					
+					case 1://检测起始帧,半个数据位宽度高电平,半个数据位低电平
+					{
+						if(fixed_length_onewire_deng[onewire_object_select].Reading_BaseTimerCount==0)
+						{
+								if(fixed_length_onewire_deng[onewire_object_select].Read_IO==1) //电平上升沿
+								{
+										if(
+											((fixed_length_onewire_deng[onewire_object_select].Reading_HighTimerCount <= (SEND_MEDIUM_WAVE_TIME+2)) && (fixed_length_onewire_deng[onewire_object_select].Reading_HighTimerCount >= (SEND_MEDIUM_WAVE_TIME-2)))&&
+											((fixed_length_onewire_deng[onewire_object_select].Reading_LowTimerCount <= (SEND_MEDIUM_WAVE_TIME+2)) && (fixed_length_onewire_deng[onewire_object_select].Reading_LowTimerCount >= (SEND_MEDIUM_WAVE_TIME-2)))
+										)//符合起始帧特性
+										{
+											fixed_length_onewire_deng[onewire_object_select].Reading++;
+											//mof_buzzer_beep(1,2,3);	
+										}
+										else
+										{
+											fixed_length_onewire_deng[onewire_object_select].Reading=0;
+										}
+								}
+								else //电平下降沿
+								{
+
+								}
+						}
+						
+									
+					}
+					break;
+					
+					case 2://接收数据帧,。
+					{
+
+								if(fixed_length_onewire_deng[onewire_object_select].Reading_BaseTimerCount==0)
+								{
+									if(fixed_length_onewire_deng[onewire_object_select].Read_IO==1) //电平上升沿
+									{
+										if(\
+											((fixed_length_onewire_deng[onewire_object_select].Reading_HighTimerCount <= (SEND_SHORT_WAVE_TIME+2)) && (fixed_length_onewire_deng[onewire_object_select].Reading_HighTimerCount >= (SEND_SHORT_WAVE_TIME-2)))&&\
+											((fixed_length_onewire_deng[onewire_object_select].Reading_LowTimerCount <= (SEND_LONG_WAVE_TIME+2)) && (fixed_length_onewire_deng[onewire_object_select].Reading_LowTimerCount >= (SEND_LONG_WAVE_TIME-2)))\
+										)//符合逻辑0数据帧特性
+										{
+											fixed_length_onewire_deng[onewire_object_select].p_ReadBuffer[fixed_length_onewire_deng[onewire_object_select].ReadPtr]&=~0x80;
+										}
+										else if(\
+											((fixed_length_onewire_deng[onewire_object_select].Reading_HighTimerCount <= (SEND_LONG_WAVE_TIME+2)) && (fixed_length_onewire_deng[onewire_object_select].Reading_HighTimerCount >= (SEND_LONG_WAVE_TIME-2)))&&\
+											((fixed_length_onewire_deng[onewire_object_select].Reading_LowTimerCount <= (SEND_SHORT_WAVE_TIME+2)) && (fixed_length_onewire_deng[onewire_object_select].Reading_LowTimerCount >= (SEND_SHORT_WAVE_TIME-2)))\
+										)//符合逻辑1数据帧特性
+										{
+											fixed_length_onewire_deng[onewire_object_select].p_ReadBuffer[fixed_length_onewire_deng[onewire_object_select].ReadPtr]|=0x80;
+										}
+										else //数据帧接收错误
+										{
+											fixed_length_onewire_deng[onewire_object_select].Reading=0xee;
+										}
+										
+										//准备下次接收
+										fixed_length_onewire_deng[onewire_object_select].Reading_BitCount++;
+										
+										fixed_length_onewire_deng[onewire_object_select].Reading_HighTimerCount=0;
+										fixed_length_onewire_deng[onewire_object_select].Reading_LowTimerCount=0;
+										fixed_length_onewire_deng[onewire_object_select].Reading_BaseTimerCount=0;
+											
+										//准备接收下一位或下个字节
+										if(fixed_length_onewire_deng[onewire_object_select].Reading_BitCount < 8) //未接收完一个字节
+										{
+												fixed_length_onewire_deng[onewire_object_select].p_ReadBuffer[fixed_length_onewire_deng[onewire_object_select].ReadPtr] >>=1; //移位后继续接收数据位
+										}
+										else //已接收完一个字节
+										{
+												fixed_length_onewire_deng[onewire_object_select].Reading_BitCount = 0;
+											
+												fixed_length_onewire_deng[onewire_object_select].ReadPtr++; //接收下一个字节
+
+												//接收超过指定长度数据帧(一般为接收缓冲区的上限)
+												if(fixed_length_onewire_deng[onewire_object_select].ReadPtr>=(fixed_length_onewire_deng[onewire_object_select].ReadLength)) 
+												{		
+													fixed_length_onewire_deng[onewire_object_select].Reading=200; //接收完成,停止接收,等待主循环处理数据
+												}		
+							
+
+										}
+															
+									}
+									else //电平下降沿
+									{
+										if(\
+											((fixed_length_onewire_deng[onewire_object_select].Reading_HighTimerCount <= (SEND_MEDIUM_WAVE_TIME+2)) && (fixed_length_onewire_deng[onewire_object_select].Reading_HighTimerCount >= (SEND_MEDIUM_WAVE_TIME-2)))\
+										)//符合结束帧特性
+										{
+											fixed_length_onewire_deng[onewire_object_select].Reading=200; //接收完成,停止接收,等待主循环处理数据
+										}
+									}
+									
+								}
+								else if(fixed_length_onewire_deng[onewire_object_select].Reading_BaseTimerCount>(SEND_BIT_WIDTH_TIME+SEND_BIT_WIDTH_TIME+SEND_BIT_WIDTH_TIME+2)) //接收超时
+								{
+									fixed_length_onewire_deng[onewire_object_select].Reading=0xee;
+								}					
+						
+					}
+					break;
+					
+					case 0xee://接收错误
+					default: 
+					{
+							fixed_length_onewire_deng[onewire_object_select].Reading=0;
+							fixed_length_onewire_deng[onewire_object_select].Reading_BitCount=0;	
+							fixed_length_onewire_deng[onewire_object_select].ReadPtr=0;
+							fixed_length_onewire_deng[onewire_object_select].Reading_HighTimerCount=0;
+							fixed_length_onewire_deng[onewire_object_select].Reading_LowTimerCount=0;
+							fixed_length_onewire_deng[onewire_object_select].Reading_BaseTimerCount=0;
+					}
+					break;
+			}
+			
+		}
+		
+
+	}
+
+	
 }

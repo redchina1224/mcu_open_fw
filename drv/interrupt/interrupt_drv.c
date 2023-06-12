@@ -747,7 +747,7 @@ void timer2_Isr() interrupt 5
 		#ifdef CommunicationTypeOneWireModel
 			#if(CommunicationTypeOneWireModel==CommunicationType_OneWire_DengProtocol)
 					#if(CommunicationOneWire_CoreTimer==2)
-								comm_handle();
+								onewrite_fixed_length_in_isr();//comm_handle();
 					#endif //#if(CommunicationOneWire_CoreTimer==2)
 			#endif //#if(CommunicationTypeOneWireModel==CommunicationType_OneWire_DengProtocol)
 		#endif //#ifdef CommunicationTypeOneWireModel
@@ -768,11 +768,6 @@ void timer2_Isr() interrupt 5
 			#endif //#if (MotorType==MotorType_Step)
 		#endif //#ifdef MotorType
 		
-//		if(++step_isr_count>step_motor_rate)
-//		{
-//			step_motor_pulse();
-//			step_isr_count=0;
-//		}
 
 	MOF_T2IF_CLEAN;	//清中断标志位
 		
