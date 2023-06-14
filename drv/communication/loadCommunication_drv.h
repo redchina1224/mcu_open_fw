@@ -19,6 +19,11 @@
 		#endif
 	#endif
 
+	#if ((CommunicationType&CommunicationType_I2C)==CommunicationType_I2C)
+		#if ((CommunicationTypeI2cModel&CommunicationType_I2C_SoftI2C)==CommunicationType_I2C_SoftI2C)	
+			#include "i2c\softi2c\soft_i2c_drv.h"
+		#endif
+	#endif
 
 #endif
 

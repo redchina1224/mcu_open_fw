@@ -1,0 +1,184 @@
+#ifndef __CA51F005_XDATA_H__
+#define __CA51F005_XDATA_H__
+
+#ifdef __MAIN_C__
+    #define XRAM_U8 volatile unsigned char xdata
+    #define XRAM_AT_(x)    _at_ x
+#else
+    #define XRAM_U8 extern volatile unsigned char xdata
+    #define XRAM_AT_(x)
+#endif
+
+
+XRAM_U8     P00F        XRAM_AT_(0x8000);
+XRAM_U8     P01F        XRAM_AT_(0x8001);
+XRAM_U8     P02F        XRAM_AT_(0x8002);
+XRAM_U8     P03F        XRAM_AT_(0x8003);
+XRAM_U8     P04F        XRAM_AT_(0x8004);
+XRAM_U8     P05F        XRAM_AT_(0x8005);
+XRAM_U8     P06F        XRAM_AT_(0x8006);
+XRAM_U8     P07F        XRAM_AT_(0x8007);
+
+XRAM_U8     P10F        XRAM_AT_(0x8008);
+XRAM_U8     P11F        XRAM_AT_(0x8009);
+XRAM_U8     P12F        XRAM_AT_(0x800a);
+XRAM_U8     P13F        XRAM_AT_(0x800b);
+XRAM_U8     P14F        XRAM_AT_(0x800c);
+XRAM_U8     P15F        XRAM_AT_(0x800d);
+XRAM_U8     P16F        XRAM_AT_(0x800e);
+XRAM_U8     P17F        XRAM_AT_(0x800f);
+
+XRAM_U8     P20F        XRAM_AT_(0x8010);
+XRAM_U8     RCMSLL      XRAM_AT_(0x8011);
+XRAM_U8     RCMSLH      XRAM_AT_(0x8012);
+XRAM_U8     RCMSHL      XRAM_AT_(0x8013);
+XRAM_U8     RCMSHH      XRAM_AT_(0x8014);
+XRAM_U8     RCTAGL      XRAM_AT_(0x8015);
+XRAM_U8     RCTAGH      XRAM_AT_(0x8016);
+
+
+XRAM_U8     P30F        XRAM_AT_(0x8018);
+XRAM_U8     RCCON       XRAM_AT_(0x8019);
+XRAM_U8     HVTH        XRAM_AT_(0x801a);
+XRAM_U8     VCKDL       XRAM_AT_(0x801b);
+XRAM_U8     VCKDH       XRAM_AT_(0x801c);
+XRAM_U8     STEP        XRAM_AT_(0x801d);
+XRAM_U8     STEPNUM     XRAM_AT_(0x801e);
+
+
+XRAM_U8     CKCON       XRAM_AT_(0x8080);
+XRAM_U8     CKSEL       XRAM_AT_(0x8081);
+XRAM_U8     CKDIV       XRAM_AT_(0x8082);
+XRAM_U8     IHCFGL      XRAM_AT_(0x8083);
+XRAM_U8     IHCFGH      XRAM_AT_(0x8084);
+XRAM_U8     ILCFGL      XRAM_AT_(0x8085);
+XRAM_U8     XHISEL      XRAM_AT_(0x8086);
+
+XRAM_U8     ADCALL      XRAM_AT_(0x8088);
+XRAM_U8     ADCALH      XRAM_AT_(0x8089);
+XRAM_U8     ACPDLL      XRAM_AT_(0x808a);
+XRAM_U8     ACPDLH      XRAM_AT_(0x808b);
+XRAM_U8     ACPDHL      XRAM_AT_(0x808c);
+XRAM_U8     ACPDHH      XRAM_AT_(0x808d);
+XRAM_U8     ADPWMST     XRAM_AT_(0x808e);
+XRAM_U8     ADOPC       XRAM_AT_(0x808f);
+
+XRAM_U8     PFGCFGL     XRAM_AT_(0x8090);
+XRAM_U8     PFGCFGH     XRAM_AT_(0x8091);
+XRAM_U8     PFGTRIML    XRAM_AT_(0x8092);
+XRAM_U8     PFGTRIMH    XRAM_AT_(0x8093);
+XRAM_U8     ACPBC       XRAM_AT_(0x8094);
+
+XRAM_U8     PWMPS       XRAM_AT_(0x8098);
+XRAM_U8     PWMHS       XRAM_AT_(0x8099);
+XRAM_U8     PWMFBC      XRAM_AT_(0x809a);
+XRAM_U8     PWMFBS      XRAM_AT_(0x809b);
+XRAM_U8     PWMSBC      XRAM_AT_(0x809c);
+XRAM_U8     PWMBD       XRAM_AT_(0x809d);
+
+XRAM_U8     T2CPPS      XRAM_AT_(0x80a0);
+XRAM_U8     T2CPCHS     XRAM_AT_(0x80a1);
+XRAM_U8     T2CPF       XRAM_AT_(0x80a2);
+XRAM_U8     T2CPL       XRAM_AT_(0x80a3);
+XRAM_U8     T2CPH       XRAM_AT_(0x80a4);
+
+XRAM_U8     TMCON       XRAM_AT_(0x80a8);
+XRAM_U8     TMSNU       XRAM_AT_(0x80a9);
+
+XRAM_U8     SWICON      XRAM_AT_(0x80b0);
+XRAM_U8     SWIDAT      XRAM_AT_(0x80b1);
+XRAM_U8     SWISTA      XRAM_AT_(0x80b2);
+XRAM_U8     SWIOVT      XRAM_AT_(0x80b3);
+
+XRAM_U8     AMPCON      XRAM_AT_(0x80b8);
+XRAM_U8     AMPAOS      XRAM_AT_(0x80b9);
+XRAM_U8     AMPOUT      XRAM_AT_(0x80ba);
+
+XRAM_U8     BZCON       XRAM_AT_(0x80c0);
+XRAM_U8     BZDIVL      XRAM_AT_(0x80c1);
+XRAM_U8     BZDIVH      XRAM_AT_(0x80c2);
+XRAM_U8     BZDUTL      XRAM_AT_(0x80c3);
+XRAM_U8     BZDUTH      XRAM_AT_(0x80c4);
+
+XRAM_U8     DCCR        XRAM_AT_(0x80d0);
+XRAM_U8     DCDS        XRAM_AT_(0x80d1);
+XRAM_U8     DCDB        XRAM_AT_(0x80d2);
+XRAM_U8     DCBIT0HH    XRAM_AT_(0x80d3);
+XRAM_U8     DCBIT0HL    XRAM_AT_(0x80d4);
+XRAM_U8     DCBIT0LH    XRAM_AT_(0x80d5);
+XRAM_U8     DCBIT0LL    XRAM_AT_(0x80d6);
+XRAM_U8     DCBIT1HH    XRAM_AT_(0x80d7);
+
+XRAM_U8     DCBIT1HL    XRAM_AT_(0x80d8);
+XRAM_U8     DCBIT1LH    XRAM_AT_(0x80d9);
+XRAM_U8     DCBIT1LL    XRAM_AT_(0x80da);
+XRAM_U8     DCOVRH      XRAM_AT_(0x80db);
+XRAM_U8     DCOVRL      XRAM_AT_(0x80dc);
+XRAM_U8     DCFCR       XRAM_AT_(0x80dd);
+
+XRAM_U8     DC1CR       XRAM_AT_(0x80e0);
+XRAM_U8     DC1DS       XRAM_AT_(0x80e1);
+XRAM_U8     DC1DB       XRAM_AT_(0x80e2);
+XRAM_U8     DC1BIT0HH   XRAM_AT_(0x80e3);
+XRAM_U8     DC1BIT0HL   XRAM_AT_(0x80e4);
+XRAM_U8     DC1BIT0LH   XRAM_AT_(0x80e5);
+XRAM_U8     DC1BIT0LL   XRAM_AT_(0x80e6);
+XRAM_U8     DC1BIT1HH   XRAM_AT_(0x80e7);
+
+XRAM_U8     DC1BIT1HL   XRAM_AT_(0x80e8);
+XRAM_U8     DC1BIT1LH   XRAM_AT_(0x80e9);
+XRAM_U8     DC1BIT1LL   XRAM_AT_(0x80ea);
+XRAM_U8     DC1OVRH     XRAM_AT_(0x80eb);
+XRAM_U8     DC1OVRL     XRAM_AT_(0x80ec);
+XRAM_U8     DC1FCR      XRAM_AT_(0x80ed);
+
+XRAM_U8     TSCMD       XRAM_AT_(0x80f8);
+XRAM_U8     TSSTA       XRAM_AT_(0x80f9);
+XRAM_U8     TSSWC       XRAM_AT_(0x80fa);
+XRAM_U8     STPCL       XRAM_AT_(0x80fb);
+XRAM_U8     STPCH       XRAM_AT_(0x80fc);
+
+XRAM_U8     SPMAX       XRAM_AT_(0x8100);
+XRAM_U8     I2CIOS      XRAM_AT_(0x8101);
+
+XRAM_U8     UDCKS1      XRAM_AT_(0x8118);
+XRAM_U8     UDCKS2      XRAM_AT_(0x8119);
+
+XRAM_U8     FTCTL       XRAM_AT_(0x811e);
+XRAM_U8     TPCTL       XRAM_AT_(0x811f);
+
+XRAM_U8     P00C        XRAM_AT_(0x8120);
+XRAM_U8     P01C        XRAM_AT_(0x8121);
+XRAM_U8     P02C        XRAM_AT_(0x8122);
+XRAM_U8     P03C        XRAM_AT_(0x8123);
+XRAM_U8     P04C        XRAM_AT_(0x8124);
+XRAM_U8     P05C        XRAM_AT_(0x8125);
+XRAM_U8     P06C        XRAM_AT_(0x8126);
+XRAM_U8     P07C        XRAM_AT_(0x8127);
+
+XRAM_U8     P10C        XRAM_AT_(0x8128);
+XRAM_U8     P11C        XRAM_AT_(0x8129);
+XRAM_U8     P12C        XRAM_AT_(0x812a);
+XRAM_U8     P13C        XRAM_AT_(0x812b);
+XRAM_U8     P14C        XRAM_AT_(0x812c);
+XRAM_U8     P15C        XRAM_AT_(0x812d);
+XRAM_U8     P16C        XRAM_AT_(0x812e);
+XRAM_U8     P17C        XRAM_AT_(0x812f);
+
+XRAM_U8     P20C        XRAM_AT_(0x8130);
+
+XRAM_U8     P30C        XRAM_AT_(0x8138);
+
+XRAM_U8     MECON       XRAM_AT_(0xfc00);
+XRAM_U8     FSCMD       XRAM_AT_(0xfc01);
+XRAM_U8     FSDAT       XRAM_AT_(0xfc02);
+XRAM_U8     LOCK        XRAM_AT_(0xfc03);
+XRAM_U8     PADRD       XRAM_AT_(0xfc04);
+XRAM_U8     PTSL        XRAM_AT_(0xfc05);
+XRAM_U8     PTSH        XRAM_AT_(0xfc06);
+XRAM_U8     REPSET      XRAM_AT_(0xfc07);
+
+XRAM_U8     MEMPTEC     XRAM_AT_(0xfc0d);
+XRAM_U8     PADRM       XRAM_AT_(0xfc0f);
+
+#endif  // __CA51F003s_XDATA_H__
