@@ -14,24 +14,30 @@
 
 typedef struct
 {
-unsigned char S_Busy;
-unsigned char S_ReadCharWindows[2];
-unsigned char S_ReadPtr;
-unsigned char S_WritePtr;
-unsigned char S_ReadLength;
-unsigned char S_ReadTimeout;
-unsigned char S_WriteLength;
-unsigned char S_WriteAppendbytes;
-unsigned char S_Reading;
-unsigned char S_Writing;
-unsigned char *S_ReadBuffer;
-unsigned char *S_WriteBuffer;
-unsigned char S_ReadChecksumAdj;
-unsigned char S_WriteChecksumAdj;
+unsigned char Busy;
+unsigned char ReadCharWindows[2];
+unsigned char ReadPtr;
+unsigned char WritePtr;
+unsigned char ReadLength;
+unsigned char ReadTimeout;
+unsigned char WriteLength;
+unsigned char WriteAppendbytes;
+unsigned char Reading;
+unsigned char Writing;
+unsigned char *p_ReadBuffer;
+unsigned char *p_WriteBuffer;
+unsigned char ReadChecksumAdj;
+unsigned char WriteChecksumAdj;
 } mof_haier_uplus_uart_port_t;
 
+void uart_haier_uplus_init(unsigned char *txbuf,unsigned char *rxbuf);
+
+void uart_haier_uplus_send(unsigned char writelength);
+	
 void uart_haier_uplus_tx_in_isr(void);
 
 void uart_haier_uplus_rx_in_isr(void);
+
+extern mof_haier_uplus_uart_port_t xdata haier_uplus_port;
 
 #endif

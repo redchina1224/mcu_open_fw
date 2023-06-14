@@ -102,6 +102,11 @@
 	#define MOF_UART_CLKSET_DEFAULT 0
 	#define MOF_UART1_CLKSET(clk)  MOF_NOP//临时解决方案,需替换为串口时钟源及分频比设置功能
 
+	#define MOF_UART2_TXBUF S2BUF
+	#define MOF_UART2_RXBUF S2BUF
+	
+	#define MOF_UART2_CLKSET(clk)  MOF_NOP//临时解决方案,需替换为串口时钟源及分频比设置功能
+
 	//配置UART波特率
 	/*
 	//注意： 以下波特率参数对应主时钟为16M，如选择另外的主时钟频率，参数须重新计算。
@@ -130,9 +135,10 @@ code unsigned int BR_SET_TAB[][2]=
 };
 	*/
 	#define MOF_CA51F_DNUM 31
-	#define MOF_CA51F_S1REL_FROM_BAUDRATE(baudrate) (1024-((FsysClk)/((baudrate)*32)))
+	#define MOF_CA51F_SxREL_FROM_BAUDRATE(baudrate) (1024-((FsysClk)/((baudrate)*32)))
 	
-	#define MOF_UART1_BAUDRATE(x) {UDCKS1=(0X80|MOF_CA51F_DNUM);	S1RELH = (unsigned char)((MOF_CA51F_S1REL_FROM_BAUDRATE(x))>>8); S1RELL = (unsigned char)(MOF_CA51F_S1REL_FROM_BAUDRATE(x));}
+	//配置串口波特率
+	#define MOF_UART1_BAUDRATE(x) {UDCKS1=(0X80|MOF_CA51F_DNUM);	S1RELH = (unsigned char)((MOF_CA51F_SxREL_FROM_BAUDRATE(x))>>8); S1RELL = (unsigned char)(MOF_CA51F_SxREL_FROM_BAUDRATE(x));}
 
 	//配置串口通道
 	#define MOF_UART1_CH0_ENABLE { MOF_PORT_BIT_UART(0,7);MOF_PORT_BIT_UART(0,6); }
@@ -146,6 +152,26 @@ code unsigned int BR_SET_TAB[][2]=
 	#define MOF_UART1_TXIF_GRIGGER (S1CON & BIT1)
 	#define MOF_UART1_TXIF_CLEAN {S1CON=(S1CON&~(BIT0|BIT1))|BIT1;}
 
+	
+	//配置串口波特率
+	#define MOF_UART2_BAUDRATE(x) {UDCKS2=(0X80|MOF_CA51F_DNUM);	S2RELH = (unsigned char)((MOF_CA51F_SxREL_FROM_BAUDRATE(x))>>8); S2RELL = (unsigned char)(MOF_CA51F_SxREL_FROM_BAUDRATE(x));}
+
+	//配置串口通道
+	#define MOF_UART2_CH0_ENABLE { MOF_PORT_BIT_UART(0,2);MOF_PORT_BIT_UART(1,6); }
+
+	//使能串口
+	#define MOF_UART2_ENABLE {S2CON=0xD0;INT3EN=1;}
+	
+	#define MOF_UART2_RXIF_GRIGGER (S2CON & BIT0)
+	#define MOF_UART2_RXIF_CLEAN {S2CON=(S2CON&~(BIT0|BIT1))|BIT0;}
+
+	#define MOF_UART2_TXIF_GRIGGER (S2CON & BIT1)
+	#define MOF_UART2_TXIF_CLEAN {S2CON=(S2CON&~(BIT0|BIT1))|BIT1;}
+
+	
+	
+	
+	
 	//串口通用接收发送接口
 	#define UART_BUF_CH(n,t) MOF_UART##n##t
 	#define UART_TXBUF_CH(n) UART_BUF_CH(n,_TXBUF)

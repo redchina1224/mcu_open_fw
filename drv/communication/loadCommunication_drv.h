@@ -12,9 +12,11 @@
 	#if ((CommunicationType&CommunicationType_Uart)==CommunicationType_Uart)
 		#if ((CommunicationTypeUartModel&CommunicationType_Uart_PreambleCode)==CommunicationType_Uart_PreambleCode) 
 			#include "uart\uart_precode_protocol_drv.h"
-		#elif ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength) 
+		#endif
+		#if ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength) 
 			#include "uart\fixed_length\uart_fixed_length_drv.h"
-		#elif ((CommunicationTypeUartModel&CommunicationType_Uart_HaierUplus)==CommunicationType_Uart_HaierUplus)
+		#endif
+		#if ((CommunicationTypeUartModel&CommunicationType_Uart_HaierUplus)==CommunicationType_Uart_HaierUplus)
 			#include "uart\haier_uplus\uart_haier_uplus_drv.h"
 		#endif
 	#endif

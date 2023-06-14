@@ -803,14 +803,14 @@ void UART1_ISR (void) interrupt 6
 
 		#if ((CommunicationType&CommunicationType_Uart)==CommunicationType_Uart)
 		
-			#if((CommunicationTypeUartModel&CommunicationType_Uart_HaierUplus)==CommunicationType_Uart_HaierUplus)
-				#if (UART_UPLUS_PORT_NUM==1)
+			#if((CommunicationTypeUartModel&CommunicationType_Uart_HaierUplus)==CommunicationType_Uart_HaierUplus&&(UART_UPLUS_PORT_NUM==1))
+
 					uart_haier_uplus_rx_in_isr();
-				#endif
-			#elif ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength)
-				#if (UART_FIXED_LENGTH_PORT_NUM==1)
+
+			#elif ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength&&(UART_FIXED_LENGTH_PORT_NUM==1))
+
 					uart_fixed_length_rx_in_isr();
-				#endif
+
 			#endif
 		
 		#endif
@@ -823,17 +823,59 @@ void UART1_ISR (void) interrupt 6
 
 		#if ((CommunicationType&CommunicationType_Uart)==CommunicationType_Uart)
 		
-			#if((CommunicationTypeUartModel&CommunicationType_Uart_HaierUplus)==CommunicationType_Uart_HaierUplus)
-				#if (UART_UPLUS_PORT_NUM==1)
+			#if((CommunicationTypeUartModel&CommunicationType_Uart_HaierUplus)==CommunicationType_Uart_HaierUplus&&(UART_UPLUS_PORT_NUM==1))
+
 					uart_haier_uplus_tx_in_isr();
-				#endif
-			#elif ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength)
-				#if (UART_FIXED_LENGTH_PORT_NUM==1)
+
+			#elif ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength&&(UART_FIXED_LENGTH_PORT_NUM==1))
+
 					uart_fixed_length_tx_in_isr();
-				#endif
+
 			#endif
 		
 		#endif
+	}
+}
+
+
+void UART2_ISR (void) interrupt 8	
+{
+	if(MOF_UART2_RXIF_GRIGGER)
+	{
+		MOF_UART2_RXIF_CLEAN;	
+
+		#if ((CommunicationType&CommunicationType_Uart)==CommunicationType_Uart)
+		
+			#if((CommunicationTypeUartModel&CommunicationType_Uart_HaierUplus)==CommunicationType_Uart_HaierUplus&&(UART_UPLUS_PORT_NUM==2))
+
+					uart_haier_uplus_rx_in_isr();
+
+			#elif ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength&&(UART_FIXED_LENGTH_PORT_NUM==2))
+
+					uart_fixed_length_rx_in_isr();
+
+			#endif
+		
+		#endif
+	}
+	
+	if(MOF_UART2_TXIF_GRIGGER)
+	{
+		MOF_UART2_TXIF_CLEAN;	
+
+		#if ((CommunicationType&CommunicationType_Uart)==CommunicationType_Uart)
+		
+			#if((CommunicationTypeUartModel&CommunicationType_Uart_HaierUplus)==CommunicationType_Uart_HaierUplus&&(UART_UPLUS_PORT_NUM==2))
+
+					uart_haier_uplus_tx_in_isr();
+
+			#elif ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength&&(UART_FIXED_LENGTH_PORT_NUM==2))
+
+					uart_fixed_length_tx_in_isr();
+
+			#endif
+		
+		#endif		
 	}
 }
 
