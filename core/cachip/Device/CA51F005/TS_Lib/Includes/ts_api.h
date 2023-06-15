@@ -9,10 +9,7 @@ TSState_T 	  idata TS_State;
 TYPE_SN idata PreKeysFlagSN;	
 TYPE_SN xdata KeysFlagSN;	
 
-//unsigned int  TS_Key;	
-//unsigned int 	TS_LongKeyTimer;
-//unsigned char TK_State;	
-//unsigned char 	ComTimer;
+
 bit TS_CycleScanDoneFlag;
 unsigned char idata 	TS_Cnt;			
 unsigned int 	xdata 	TS_RawData[OPENED_TS_COUNT+1];
@@ -73,7 +70,14 @@ bit TS_StableFlag;
 unsigned char xdata TS_HalfSecCnt;
 
 #if SUPPORT_KEY
-
+#if DEBUG
+unsigned char 			xdata 	Key_Cnt_Debug;	
+TSState_T 	  			xdata 	TS_State_Debug;
+unsigned char 			xdata 	TS_CH_Debug[OPENED_TS_COUNT];	
+unsigned int  			xdata 	TS_RefChBaseLineData;
+unsigned int 				xdata 	TS_RefPostData;
+unsigned long int   			xdata 	KeysFlagSN_Debug;
+#endif
 
 #if SUPPORT_COVER_PANAL_AFTER_POWERON
 unsigned char PanalCoverJudgeTimer;

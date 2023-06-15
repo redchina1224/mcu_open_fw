@@ -2,22 +2,7 @@
 #define _TK_API_C_
 
 /*********************************************************************************************************************/
-#include "ca51f_config.h"
-#include "includes\CA51F005SFR.h"
-#include "includes\CA51F005XSFR.h"
-#include "includes\gpiodef.h"
-
-#include "Library\Includes\tmc.h"		
-#include "Library\Includes\system_clock.h"		
-#include "Library\includes\uart.h"
-#include "includes\system.h"
-#include "Library\includes\delay.h"
-#include <intrins.h>
-/*********************************************************************************************************************/
-#include "TS_Lib\Includes\ts_configuration.h"
-#include "TS_Lib\Includes\ts_def.h"
-#include "TS_Lib\Includes\ts_api.h"
-#include "TS_Lib\Includes\ts_service.h"		   
+#include "..\..\..\..\..\com_include_core.h"
 /*********************************************************************************************************************/
 void Debug_init(void);
 void Debug_ParamLoad(void);
@@ -28,10 +13,15 @@ code unsigned int TS_KEY_CH_INFO_SEQ[][2]=
 	KEY_SEQ
 };
 #endif
-
+#if SUPPORT_WHEEL_SLIDER
+code unsigned char TS_WHEEL_SLIDER_CH_SEQ[]=
+{
+	WHEEL_SLIDER0_SEQ,
+};
+code unsigned char WHEEL_SLIDER0_MAX_MIN_TAB[]={WHEEL_SLIDER0_CH_MIN_RATE};
+#else
 code unsigned char WHEEL_SLIDER0_MAX_MIN_TAB[1]={0};
-
-
+#endif	
 #if SUPPORT_KEY	
 code TYPE_SN MASK_TAB[]=
 {
@@ -111,41 +101,13 @@ void TS_MS_ISR (void)
 				TS_AreaConfirmTimer[i]--;
 			}
 		}
-
-#if SUPPORT_KEY
-#if SUPPORT_COVER_PANAL_AFTER_POWERON
-		if(PanalCoverJudgeTimer) PanalCoverJudgeTimer--;
-#endif
-#endif
-#if SUPPORT_KEY
-#if ANTI_SPEAKER_EN
-		if(RefChDataTimer) RefChDataTimer--;
-#endif
-#endif
 	}	
 }
 void TS_HS_ISR (void)
 {
-#if SUPPORT_KEY
-#if (FINGER_LONG_TOUCH_TIME_LIMIT > 0)
-	unsigned char i;
-#endif
-#endif
 
 	TS_HalfSecCnt++;
 	
-#if SUPPORT_KEY
-#if (FINGER_LONG_TOUCH_TIME_LIMIT > 0)
-	for(i = 0; i < KEY_CH_COUNT; i++)
-	{
-		if(TSKey_LongTouchLimitTimer[i])
-		{
-			TSKey_LongTouchLimitTimer[i]--;
-		}
-	}		
-#endif
-#endif
-
 	if(TS_RefCHBaseLineAdjuTimer)
 	{
 		TS_RefCHBaseLineAdjuTimer--;
@@ -199,11 +161,8 @@ void TS_ISR (void)
 	
 	for(i = 0; i < 6; i++)
 	{
-#if (TS_ACQ_TIMES == 1)
+
 		TS_RawData[TS_Index+i] = TS_Data[i].wVal;
-#else
-		TS_DataSum[TS_Index+i] += TS_Data[i].wVal;	
-#endif		
 
 		if(TS_Index+i == TS_Cnt)
 		{			
@@ -214,21 +173,9 @@ void TS_ISR (void)
 
 	if(TS_Index+6 > TS_Cnt)
 	{
-#if (TS_ACQ_TIMES == 1)
+
 		TS_CycleScanDoneFlag = 1;	
-#else
-		TS_Acq_Counter++;
-		if(TS_Acq_Counter >= TS_ACQ_TIMES)
-		{
-			for(i = 0; i < TS_Cnt+1; i++)
-			{
-				TS_RawData[i] = TS_DataSum[i];
-				TS_DataSum[i] = 0;
-			}
-			TS_CycleScanDoneFlag = 1;		
-			TS_Acq_Counter = 0;
-		}	
-#endif		
+	
 		TS_Index = 0;
 	}
 	else 
@@ -460,9 +407,21 @@ void TS_RunInit(void)
 				TS_BaseLineDataBak[i] = TS_BaseLineData[i];
 #endif	
 #endif				
-#if SUPPORT_KEY
+#if (SUPPORT_KEY && SUPPORT_WHEEL_SLIDER)
+				if(i < KEY_CH_COUNT)
+				{
+					TSKey_FingerThd[i] = TS_KEY_CH_INFO_SEQ[i][1];
+					TS_AreaConfirmTimerSet(i,AREA_PNOISE);
+				}
+				else
+				{
+					TS_AreaConfirmTimer[i] = WHEEL_SLIDER_BASELINE_UPDATE_TIME;
+				}
+#elif SUPPORT_KEY
 				TSKey_FingerThd[i] = TS_KEY_CH_INFO_SEQ[i][1];
 				TS_AreaConfirmTimerSet(i,AREA_PNOISE);				
+#elif SUPPORT_WHEEL_SLIDER
+				TS_AreaConfirmTimer[i] = WHEEL_SLIDER_BASELINE_UPDATE_TIME;
 #endif
 			}	
 #if SUPPORT_KEY
@@ -477,6 +436,9 @@ void TS_RunInit(void)
 			RefChDataBufIdx = 0;
 #endif		
 #endif			
+#if (DEBUG)
+			Debug_ParamLoad();
+#endif		
 			TS_Index = 0;
 			TS_ScanStart();	
 			TS_State = TS_DEAL;	
@@ -792,23 +754,228 @@ ANTI_WATER_MODE_KEY_RELEASE:
 	}
 }
 #endif
+#if SUPPORT_WHEEL_SLIDER
+void TS_WheelSliderDeal(void)
+{
+	unsigned char i;
+	unsigned int   Delta,Position;
+	bit WheelSliderTogFlag = 0;
+	TS_BaseCh = KEY_CH_COUNT; 
+	if(!W_S_RefChSet)
+	{
+		W_S_RefChSet = 1;		
+		SetWheelSliderRefCh(WHEEL_SLIDER0_CH_COUNT);
+	}
+	
+#if PRINT_WHEEL_SLIDER_DATA_EN
+	TK_Debug_UartPutChar(0xaa);
+	for(i = TS_BaseCh; i < TS_BaseCh + WHEEL_SLIDER0_CH_COUNT; i++)
+	{						
+		if(TS_BaseLineData[i] > TS_PostData[i])
+		{
+			Delta = (int)TS_BaseLineData[i] - (int)TS_PostData[i];	
+		}
+		else
+		{
+			Delta = 0;
+		}						
+		TK_Debug_UartPutChar(i);
+		TK_Debug_UartPutChar(TS_PostData[i]>>8);
+		TK_Debug_UartPutChar(TS_PostData[i]);			
+		TK_Debug_UartPutChar(TS_BaseLineData[i]>>8);
+		TK_Debug_UartPutChar(TS_BaseLineData[i]);	
+		TK_Debug_UartPutChar(Delta>>8);	
+		TK_Debug_UartPutChar(Delta);								
+	}				
+#endif
+#if (WHEEL_OR_SLIDER_DEF0	== SLIDER)
+	Position = SliderTouchJudge(WHEEL_SLIDER0_CH_COUNT,WHEEL_SLIDER0_TOUCH_THD);
+#elif (WHEEL_OR_SLIDER_DEF0	== WHEEL)
+	Position = WheelTouchJudge(WHEEL_SLIDER0_CH_COUNT,WHEEL_SLIDER0_TOUCH_THD);
+#endif
+	if(Position != -1)
+	{
+		TS_StableFlag = 0;
+	}
+	if(WheelSliderState == WHEEL_SLIDER_NO_TOUCH)
+	{
+		if(!WheelSliderTouchFlag)
+		{
+			if(Position != -1)
+			{
+				WheelSliderTouchFlag = 1;	
+				TSWheelSlider_TouchConfirmTimer = WHEEL_SLIDER_TOUCH_CONFIRM_TIME;				
+			}
+			else
+			{
+				for(i = TS_BaseCh; i < TS_BaseCh + WHEEL_SLIDER0_CH_COUNT; i++)
+				{						
+					if(TS_FirstAreaData[i] > TS_PostData[i]) 
+					{
+						Delta 	= TS_FirstAreaData[i] - TS_PostData[i];
+					}
+					else
+					{
+						Delta 	= TS_PostData[i] - TS_FirstAreaData[i];
+					}					
+					if(Delta <= WHEEL_SLIDER0_NOISE_THD) 
+					{
+						if(!TS_AreaConfirmTimer[i])
+						{
+							TS_FirstAreaData[i] = TS_PostData[i];
+							TS_BaseLineData[i] 	= TS_PostData[i];
+							TS_AreaConfirmTimer[i] = WHEEL_SLIDER_BASELINE_UPDATE_TIME;
+						}							
+					}
+					else
+					{
+						TS_FirstAreaData[i] = TS_PostData[i];
+						TS_AreaConfirmTimer[i] = WHEEL_SLIDER_BASELINE_UPDATE_TIME;
+					}
+				}
+			}			
+		}	
+		else
+		{	
+			if(Position != -1)
+			{
+				if(!TSWheelSlider_TouchConfirmTimer)
+				{
+						WheelSliderState = WHEEL_SLIDER_TOUCH;	
+#if (WHEEL_SLIDER_LONG_TOUCH_TIME_LIMIT > 0)
+						TSWheelSlider_LongTouchLimitTimer = WHEEL_SLIDER_LONG_TOUCH_TIME_LIMIT;
+#endif
+				}	
+			}
+			else
+			{
+				WheelSliderTouchFlag = 0;
+				for(i = TS_BaseCh; i < TS_BaseCh + WHEEL_SLIDER0_CH_COUNT; i++)
+				{
+					TS_AreaConfirmTimer[i] = WHEEL_SLIDER_BASELINE_UPDATE_TIME;
+				}
+			}
+		}				
+	}
+	else if(WheelSliderState == WHEEL_SLIDER_TOUCH)
+	{		
+#if (WHEEL_SLIDER_LONG_TOUCH_TIME_LIMIT > 0)
+		if(!TSWheelSlider_LongTouchLimitTimer)
+		{
+			for(i = TS_BaseCh; i < TS_BaseCh + WHEEL_SLIDER0_CH_COUNT; i++)
+			{
+				TS_FirstAreaData[i] = TS_PostData[i];
+				TS_BaseLineData[i] 	= TS_PostData[i];
+			}
+			WheelSliderTouchFlag = 0;
+			goto WHEEL_SLIDER_RELEASE;
+		}
+#endif
+		if(WheelSliderTouchFlag)
+		{
+			if(Position == -1)	
+			{
+				WheelSliderTouchFlag = 0;
+				TSWheelSlider_TouchConfirmTimer = WHEEL_SLIDER_TOUCH_RELEASE_CONFIRM_TIME;		
+			}
+		}
+		else						 
+		{
+			if(Position == -1)	
+			{
+				if(!TSWheelSlider_TouchConfirmTimer)
+				{
+WHEEL_SLIDER_RELEASE:
+					WheelSliderState = WHEEL_SLIDER_NO_TOUCH;	
+					WheelSliderCapRateFilter = 0;
+					WheelSliderPosition = -1;
+					for(i = TS_BaseCh; i < TS_BaseCh + WHEEL_SLIDER0_CH_COUNT; i++)
+					{
+						TS_AreaConfirmTimer[i] = WHEEL_SLIDER_BASELINE_UPDATE_TIME;
+					}
+				}
+			}
+			else
+			{
+				WheelSliderTouchFlag = 1;				
+			}
+		}		
+	}		
+	if(WheelSliderState == WHEEL_SLIDER_TOUCH)
+	{
+		if(Position != -1)
+		{
+			WheelSliderPosition = Position;
+		}	
+#if PRINT_WHEEL_SLIDER_POSITION_EN
+		TK_Debug_UartPutChar(WheelSliderPosition/100+0x30);		
+		TK_Debug_UartPutChar((WheelSliderPosition%100)/10+0x30);		
+		TK_Debug_UartPutChar((WheelSliderPosition%10)+0x30);	
 
+		TK_Debug_UartPutChar('\r');	
+		TK_Debug_UartPutChar('\n');	
+#endif
+#if PRINT_WHEEL_SLIDER_RATE_EN
+		{
+			unsigned char DeltaRate;
+			DeltaRate = WheelSliderCapRateFilter/4;
+			TK_Debug_UartPutChar(WheelSliderMaxIdx + 0x30);	
+			TK_Debug_UartPutChar(' ');
+				
+			TK_Debug_UartPutChar(DeltaRate/100+0x30);		
+			TK_Debug_UartPutChar((DeltaRate%100)/10+0x30);		
+			TK_Debug_UartPutChar((DeltaRate%10)+0x30);	
+			TK_Debug_UartPutChar('\r');	
+			TK_Debug_UartPutChar('\n');					
+		}
+#endif
+	}
+	else
+	{
+		WheelSliderPosition = -1;	
+	}
+
+	if(WheelSliderPosition != -1)
+	{
+		ActiveTouchType = 2;
+	}
+	else
+	{
+		ActiveTouchType = 0;
+	}
+}
+#endif	
 void TS_init(void)
 {
 	unsigned char i,ch_idx;
-
+#if (DEBUG)
+	Debug_init();
+#endif
 	TS_Cnt 		= OPENED_TS_COUNT;
 	ch_idx = 0;
 	for(i = 0;i < OPENED_TS_COUNT; i++)
 	{
-#if SUPPORT_KEY
+#if (SUPPORT_KEY && SUPPORT_WHEEL_SLIDER)
+		if(i < KEY_CH_COUNT)
+		{
+			TS_CH[ch_idx++] = TS_KEY_CH_INFO_SEQ[i][0];
+		}
+		else
+		{
+			TS_CH[ch_idx++] = TS_WHEEL_SLIDER_CH_SEQ[i-KEY_CH_COUNT];
+		}
+#elif SUPPORT_KEY
 		TS_CH[ch_idx++] = TS_KEY_CH_INFO_SEQ[i][0];
+#elif SUPPORT_WHEEL_SLIDER
+		TS_CH[ch_idx++] = TS_WHEEL_SLIDER_CH_SEQ[i];
 #endif
 	}
-	
+	#define ILCKE		(1<<7)
 	CKCON |= ILCKE;
 
 
+#define TME(N)		(N<<7) 	//N=0-1
+	
 	TMCON = TME(1);
 	TMSNU = 0;	
 	
@@ -841,7 +1008,19 @@ void TS_init(void)
 	PanalCoverJudgeFlag = 0;
 #endif
 #endif
+#if SUPPORT_TOUCH_SLEEP_MODE
+	EnterStopScanTimer = ENTER_STOP_MODE_TIME;
+  TS_SleepEn = 1;
+	TS_SleepMode = 0;
+#endif
+#if SUPPORT_WHEEL_SLIDER
+	W_S_RefChSet = 0;
 
+	WheelSliderState = WHEEL_SLIDER_NO_TOUCH;
+	WheelSliderTouchFlag = 0;
+	WheelSliderPosition = -1;		
+	WheelSliderCapRateFilter = 0;
+#endif
 	TS_State = TS_INIT;
 	TS_Init_Step = 0;
 #if SUPPORT_KEY
@@ -850,7 +1029,12 @@ void TS_init(void)
 #endif
 #endif
 	MainLoopCnt1 = MainLoopCnt2 = 0;
-
+#if SUPPORT_KEY	
+#if GENERATE_TS_KEY_EN
+	TK_State = TK_STATE_RELEASE;
+	TS_Key = 0;
+#endif
+#endif
 }
 
 void TS_Action(void)
@@ -881,7 +1065,43 @@ void TS_Action(void)
 					TSKey_DataDeal();	
 				}
 #endif
-									
+#if (DEBUG)
+				Debug_ParamLoad();
+#endif		
+#if SUPPORT_WHEEL_SLIDER
+				if(ActiveTouchType != 1)
+				{
+					TS_WheelSliderDeal();
+				}
+#endif				
+#if SUPPORT_TOUCH_SLEEP_MODE
+				if(!TS_StableFlag || !TS_SleepEn || (PCON & BIT2))	// 在仿真模式不进入STOP模式
+				{
+					EnterStopScanTimer = ENTER_STOP_MODE_TIME;
+				}			
+				if(!EnterStopScanTimer&&TS_SleepEn)
+				{
+#if ENTER_SLEEP_PRINT_EN
+					TK_Debug_UartPutChar('s');	
+					TK_Debug_UartPutChar('l');	
+					TK_Debug_UartPutChar('e');	
+					TK_Debug_UartPutChar('e');	
+					TK_Debug_UartPutChar('p');	
+					TK_Debug_UartPutChar('\r');	
+					TK_Debug_UartPutChar('\n');		
+					Delay_ms(1);
+#endif
+					TS_EnterSleepMode();		
+#if ENTER_SLEEP_PRINT_EN					
+					TK_Debug_UartPutChar('e');	
+					TK_Debug_UartPutChar('x');	
+					TK_Debug_UartPutChar('i');	
+					TK_Debug_UartPutChar('t');	
+					TK_Debug_UartPutChar('\r');	
+					TK_Debug_UartPutChar('\n');		
+#endif
+				}
+#endif										
 			}
 			if(TS_HalfSecCnt >= 5)
 			{
@@ -894,11 +1114,505 @@ void TS_Action(void)
 			break;
 	}
 
-
+#if SUPPORT_KEY	
+#if GENERATE_TS_KEY_EN
+	TS_GetKey();
+#endif
+#endif
 }
+#if SUPPORT_TOUCH_SLEEP_MODE
+void TS_SetChannel(unsigned char index,unsigned char ch);
+void TS_SleepScanStart(void)
+{	
+	unsigned char i;	 
+	for(i = 0; i < 6; i++)					
+	{
+		if(TS_Index + i < TS_Cnt)
+		{
+			TS_SetChannel(i,(TS_CH[TS_Index+i])+1);
+		}
+		else
+		{
+			TS_SetChannel(i,0);
+		}
+	}
+	TKCON |= TKST(1);	
+}
+void TS_EnterSleepMode(void)
+{
+//省电模式参数配置
+	#define STOP_TKDIV_VAL			0
+	#define STOP_TKTMS_VAL			15		//放电时间
+	#define STOP_VRS_VAL				7			//比较器阈值	
+	unsigned char TS_SampleComplete = 0,i;
+	unsigned int xdata WakeUp_PThdVal[OPENED_TS_COUNT];
+	unsigned int xdata WakeUp_NThdVal[OPENED_TS_COUNT];	
+	WORD_UNION TS_Data;
 
+	TKCON = 0;
+	TKIF = 0x3F;
+	
+	TS_SleepMode = 1;
+	TMCON &= ~TME(1);
+	TMCON |= TMF;	
+	
+	GPIO_Init(P13F,HIGH_Z);
+	GPIO_Init(P14F,HIGH_Z);
+	
+	TKCON = (TKCON&0xE0) | VRS(STOP_VRS_VAL);
+	TKCON &= ~TKIE(1);
+	TKCFG = TKDIV(STOP_TKDIV_VAL)|TKTMS(STOP_TKTMS_VAL);		
+
+#if (OPENED_TS_COUNT%6 == 0)
+	TKMTS = (SLEEP_MODE_SCAN_INTERVAL_TIME*6)/(OPENED_TS_COUNT);
+#else
+	TKMTS = (SLEEP_MODE_SCAN_INTERVAL_TIME)/((OPENED_TS_COUNT/6)+1);
+#endif
+	TKPWC = TKPC(1)|VDS(0)|VIRS(0)|TKPWS(0)|TKCVS(0);		//省电设为VDD充电
+	TKCKS = 1;
+	
+#ifdef LVD_RST_ENABLE
+	LVDCON = 0;	
+#endif		
+	I2CCON = 0;
+	SWICON |= 0x01;
+	CKCON = 0;
+	MECON |= BIT6;	
+	PWCON = PWCON&(~0x08);	
+
+	TS_Index = 0;
+	TS_SleepScanStart();
+	WDFLG = 0xA5;
+			
+	TMCON = TME(1);
+	TMSNU = 127;	
+
+	CKCON |= ILCKE;						//IRCL时钟使能
+	CKCON = (CKCON&0xFE) | CKSEL_IRCL;	//系统时钟切换到IRCH
+	
+	while(1)
+	{
+		if(TS_SampleComplete)
+		{
+			EA = 0;
+			PCON = (PCON&0x04) | 0x02;
+			_nop_();
+			_nop_();
+			_nop_();
+			EA = 1;
+		}
+		if(TS_HalfSecCnt >= 5)
+		{
+			break;
+		}
+
+		if(TKIF != 0)
+		{
+			if(TS_HalfSecCnt) TS_HalfSecCnt--;
+			for(i = 0; i < 6; i++)
+			{
+				if(TKIF & (1<<i))
+				{
+					TKIF = (1<<i);	
+					if(i == 0) 
+					{
+						TS_Data.bVal[0] = TK0MSH;
+						TS_Data.bVal[1] = TK0MSL;
+					}
+					else if(i == 1) 
+					{
+						TS_Data.bVal[0] = TK1MSH;
+						TS_Data.bVal[1] = TK1MSL;
+					}
+					else if(i == 2) 
+					{
+						TS_Data.bVal[0] = TK2MSH;
+						TS_Data.bVal[1] = TK2MSL;
+					}
+					else if(i == 3) 
+					{
+						TS_Data.bVal[0] = TK3MSH;
+						TS_Data.bVal[1] = TK3MSL;
+					}
+					else if(i == 4) 
+					{
+						TS_Data.bVal[0] = TK4MSH;
+						TS_Data.bVal[1] = TK4MSL;
+					}
+					else if(i == 5) 
+					{
+						TS_Data.bVal[0] = TK5MSH;
+						TS_Data.bVal[1] = TK5MSL;
+					}
+					if(TS_SampleComplete == 0)
+					{
+						WakeUp_PThdVal[TS_Index+i] = TS_Data.wVal - SLEEP_TOUTH_THD;
+						WakeUp_NThdVal[TS_Index+i] = TS_Data.wVal + SLEEP_TOUTH_THD;
+					}
+					else 
+					{
+						if((TS_Data.wVal <= WakeUp_PThdVal[TS_Index+i])||(TS_Data.wVal >= WakeUp_NThdVal[TS_Index+i]))
+						{
+							goto SLEEP_EXIT;			
+						}
+					}
+				}
+			}
+			if(TS_Index+6 < TS_Cnt)
+			{
+				TS_Index += 6;
+			}
+			else 
+			{
+				TS_Index = 0;
+				if(TS_SampleComplete == 0)
+				{
+					TS_SampleComplete = 1;				
+					TKCON |= TMEN(1);					
+				}
+			}
+			TS_SleepScanStart();	
+			WDFLG = 0xA5;
+		}
+	}
+SLEEP_EXIT:
+	Sys_Clk_Set_IRCH();
+	TKCON = 0;
+	TKIF = 0x3F;
+	TKCKS = 0;
+	PWCON = (PWCON&0xF0)|0x0D;	
+
+	TKCFG = TKDIV(TKDIV_VAL)|TKTMS(TKTMS_VAL);		
+#if (TK_CHARGE_REF_SELECT == SOURCE_VDD)
+	TKCON = TKST(0)|TKIE(1)|TMEN(0)|FAEN(FAEN_V)|VRS(VRS_VAL);
+	TKPWC = TKPC(TK_PC_VAL)|VDS(0)|VIRS(0)|TKPWS(0)|TKCVS(0);		
+#elif (TK_CHARGE_REF_SELECT == SOURCE_INNER) 
+	TKCON = TKST(0)|TKIE(1)|TMEN(0)|FAEN(FAEN_V)|VRS(0);
+	TKPWC = TKPC(TK_PC_VAL)|VDS(VDS_VAL)|VIRS(VIRS_VAL)|TKPWS(1)|TKCVS(1);		
+#endif
+	TKCKS = 0;
+	CKCON |= ILCKE;
+	TMCON &= ~TME(1);
+	TMCON |= TMF;
+	Delay_50us(1);
+	TMCON = TME(1);
+	TMSNU = 0;	
+	TS_Index = 0;
+	TS_ScanStart();
+	EnterStopScanTimer = ENTER_STOP_MODE_TIME;
+	TS_SleepMode = 0;
+#ifdef LVD_RST_ENABLE
+	LVDCON = 0xe0;	//设置LVD复位电压为2V
+#endif							
+}
+#endif
 /*********************************************************************************************************************/
-
+#if SUPPORT_KEY	
+#if GENERATE_TS_KEY_EN
+#if GENERATE_DOUBLE_KEY_EN
+typedef struct 
+{	
+	unsigned char 	TogKeyNum;
+	unsigned char 	TogKeyList[2];
+}
+T_TogKeyInfo;
+#endif
+code unsigned char TS_KEY_TAB[]=
+{
+	K1,K2,K3,K4,K5,K6,K7,K8,K9,K10,K11,K12,K13,K14,K15,K16,K17,K18,K19,K20
+};
+#if GENERATE_DOUBLE_KEY_EN
+void TS_GetTogKeyInfor(T_TogKeyInfo *pKeyInfo)
+{
+	unsigned char i,index;
+	pKeyInfo->TogKeyNum = 0;
+	index = 0;
+	for(i = 0; i < KEY_CH_COUNT; i++)
+	{
+		if(KeysFlagSN & MASK_TAB[i])
+		{
+			pKeyInfo->TogKeyNum++;
+			
+			if(pKeyInfo->TogKeyNum <= 2)
+			{
+				pKeyInfo->TogKeyList[index++] = TS_KEY_TAB[i];
+			}
+		}
+	}
+}
+#endif
+#if PRINT_TS_KEY_EN
+void Hex2CharPrint(unsigned int integar)
+{
+	unsigned char CharBuf[4];
+	unsigned char i, temp;
+	for(i = 0; i < 4; i++)
+	{
+		temp = (unsigned char)(integar&0x0F);
+		if(temp >= 0x0A)
+		{
+			CharBuf[i] = (temp - 0x0A) + 'A';
+		}
+		else
+		{
+			CharBuf[i] = temp + '0';
+		}
+		integar >>= 4;
+	}
+	TK_Debug_UartPutChar('0');	
+	TK_Debug_UartPutChar('x');	
+	TK_Debug_UartPutChar(CharBuf[2]);
+	TK_Debug_UartPutChar(CharBuf[1]);
+	TK_Debug_UartPutChar(CharBuf[0]);
+}
+#endif
+void TS_GetKey(void)
+{
+	static unsigned int KeyBak;	
+	static bit LongFlag;
+#if GENERATE_DOUBLE_KEY_EN
+	T_TogKeyInfo KeyInfo;
+	TS_GetTogKeyInfor(&KeyInfo);
+#else
+	static unsigned char KeyidxBak;
+	unsigned char i;
+#endif
+	TS_Key = 0;	
+	if(TK_State == TK_STATE_RELEASE)
+	{
+#if GENERATE_DOUBLE_KEY_EN
+		if(KeyInfo.TogKeyNum != 0)
+		{			
+			if(KeyInfo.TogKeyNum == 1)
+			{
+				KeyBak = (unsigned int)KeyInfo.TogKeyList[0];
+				TK_State = TK_STATE_SINGLE_KEY_PRESS;				
+			}
+			else if(KeyInfo.TogKeyNum == 2)
+			{
+				KeyBak = ((unsigned int)KeyInfo.TogKeyList[0]<<5)|(unsigned int)KeyInfo.TogKeyList[1];
+				TK_State = TK_STATE_DOUBLE_KEY_PRESS;
+			}
+			TS_Key = KeyBak;
+			LongFlag = 0;
+			TS_LongKeyTimer = TS_LONG_START_TIME;
+		}
+#else
+		if(KeysFlagSN != 0)
+		{
+			for(i = 0; i < KEY_CH_COUNT; i++)
+			{
+				if(KeysFlagSN & MASK_TAB[i])
+				{
+					KeyidxBak = i;
+					KeyBak = TS_KEY_TAB[i];
+					break;
+				}		
+			}				
+			TS_Key = KeyBak;
+			LongFlag = 0;
+			TS_LongKeyTimer = TS_LONG_START_TIME;
+			TK_State = TK_STATE_SINGLE_KEY_PRESS;		
+		}
+#endif
+	}
+	else if(TK_State == TK_STATE_SINGLE_KEY_PRESS)
+	{
+#if GENERATE_DOUBLE_KEY_EN	
+		if(KeyInfo.TogKeyNum == 1)
+		{
+			if(KeyBak == (unsigned int)KeyInfo.TogKeyList[0])
+			{
+				if(!TS_LongKeyTimer)
+				{
+					if(!LongFlag)
+					{
+						LongFlag = 1;
+						TS_Key = KeyBak | KEY_LONG_START;
+					}
+					else
+					{
+						TS_Key = KeyBak | KEY_LONG;
+					}
+					TS_LongKeyTimer = TS_LONG_TIME;
+				}				
+			}
+			else 
+			{
+				if(!LongFlag)
+				{
+					TS_Key = KeyBak | KEY_BREAK;
+				}
+				else
+				{
+					TS_Key = KeyBak | KEY_LONG_BREAK;
+				}
+				TK_State = TK_STATE_RELEASE;
+			}
+		}
+		else if(KeyInfo.TogKeyNum == 2)
+		{
+			KeyBak = ((unsigned int)KeyInfo.TogKeyList[0]<<5) | (unsigned int)KeyInfo.TogKeyList[1];
+			TK_State = TK_STATE_DOUBLE_KEY_PRESS;
+			TS_Key = KeyBak;
+			LongFlag = 0;
+			TS_LongKeyTimer = TS_LONG_START_TIME;
+		}
+		else if(KeyInfo.TogKeyNum == 0)
+		{
+			if(!LongFlag)
+			{
+				TS_Key = KeyBak | KEY_BREAK;
+			}
+			else
+			{
+				TS_Key = KeyBak | KEY_LONG_BREAK;
+			}
+			TK_State = TK_STATE_RELEASE;
+		}
+#else
+		if(KeysFlagSN & MASK_TAB[KeyidxBak])
+		{
+				if(!TS_LongKeyTimer)
+				{
+					if(!LongFlag)
+					{
+						LongFlag = 1;
+						TS_Key = KeyBak | KEY_LONG_START;
+					}
+					else
+					{
+						TS_Key = KeyBak | KEY_LONG;
+					}
+					TS_LongKeyTimer = TS_LONG_TIME;
+				}					
+		}
+		else
+		{
+			if(!LongFlag)
+			{
+				TS_Key = KeyBak | KEY_BREAK;
+			}
+			else
+			{
+				TS_Key = KeyBak | KEY_LONG_BREAK;
+			}
+			TK_State = TK_STATE_RELEASE;			
+		}
+#endif
+	}
+#if GENERATE_DOUBLE_KEY_EN	
+	else if(TK_State == TK_STATE_DOUBLE_KEY_PRESS)
+	{
+		if(KeyInfo.TogKeyNum == 2)
+		{
+			if(KeyBak == ((unsigned int)KeyInfo.TogKeyList[0]<<5)|(unsigned int)KeyInfo.TogKeyList[1])
+			{
+				if(!TS_LongKeyTimer)
+				{
+					if(!LongFlag)
+					{
+						LongFlag = 1;
+						TS_Key = KeyBak | KEY_LONG_START;
+					}
+					else
+					{
+						TS_Key = KeyBak | KEY_LONG;
+					}
+					TS_LongKeyTimer = TS_LONG_TIME;
+				}					
+			}
+		}
+		else if(KeyInfo.TogKeyNum == 0)
+		{
+			if(!LongFlag)
+			{
+				TS_Key = KeyBak | KEY_BREAK;
+			}
+			else
+			{
+				TS_Key = KeyBak | KEY_LONG_BREAK;
+			}
+			TK_State = TK_STATE_RELEASE;		
+		}
+	}
+#endif
+#if PRINT_TS_KEY_EN
+	if(TS_Key != 0)
+	{
+		if((TS_Key & 0xFF00) == 0)
+		{
+#if GENERATE_DOUBLE_KEY_EN	
+			if(TS_Key > 0x1F)
+			{
+				TK_Debug_UartPutChar('d');	
+				TK_Debug_UartPutChar('o');	
+				TK_Debug_UartPutChar('u');	
+				TK_Debug_UartPutChar('b');	
+				TK_Debug_UartPutChar('l');	
+				TK_Debug_UartPutChar('e');			
+			}
+			else
+			{
+				TK_Debug_UartPutChar('s');	
+				TK_Debug_UartPutChar('i');	
+				TK_Debug_UartPutChar('n');	
+				TK_Debug_UartPutChar('g');	
+				TK_Debug_UartPutChar('l');	
+				TK_Debug_UartPutChar('e');		
+			}
+			TK_Debug_UartPutChar(' ');	
+#endif
+			TK_Debug_UartPutChar('k');	
+			TK_Debug_UartPutChar('e');	
+			TK_Debug_UartPutChar('y');	
+			TK_Debug_UartPutChar(' ');	
+			TK_Debug_UartPutChar('=');	
+			TK_Debug_UartPutChar(' ');	
+			Hex2CharPrint(TS_Key);
+			TK_Debug_UartPutChar('\r');	
+			TK_Debug_UartPutChar('\n');	
+		}
+		else if(TS_Key & KEY_BREAK)
+		{
+			TK_Debug_UartPutChar('k');	
+			TK_Debug_UartPutChar('e');	
+			TK_Debug_UartPutChar('y');	
+			TK_Debug_UartPutChar(' ');	
+			TK_Debug_UartPutChar('u');	
+			TK_Debug_UartPutChar('p');	
+			TK_Debug_UartPutChar('\r');	
+			TK_Debug_UartPutChar('\n');				
+		}
+		else if(TS_Key & KEY_LONG_START)
+		{
+			TK_Debug_UartPutChar('l');	
+			TK_Debug_UartPutChar('o');	
+			TK_Debug_UartPutChar('n');	
+			TK_Debug_UartPutChar('g');	
+			TK_Debug_UartPutChar(' ');	
+			TK_Debug_UartPutChar('s');	
+			TK_Debug_UartPutChar('t');	
+			TK_Debug_UartPutChar('a');	
+			TK_Debug_UartPutChar('r');	
+			TK_Debug_UartPutChar('t');	
+			TK_Debug_UartPutChar('\r');	
+			TK_Debug_UartPutChar('\n');			
+		}
+		else if(TS_Key & KEY_LONG)
+		{
+			TK_Debug_UartPutChar('l');	
+			TK_Debug_UartPutChar('o');	
+			TK_Debug_UartPutChar('n');	
+			TK_Debug_UartPutChar('g');	
+			TK_Debug_UartPutChar('\r');	
+			TK_Debug_UartPutChar('\n');			
+		}
+	}
+#endif
+}
+#endif
+#endif
 /*********************************************************************************************************************/
 
 /*********************************************************************************************************************/

@@ -838,8 +838,14 @@ void UART1_ISR (void) interrupt 6
 }
 
 
-void UART2_ISR (void) interrupt 8	
+void INT3_ISR (void) interrupt 8	
 {
+	if(TKIF != 0)
+	{
+		TS_ISR();
+	}
+	
+	
 	if(MOF_UART2_RXIF_GRIGGER)
 	{
 		MOF_UART2_RXIF_CLEAN;	
@@ -879,6 +885,24 @@ void UART2_ISR (void) interrupt 8
 	}
 }
 
+#define TMF			(1<<0) 
+void INT8_ISR (void) interrupt 13 	 
+{
+	static unsigned char TmCnt = 0;
+	if(TMCON & TMF)			//ºÁÃëÖÐ¶Ï
+	{
+		TMCON |= TMF;	
+	
+		TS_MS_ISR();
+
+		TmCnt++;
+		if(TmCnt >= 128)
+		{
+			TmCnt = 0;
+			TS_HS_ISR();
+		}
+	}
+}
 
 #elif (DevPlatform==DevPlatform_Unkonw)
 
