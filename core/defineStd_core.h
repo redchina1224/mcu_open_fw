@@ -64,6 +64,11 @@ typedef double 			    FP64; 		// 双精度浮点数(64位长度)
 //			第四位: v表示变量  c表示静态变量
 
 
+typedef union {
+unsigned long LongValue;
+unsigned int IntValues[2];
+unsigned char CharValues[4];
+} mof_long4chars_t;
 
 
 
