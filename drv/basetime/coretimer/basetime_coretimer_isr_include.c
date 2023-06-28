@@ -1,6 +1,13 @@
 #ifdef BaseTimeType
 #if (BaseTimeType==BaseTimeType_CoreTimer) 
 
+#ifdef RtcType
+#if (RtcType==RtcType_BaseTimeSoftRtc)
+bit Rtc_1s_bit=0;
+bit Rtc_500ms_bit=0;
+#endif
+#endif
+
 bit T_500ms_bit=0;
 bit T_1s_bit=0;
 
@@ -56,7 +63,14 @@ M_20ms_bit=1;
 	}
 #endif
 #endif
-T_500ms_bit=1;
+	
+#ifdef RtcType
+#if(RtcType==RtcType_BaseTimeSoftRtc)
+if(T_1s_bit) Rtc_1s_bit=1;
+if(T_500ms_bit) Rtc_500ms_bit=1;
+#endif
+#endif
+	
 }
 
 

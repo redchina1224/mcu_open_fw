@@ -100,7 +100,9 @@ inline void powerofflvd_in_isr(void)
 
 //嵌入实时时钟内联函数
 #ifdef RtcType
+#if (RtcType==RtcType_TimerSoftRtc )
 	#include "..\rtc\softrtc\softrtc_coretimer_isr_include.c"
+#endif
 #endif
 
 //嵌入软件蜂鸣发生器内联函数

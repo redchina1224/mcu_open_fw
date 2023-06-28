@@ -10,18 +10,18 @@ bit rtc_halfsec_flashbit=0;
 bit Sec_x1_workbit=0;
 
 #if(RtcType==RtcType_TimerSoftRtc)
-void zd_softrtc_init(void)
+void mof_softrtc_init(void)
 {
 	//关中断
-	ZD_GIE_DISABLE;  //中断总允许开关
+	MOF_GIE_DISABLE;  //中断总允许开关
 	
-	zd_timerInit(SoftRtcTimer); //初始化定时器125us中断`
+	mof_timerInit(SoftRtcTimer); //初始化定时器125us中断`
 
-	ZD_GIE_ENABLE; //中断总允许开关
+	MOF_GIE_ENABLE; //中断总允许开关
 }
 #endif
 
-unsigned long zd_getUtc_Sec(void)
+unsigned long mof_getUtc_Sec(void)
 {
 	return utcsec;
 }
@@ -49,7 +49,7 @@ unsigned long GetUtcSecByHourMin(unsigned long hour,unsigned long min)
 }
 
 
-void zd_softrtc_run(void)
+void mof_softrtc_run(void)
 {
 Sec_x1_workbit=0;
 #if (RtcType==RtcType_TimerSoftRtc)	
@@ -66,13 +66,16 @@ Sec_x1_workbit=0;
 		rtc_halfsec_flashbit=~rtc_halfsec_flashbit;
 	}
 #elif (RtcType==RtcType_BaseTimeSoftRtc)
-	if(mSec_x1000_workbit)
+	if(Rtc_1s_bit)
 	{
+		Rtc_1s_bit=0;
 		Sec_x1_workbit=1;
 		utcsec++;
 	}
-	if(mSec_x500_workbit)
+	
+	if(Rtc_500ms_bit)
 	{
+		Rtc_500ms_bit=0;
 		rtc_halfsec_flashbit=~rtc_halfsec_flashbit;
 	}
 #endif

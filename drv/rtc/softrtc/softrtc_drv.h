@@ -7,9 +7,9 @@ extern bit Sec_x1_workbit;
 
 extern unsigned char Rtc_timeNow[3];
 
-void zd_softrtc_init(void);
+void mof_softrtc_init(void);
 
-unsigned long zd_getUtc_Sec(void);
+unsigned long mof_getUtc_Sec(void);
 
 bit GetSecHalfBit(void);
 
@@ -19,7 +19,7 @@ void SetUtcSecByHourMin(unsigned char hour,unsigned char min);
 
 unsigned long GetUtcSecByHourMin(unsigned long hour,unsigned long min);
 
-void zd_softrtc_run(void);
+void mof_softrtc_run(void);
 
 #endif
 

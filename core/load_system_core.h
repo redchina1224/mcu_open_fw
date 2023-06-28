@@ -15,7 +15,12 @@
 #include "pwm_core.h"
 #include "uart_core.h"
 #include "timer_core.h"
-//#include "touchkey_core.h"
+
+#ifdef KeyType
+#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)
+#include "touchkey_core.h"
+#endif
+#endif
 //#include "uart_core.h"
 //#include "uart2.h"
 //#include "timer0.h"

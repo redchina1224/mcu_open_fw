@@ -10,6 +10,13 @@ extern bit M_10ms_bit;
 extern bit M_20ms_bit;
 #endif
 
+#ifdef RtcType
+#if (RtcType==RtcType_BaseTimeSoftRtc)
+extern bit Rtc_1s_bit;
+extern bit Rtc_500ms_bit;
+#endif
+#endif
+
 #endif
 #endif
 

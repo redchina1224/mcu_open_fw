@@ -14,30 +14,30 @@
 #if((KeyType&KeyType_McuTouch)==KeyType_McuTouch)
 
 
-#if(McuType==McuType_CmsSemicon_CMS79F738)
+//#if(McuType==McuType_CmsSemicon_CMS79F738)
 
-#elif(McuType==McuType_FremontMicroDevices_FT62F13)
-	#include "fmd\FT62F13X\Touch_Kscan_Library.h"
-#endif
+//#elif(McuType==McuType_FremontMicroDevices_FT62F13)
+//	#include "fmd\FT62F13X\Touch_Kscan_Library.h"
+//#endif
 
 
 
 /***********************************************************************************************
-*函数名 		: void zd_touchkeyInit(void)
+*函数名 		: void mof_touchkeyInit(void)
 *函数功能描述 	: 初始化触摸按键
 *函数参数 		: 无
 *函数返回值 	: 无
 ***********************************************************************************************/
-void zd_touchkeyInit(void);
+void mof_touchkeyInit(void);
 
 
 /***********************************************************************************************
-*函数名 		: unsigned long zd_touchkeyRead(void)
+*函数名 		: unsigned long mof_touchkeyRead(void)
 *函数功能描述 	: 初始化触摸按键
 *函数参数 		: unsigned long *keyval ：按键值地址指针
 *函数返回值 	: unsigned char  按键值状态  1：键值有更新  0：键值无更新
 ***********************************************************************************************/
-unsigned char zd_touchkeyRead(unsigned long *keyval);
+unsigned char mof_touchkeyRead(unsigned long *keyval);
 
 #endif  //#if((KeyType&KeyType_McuTouch)==KeyType_McuTouch)
 #endif  //#ifdef KeyType
