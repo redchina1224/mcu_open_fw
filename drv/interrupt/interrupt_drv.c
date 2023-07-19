@@ -842,6 +842,7 @@ void UART1_ISR (void) interrupt 6
 
 void INT3_ISR (void) interrupt 8	
 {
+#ifdef KeyType
 #if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)				
 	#if (McuType==McuType_CaChip_CA51F005)
 	if(TKIF != 0)
@@ -850,7 +851,7 @@ void INT3_ISR (void) interrupt 8
 	}
 	#endif			
 #endif //#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)		
-	
+#endif	//#ifdef KeyType
 	
 	if(MOF_UART2_RXIF_GRIGGER)
 	{
@@ -894,6 +895,7 @@ void INT3_ISR (void) interrupt 8
 #define TMF			(1<<0) 
 void INT8_ISR (void) interrupt 13 	 
 {
+#ifdef KeyType
 #if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)				
 	#if (McuType==McuType_CaChip_CA51F005)
 	static unsigned char TmCnt = 0;
@@ -912,7 +914,7 @@ void INT8_ISR (void) interrupt 13
 	}
 	#endif			
 #endif //#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)	
-
+#endif //#ifdef KeyType
 }
 
 #elif (DevPlatform==DevPlatform_Unkonw)
