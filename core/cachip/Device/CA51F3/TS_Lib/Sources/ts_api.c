@@ -5,7 +5,7 @@
 
 #include "config\project_cfg.h"  
 
-#include "ca51f_config.h"
+//#include "ca51f_config.h"
 
 //CKSEL¼Ä´æÆ÷¶¨Òå
 #define RTCKS(N)		(N<<7)
@@ -1037,13 +1037,13 @@ void TS_init(void)
 #endif
 	}
 	
-#if (RTC_CLK_SELECT == IRCL)
+//#if (RTC_CLK_SELECT == IRCL)
 	CKCON |= ILCKE;
 	CKSEL |= RTCKS(1);
-#elif (RTC_CLK_SELECT == XOSCL)	
-	CKCON |= XLCKE;
-	while(!(CKCON & XLSTA));
-#endif
+//#elif (RTC_CLK_SELECT == XOSCL)	
+//	CKCON |= XLCKE;
+//	while(!(CKCON & XLSTA));
+//#endif
 
 	RTCON = RTCE(1) | MSE(1) | HSE(1) | SCE(0) | MCE(0) | HCE(0);
 	RTMSS = 0;

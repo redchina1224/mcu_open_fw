@@ -5,12 +5,26 @@
 
 #include "config\project_cfg.h"  
 
-#include "ca51f_config.h"
+//#include "ca51f_config.h"
 	
+//I2CCON定义
+#define I2CE(N)		(N<<7)
+#define I2CIE(N)	(N<<6)
+#define STA(N)		(N<<5)
+#define STP(N)		(N<<4)
+#define CKHD(N)		(N<<3)
+#define AAK(N)		(N<<2)
+#define CBSE(N)		(N<<1)
+#define STFE(N)		(N<<0)
+
+//I2CFLG定义
+#define I2CF		(1<<0)
+#define I2CSTP		(1<<1)
+
 /*********************************************************************************************************************/
 	   
 #if DEBUG
-#include "Library\Includes\i2c.h"		
+//#include "Library\Includes\i2c.h"		
 void I2C_ISR(void);
 #endif
 /*********************************************************************************************************************/
