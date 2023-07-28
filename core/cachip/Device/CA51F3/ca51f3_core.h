@@ -3,10 +3,17 @@
 
 	#include "include/ca51f3sfr.h"
 	#include "include/ca51f3xsfr.h"
+	#include "include/gpiodef_f3.h"
+	
 	#include <intrins.h>
+
+	//低电压复位定义
+	#define MOF_LVR_INIT LVDCON=0xE1 //2V
 
 	//清看门狗定义
 	#define MOF_CLRWDT WDFLG=0xA5;
+	#define MOF_WDT_CLR WDFLG=0xA5;
+	#define MOF_WDT_INIT WDCON =  0x41;WDVTHH = 0x16; WDVTHL = 0xE2; 
 
 	//空指令定义
 	#define MOF_NOP _nop_();
@@ -144,6 +151,9 @@ code unsigned int BR_SET_TAB[][2]=
 	#define MOF_UART1_TXIF_CLEAN {S1CON=(S1CON&~(BIT0|BIT1))|BIT1;}
 	
 
-
+	//串口通用接收发送接口
+	#define UART_BUF_CH(n,t) MOF_UART##n##t
+	#define UART_TXBUF_CH(n) UART_BUF_CH(n,_TXBUF)
+	#define UART_RXBUF_CH(n) UART_BUF_CH(n,_RXBUF)
 
 #endif

@@ -860,7 +860,8 @@ void INT3_ISR (void) interrupt 8
 	#endif			
 #endif //#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)		
 #endif	//#ifdef KeyType
-	
+
+#ifdef MOF_UART2_RXIF_GRIGGER
 	if(MOF_UART2_RXIF_GRIGGER)
 	{
 		MOF_UART2_RXIF_CLEAN;	
@@ -883,7 +884,8 @@ void INT3_ISR (void) interrupt 8
 		
 		#endif
 	}
-	
+#endif
+#ifdef MOF_UART2_TXIF_GRIGGER
 	if(MOF_UART2_TXIF_GRIGGER)
 	{
 		MOF_UART2_TXIF_CLEAN;	
@@ -906,6 +908,7 @@ void INT3_ISR (void) interrupt 8
 		
 		#endif		
 	}
+#endif
 }
 
 #define TMF			(1<<0) 
