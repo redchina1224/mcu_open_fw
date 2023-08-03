@@ -21,7 +21,7 @@
 bit tm1650_SendByte(unsigned char dat);
 
 unsigned char *Tm1650_WriteBuffer;
-
+unsigned char BrightSet=0;
 unsigned char sendcase=5;
 //******************************************************************************
 //******************************************************************************
@@ -96,7 +96,7 @@ void tm1650_SendDataRun(void)
 		tm1650_SendStart();
 		//·¢ËÍ
 		tm1650_SendByte(0x48);
-		tm1650_SendByte(0x01);
+		tm1650_SendByte((BrightSet|0x01));
 		//·¢ENDÃüÁî
 		tm1650_SendEnd();
 		sendcase=0;
@@ -126,6 +126,11 @@ void tm1650_init(void)
 //	Aip650_SendEnd();
 }
 
+void tm1650_set_bright(unsigned char bright)	
+{
+	if(bright>7) bright=0;
+	BrightSet=bright<<4;
+}
 
 
 #endif

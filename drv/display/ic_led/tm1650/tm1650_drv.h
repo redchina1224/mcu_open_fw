@@ -16,6 +16,7 @@ extern unsigned char *Tm1650_WriteBuffer;
 
 void tm1650_init(void);
 void tm1650_SendDataRun(void);
+void tm1650_set_bright(unsigned char bright);
 
 
 #endif
