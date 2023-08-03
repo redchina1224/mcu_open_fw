@@ -8,6 +8,9 @@
 	#define CommunicationType_OneWire 0x010000
 	#define CommunicationType_OneWire_DengProtocol (CommunicationType_OneWire +BIT0)
 
+	#define CommunicationType_Infrared 0x080000
+	#define CommunicationType_Infrared_NecProtocol (CommunicationType_Infrared +BIT0)
+
 	#define CommunicationType_Uart 0x020000
 	#define CommunicationType_Uart_PreambleCode (CommunicationType_Uart +BIT0)
 	#define CommunicationType_Uart_FixedLength (CommunicationType_Uart +BIT1)

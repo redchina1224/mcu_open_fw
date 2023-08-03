@@ -749,10 +749,21 @@ void timer2_Isr() interrupt 5
 		#ifdef CommunicationTypeOneWireModel
 			#if(CommunicationTypeOneWireModel==CommunicationType_OneWire_DengProtocol)
 					#if(CommunicationOneWire_CoreTimer==2)
-								onewrite_fixed_length_in_isr();//comm_handle();
+								onewrite_fixed_length_in_isr();
 					#endif //#if(CommunicationOneWire_CoreTimer==2)
 			#endif //#if(CommunicationTypeOneWireModel==CommunicationType_OneWire_DengProtocol)
 		#endif //#ifdef CommunicationTypeOneWireModel
+
+		#ifdef CommunicationTypeInfraredModel
+			#if(CommunicationTypeInfraredModel==CommunicationType_Infrared_NecProtocol)
+					#if(CommunicationInfrared_CoreTimer==2)
+								infrared_fixed_length_in_isr();
+					#endif //#if(CommunicationInfrared_CoreTimer==2)
+			#endif //#if(CommunicationTypeInfraredModel==CommunicationType_Infrared_NecProtocol)
+		#endif //#ifdef CommunicationTypeInfraredModel
+
+
+
 		
 		//软件时基系统
 		#if (BaseTimeType==BaseTimeType_CoreTimer) 

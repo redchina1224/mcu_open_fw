@@ -9,6 +9,14 @@
 		#endif
 	#endif
 
+
+	#if ((CommunicationType&CommunicationType_Infrared)==CommunicationType_Infrared)
+		#if ((CommunicationTypeInfraredModel&CommunicationType_Infrared_NecProtocol)==CommunicationType_Infrared_NecProtocol)	
+			#include "infrared\necprotocol\infrared_necprotocol_drv.h"
+		#endif
+	#endif
+
+
 	#if ((CommunicationType&CommunicationType_Uart)==CommunicationType_Uart)
 		#if ((CommunicationTypeUartModel&CommunicationType_Uart_PreambleCode)==CommunicationType_Uart_PreambleCode) 
 			#include "uart\uart_precode_protocol_drv.h"
