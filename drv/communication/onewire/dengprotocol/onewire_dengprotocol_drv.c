@@ -250,15 +250,33 @@ void onewrite_fixed_length_in_isr(void)
 							fixed_length_onewire_deng[onewire_object_select].Busy=0;
 							fixed_length_onewire_deng[onewire_object_select].SendEnSw=0;
 							//mof_buzzer_beep(1,2,3);	
-							//发送结束切换为输入
+							//发送结束切换为输入,或者输出拉低
 							if(onewire_object_select==0)
 							{
+							#ifdef ONEWIRE_DIO
 								ONEWIRE_DIO_IN;
+							#else
+								ONEWIRE_DO=0;
+							#endif
 							}
 		#if (ONEWIRE_DENG_TOTAL_NUM>1)
 							else if(onewire_object_select==1)
 							{
+							#ifdef ONEWIRE2_DIO
 								ONEWIRE2_DIO_IN;
+							#else
+								ONEWIRE2_DO=0;
+							#endif
+							}	
+		#endif
+		#if (ONEWIRE_DENG_TOTAL_NUM>2)
+							else if(onewire_object_select==2)
+							{
+							#ifdef ONEWIRE3_DIO
+								ONEWIRE3_DIO_IN;
+							#else
+								ONEWIRE3_DO=0;
+							#endif
 							}	
 		#endif
 
@@ -271,14 +289,36 @@ void onewrite_fixed_length_in_isr(void)
 					{
 						if(onewire_object_select==0)
 						{
-							ONEWIRE_DIO=fixed_length_onewire_deng[onewire_object_select].Write_IO;
-							ONEWIRE_DIO_OUT;
+							#ifdef ONEWIRE_DIO
+								ONEWIRE_DIO=fixed_length_onewire_deng[onewire_object_select].Write_IO;
+								ONEWIRE_DIO_OUT;
+							#else
+								ONEWIRE_DO=fixed_length_onewire_deng[onewire_object_select].Write_IO;
+								ONEWIRE_DO_OUT;
+							#endif
 						}
 		#if (ONEWIRE_DENG_TOTAL_NUM>1)
 						else if(onewire_object_select==1)
 						{
-							ONEWIRE2_DIO=fixed_length_onewire_deng[onewire_object_select].Write_IO;
-							ONEWIRE2_DIO_OUT;
+							#ifdef ONEWIRE2_DIO
+								ONEWIRE2_DIO=fixed_length_onewire_deng[onewire_object_select].Write_IO;
+								ONEWIRE2_DIO_OUT;
+							#else
+								ONEWIRE2_DO=fixed_length_onewire_deng[onewire_object_select].Write_IO;
+								ONEWIRE2_DO_OUT;
+							#endif
+						}
+		#endif
+		#if (ONEWIRE_DENG_TOTAL_NUM>2)
+						else if(onewire_object_select==2)
+						{
+							#ifdef ONEWIRE3_DIO
+								ONEWIRE3_DIO=fixed_length_onewire_deng[onewire_object_select].Write_IO;
+								ONEWIRE3_DIO_OUT;
+							#else
+								ONEWIRE3_DO=fixed_length_onewire_deng[onewire_object_select].Write_IO;
+								ONEWIRE3_DO_OUT;
+							#endif
 						}
 		#endif
 
@@ -292,14 +332,36 @@ void onewrite_fixed_length_in_isr(void)
 			//切换为输入并接收电平
 			if(onewire_object_select==0)
 			{
-				ONEWIRE_DIO_IN;
-				fixed_length_onewire_deng[onewire_object_select].Read_IO=ONEWIRE_DIO;
+				#ifdef ONEWIRE_DIO
+					ONEWIRE_DIO_IN;
+					fixed_length_onewire_deng[onewire_object_select].Read_IO=ONEWIRE_DIO;
+				#else
+					ONEWIRE_DI_IN;
+					fixed_length_onewire_deng[onewire_object_select].Read_IO=ONEWIRE_DI;
+				#endif
 			}
 #if (ONEWIRE_DENG_TOTAL_NUM>1)
 			else if(onewire_object_select==1)
 			{
-				ONEWIRE2_DIO_IN;
-				fixed_length_onewire_deng[onewire_object_select].Read_IO=ONEWIRE2_DIO;
+				#ifdef ONEWIRE2_DIO
+					ONEWIRE2_DIO_IN;
+					fixed_length_onewire_deng[onewire_object_select].Read_IO=ONEWIRE2_DIO;
+				#else
+					ONEWIRE2_DI_IN;
+					fixed_length_onewire_deng[onewire_object_select].Read_IO=ONEWIRE2_DI;
+				#endif
+			}
+#endif
+#if (ONEWIRE_DENG_TOTAL_NUM>2)
+			else if(onewire_object_select==2)
+			{
+				#ifdef ONEWIRE3_DIO
+					ONEWIRE3_DIO_IN;
+					fixed_length_onewire_deng[onewire_object_select].Read_IO=ONEWIRE3_DIO;
+				#else
+					ONEWIRE3_DI_IN;
+					fixed_length_onewire_deng[onewire_object_select].Read_IO=ONEWIRE3_DI;
+				#endif
 			}
 #endif
 

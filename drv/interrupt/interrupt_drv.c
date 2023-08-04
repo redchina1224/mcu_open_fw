@@ -766,12 +766,14 @@ void timer2_Isr() interrupt 5
 
 		
 		//软件时基系统
+		#ifdef BaseTimeType
 		#if (BaseTimeType==BaseTimeType_CoreTimer) 
 			#if(BaseTime_CoreTimer==2)
 				basetime_in_isr();//时基内联函数
 			#endif //#if(BaseTime_CoreTimer==0)
 		#endif //#if (BaseTimeType==BaseTimeType_CoreTimer) 
-
+		#endif //#ifdef BaseTimeType
+		
 		//步进电机脉冲输出
 		#ifdef MotorType
 			#if (MotorType==MotorType_Step)
@@ -922,12 +924,15 @@ void INT3_ISR (void) interrupt 8
 #endif
 }
 
-#define TMF			(1<<0) 
+
 void INT8_ISR (void) interrupt 13 	 
 {
 #ifdef KeyType
 #if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)				
 	#if (McuType==McuType_CaChip_CA51F005)
+	
+	#define TMF			(1<<0) 
+	
 	static unsigned char TmCnt = 0;
 	if(TMCON & TMF)			//毫秒中断
 	{
@@ -943,6 +948,12 @@ void INT8_ISR (void) interrupt 13
 		}
 	}
 	#elif (McuType==McuType_CaChip_CA51F3)
+
+	//RTCIF定义
+	#define RTC_MF		(1<<2)
+	#define RTC_HF		(1<<1)
+	#define RTC_AF		(1<<0)
+	
 		if(RTCIF & RTC_MF)			//毫秒中断	   时间为 (RTMSS+1)*128*Trtc, 
 		{
 			RTCIF = RTC_MF;		
@@ -956,6 +967,29 @@ void INT8_ISR (void) interrupt 13
 	#endif			
 #endif //#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)	
 #endif //#ifdef KeyType
+}
+
+
+//I2CFLG定义
+#define I2CF		(1<<0)
+#define I2CSTP		(1<<1)
+
+void INT6_ISR(void) interrupt 11 
+{
+	if(I2CFLG & I2CF)		
+	{
+#ifdef KeyType
+#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)				
+	#if (McuType==McuType_CaChip_CA51F005)
+			#if DEBUG
+
+					I2C_ISR();
+
+			#endif
+	#endif
+#endif
+#endif
+	}
 }
 
 #elif (DevPlatform==DevPlatform_Unkonw)
