@@ -11,7 +11,7 @@
 
 #include "..\..\com_include_app.h"
 
-unsigned char settingDisplayBlink(struct  zd_setting_display_blink_t* setting )
+unsigned char settingDisplayBlink(struct  mof_setting_display_blink_t* setting )
 {
 
 		if(setting->exitTimeOut_x100ms>0) setting->exitTimeOut_x100ms--;//超时自动退出
@@ -45,7 +45,7 @@ unsigned char settingDisplayBlink(struct  zd_setting_display_blink_t* setting )
 
 }
 
-void settingDisplayBlink_Start(struct  zd_setting_display_blink_t* setting,unsigned char exitTimeSet_x100ms)
+void settingDisplayBlink_Start(struct  mof_setting_display_blink_t* setting,unsigned char exitTimeSet_x100ms)
 {
 	setting->blinkTimeOut_x100ms=0;//单次闪烁计时,置0后，立即执行一次切换操作
 	setting->Bits.blinkDisplayEn=0;//闪烁时是否显示或熄屏的标志,置0后，下次切换为显示

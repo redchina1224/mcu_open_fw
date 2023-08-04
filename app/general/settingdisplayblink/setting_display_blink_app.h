@@ -12,7 +12,7 @@
 #define __APPSTDLIB_SETTING_DISPALY_BLINK_APP_H__
 //******************************************************************
 
-struct  zd_setting_display_blink_t {
+struct  mof_setting_display_blink_t {
 	struct {
 		unsigned char blinkDisplayEn:1;
 		unsigned char inSetting1:1;
@@ -29,8 +29,8 @@ unsigned char blinkTimeOut_x100ms;
 
 
 
-unsigned char settingDisplayBlink(struct  zd_setting_display_blink_t* setting );
-void settingDisplayBlink_Start(struct  zd_setting_display_blink_t* setting,unsigned char exitTimeSet_x100ms);
+unsigned char settingDisplayBlink(struct  mof_setting_display_blink_t* setting );
+void settingDisplayBlink_Start(struct  mof_setting_display_blink_t* setting,unsigned char exitTimeSet_x100ms);
 
 #endif 
 
