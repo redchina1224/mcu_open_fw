@@ -15,6 +15,7 @@
 	#define CommunicationType_Uart_PreambleCode (CommunicationType_Uart +BIT0)
 	#define CommunicationType_Uart_FixedLength (CommunicationType_Uart +BIT1)
 	#define CommunicationType_Uart_HaierUplus (CommunicationType_Uart +BIT7)
+	#define CommunicationType_Uart_Tuya  (CommunicationType_Uart +BIT6)
 
 	#define CommunicationType_I2C 0x040000
 	#define CommunicationType_I2C_SoftI2C (CommunicationType_I2C +BIT0)
