@@ -53,6 +53,42 @@ void onewrite_fixed_length_init(unsigned char i,unsigned char *sendbuf,unsigned 
 		fixed_length_onewire_deng[i].Reading_HighTimerCount=0;
 		fixed_length_onewire_deng[i].Reading_LowTimerCount=0;
 		fixed_length_onewire_deng[i].Reading_BaseTimerCount=0;
+	
+							if(i==0)
+							{
+							#ifdef ONEWIRE_DIO
+								ONEWIRE_DIO_IN;
+							#else
+								ONEWIRE_DI_IN;
+								ONEWIRE_DO=0;
+								ONEWIRE_DO_OUT;
+							#endif
+							}
+		#if (ONEWIRE_DENG_TOTAL_NUM>1)
+							else if(i==1)
+							{
+							#ifdef ONEWIRE2_DIO
+								ONEWIRE2_DIO_IN;
+							#else
+								ONEWIRE2_DI_IN;
+								ONEWIRE2_DO=0;
+								ONEWIRE2_DO_OUT;
+							#endif
+							}	
+		#endif
+		#if (ONEWIRE_DENG_TOTAL_NUM>2)
+							else if(i==2)
+							{
+							#ifdef ONEWIRE3_DIO
+								ONEWIRE3_DIO_IN;
+							#else
+								ONEWIRE3_DI_IN;
+								ONEWIRE3_DO=0;
+								ONEWIRE3_DO_OUT;
+							#endif
+							}	
+		#endif	
+	
 }
 
 
@@ -256,6 +292,7 @@ void onewrite_fixed_length_in_isr(void)
 							#ifdef ONEWIRE_DIO
 								ONEWIRE_DIO_IN;
 							#else
+								ONEWIRE_DI_IN;
 								ONEWIRE_DO=0;
 							#endif
 							}
@@ -265,6 +302,7 @@ void onewrite_fixed_length_in_isr(void)
 							#ifdef ONEWIRE2_DIO
 								ONEWIRE2_DIO_IN;
 							#else
+								ONEWIRE2_DI_IN;
 								ONEWIRE2_DO=0;
 							#endif
 							}	
@@ -275,6 +313,7 @@ void onewrite_fixed_length_in_isr(void)
 							#ifdef ONEWIRE3_DIO
 								ONEWIRE3_DIO_IN;
 							#else
+								ONEWIRE3_DI_IN;
 								ONEWIRE3_DO=0;
 							#endif
 							}	
