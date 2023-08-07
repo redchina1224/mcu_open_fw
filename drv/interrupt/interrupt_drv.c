@@ -824,7 +824,8 @@ void UART1_ISR (void) interrupt 6
 						uart_haier_uplus_rx_in_isr();
 					#endif
 				#endif
-			#elif ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength)
+			#endif
+			#if	((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength)
 				#ifdef UART_FIXED_LENGTH_PORT_NUM
 					#if((UART_FIXED_LENGTH_PORT_NUM==1))
 						uart_fixed_length_rx_in_isr();
@@ -848,7 +849,8 @@ void UART1_ISR (void) interrupt 6
 						uart_haier_uplus_tx_in_isr();
 					#endif
 				#endif
-			#elif ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength)
+			#endif
+			#if ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength)
 				#ifdef UART_FIXED_LENGTH_PORT_NUM
 					#if((UART_FIXED_LENGTH_PORT_NUM==1))
 						uart_fixed_length_tx_in_isr();
@@ -887,7 +889,8 @@ void INT3_ISR (void) interrupt 8
 						uart_haier_uplus_rx_in_isr();
 					#endif
 				#endif
-			#elif ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength)
+			#endif
+			#if ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength)
 				#ifdef UART_FIXED_LENGTH_PORT_NUM
 					#if((UART_FIXED_LENGTH_PORT_NUM==2))
 						uart_fixed_length_rx_in_isr();
@@ -911,7 +914,8 @@ void INT3_ISR (void) interrupt 8
 						uart_haier_uplus_tx_in_isr();
 					#endif
 				#endif
-			#elif ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength)
+			#endif
+			#if ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength)
 				#ifdef UART_FIXED_LENGTH_PORT_NUM
 					#if((UART_FIXED_LENGTH_PORT_NUM==2))
 						uart_fixed_length_tx_in_isr();
