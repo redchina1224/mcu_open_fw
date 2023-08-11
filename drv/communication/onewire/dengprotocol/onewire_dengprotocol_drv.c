@@ -47,6 +47,7 @@ void onewrite_fixed_length_init(unsigned char i,unsigned char *sendbuf,unsigned 
 		fixed_length_onewire_deng[i].p_ReadBuffer=(recvbuf);
 		fixed_length_onewire_deng[i].ReadLength=recv_len;
 		fixed_length_onewire_deng[i].SendEnSw=0;
+		fixed_length_onewire_deng[i].Busy=0;	
 		fixed_length_onewire_deng[i].Reading=0;
 		fixed_length_onewire_deng[i].Reading_BitCount=0;	
 		fixed_length_onewire_deng[i].ReadPtr=0;

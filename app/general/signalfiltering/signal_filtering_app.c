@@ -1,7 +1,7 @@
 #include "..\..\com_include_app.h"
 
 
-void zd_signalCheck(struct zd_signal_filtering_t* sig,unsigned char chkmax,unsigned char chkmin)
+void mof_signalCheck(mof_signal_filtering_t* sig,unsigned char chkmax,unsigned char chkmin)
 {
 	unsigned char TriggerFilterValueHalf;
 	TriggerFilterValueHalf=(unsigned char)(sig->TriggerFilterValue>>1);
