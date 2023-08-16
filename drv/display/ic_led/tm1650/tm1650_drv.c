@@ -16,7 +16,7 @@
 #ifdef DisplayTypeIcLedModel
 #if (DisplayTypeIcLedModel==DisplayType_IcLed_tm1650) 
 
-#define tm1650_Delay(x) MOF_NOP//core_DelayUs 
+#define tm1650_Delay(x) core_DelayUs 
 
 bit tm1650_SendByte(unsigned char dat);
 

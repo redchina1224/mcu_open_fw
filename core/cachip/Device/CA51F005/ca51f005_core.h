@@ -6,7 +6,7 @@
 	#include <intrins.h>
 
 	//低电压复位定义
-	#define MOF_LVR_INIT LVDCON=0xE1 //1.8V
+	#define MOF_LVR_INIT LVDCON=0xEA //2.7V
 
 	//清看门狗定义
 	#define MOF_CLRWDT WDFLG=0xA5;
