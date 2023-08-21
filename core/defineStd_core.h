@@ -65,6 +65,12 @@ typedef double 			    FP64; 		// 双精度浮点数(64位长度)
 
 
 typedef union {
+unsigned long LongValues[2];
+unsigned int IntValues[4];
+unsigned char CharValues[8];
+} mof_2long8chars_t;
+
+typedef union {
 unsigned long LongValue;
 unsigned int IntValues[2];
 unsigned char CharValues[4];

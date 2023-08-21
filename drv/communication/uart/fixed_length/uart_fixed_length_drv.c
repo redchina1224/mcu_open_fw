@@ -67,7 +67,7 @@ void uart_fixed_length_read_reset(void)
 
 unsigned char uart_fixed_length_ReadOverCheck(void)
 {
-	if(mSec_x100_workbit&&fixed_length_port.ReadTimeout>0) fixed_length_port.ReadTimeout--;
+	if(mSec_x10_workbit&&fixed_length_port.ReadTimeout>0) fixed_length_port.ReadTimeout--;
 	if(200==fixed_length_port.Reading)
 	{
 	#ifdef UART_FIXED_LENGTH_RX_LENGTH
@@ -140,7 +140,6 @@ void uart_fixed_length_rx_in_isr(void)
 	{		
 		fixed_length_port.Reading=200; //接收完成,停止接收,等待主循环处理数据
 	}
-	
 	//设置接收超时时间
-	fixed_length_port.ReadTimeout=3;	
+	fixed_length_port.ReadTimeout=10;	
 }
