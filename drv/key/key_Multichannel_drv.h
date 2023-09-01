@@ -19,9 +19,11 @@ unsigned int UserKeyRepeatDelay;
 unsigned char KeyQuickPressCount;
 unsigned int KeyLongPressCount;
 unsigned long KeyVal;
+unsigned long KeyDat;
 unsigned long KeyValQuick_Ago;
 unsigned long KeyVal_Ago;
 unsigned long UserKeyVal;
+unsigned long UserKeyDat;
 unsigned int UserKeyCnt;
 
 unsigned char UserKeyPressed;
