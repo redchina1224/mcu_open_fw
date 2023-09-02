@@ -239,6 +239,8 @@ code unsigned int BR_SET_TAB[][2]=
 			//配置PWM开启
 	#define MOF_PWM_INIT(md)  while(PWMUPD);PWMEN |= (1<<(md));
 			
-			
+	//FLASH参数
+	#define DATA_FLASH_SIZE 0x10000
+	#define DATA_AREA_SECTOR_SIZE 0x200			
 	
 #endif
