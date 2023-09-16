@@ -248,22 +248,14 @@ unsigned long Value;
 #define 	True		1
 #define 	False		0
 
-#define 	true		1
-#define 	false		0
-
 #define 	ENABLE		1
 #define 	DISABLE		0
 
 #define 	Enable		1
 #define 	Disable		0
 
-#define 	enable		1
-#define 	disable		0
-
 #define NULL 0
 #define Null 0
-#define null 0
-
 
 //通用定义-功能块
 
