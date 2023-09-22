@@ -11,7 +11,7 @@
 //头文件************************************************************************
 #include "..\..\..\com_include_drv.h"
 //******************************************************************************
-
+#if ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength) 
 
 #define UART_FIXED_LENGTH_TXBUF UART_TXBUF_CH(UART_FIXED_LENGTH_PORT_NUM)
 #define UART_FIXED_LENGTH_RXBUF UART_RXBUF_CH(UART_FIXED_LENGTH_PORT_NUM)
@@ -143,3 +143,5 @@ void uart_fixed_length_rx_in_isr(void)
 	//设置接收超时时间
 	fixed_length_port.ReadTimeout=10;	
 }
+
+#endif
