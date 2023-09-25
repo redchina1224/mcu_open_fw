@@ -12,6 +12,7 @@
 #define __MOTORSTEP_DRV_H__
 //声明外部函数******************************************************************
 
+#define MOTORSTEP_SPEED_DEFAULT 100
 
 typedef struct
 {
@@ -19,6 +20,7 @@ unsigned char WorkEn;
 signed int WorkStepCurrent;
 signed int WorkStep_cnt;
 unsigned char WorkSpeed_cnt;
+unsigned char WorkSpeed_set;
 unsigned char WorkSpeed;
 unsigned char StepSelectCase;
 //unsigned char Step_Case_Max;

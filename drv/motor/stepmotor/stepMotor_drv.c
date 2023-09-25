@@ -54,6 +54,7 @@ void mof_motor_step_plus_in_isr(void)
 			if((++(MotorStep_Object[MotorStep_Select].WorkSpeed_cnt)>=MotorStep_Object[MotorStep_Select].WorkSpeed))
 			{
 				MotorStep_Object[MotorStep_Select].WorkSpeed_cnt=0;
+				if(MotorStep_Object[MotorStep_Select].WorkSpeed>MotorStep_Object[MotorStep_Select].WorkSpeed_set) MotorStep_Object[MotorStep_Select].WorkSpeed--;
 				
 				if(MotorStep_Object[MotorStep_Select].WorkStep_cnt!=0)
 				{
@@ -133,10 +134,13 @@ void mof_motorStep_work(unsigned char motor_n,signed int stepCount,unsigned char
 	MotorStep_Object[motor_n].WorkEn=1;
 	MotorStep_Object[motor_n].WorkStep_cnt=stepCount;
 	#if(MOTOR_STEP_TOTAL_NUM>1)
-		MotorStep_Object[motor_n].WorkSpeed=speed/MOTOR_STEP_TOTAL_NUM;
+		MotorStep_Object[motor_n].WorkSpeed_set=speed/MOTOR_STEP_TOTAL_NUM;
 	#else
-		MotorStep_Object[motor_n].WorkSpeed=speed;
+		MotorStep_Object[motor_n].WorkSpeed_set=speed;
 	#endif
+	
+	MotorStep_Object[motor_n].WorkSpeed=(MOTORSTEP_SPEED_DEFAULT/MOTOR_STEP_TOTAL_NUM);
+	//MotorStep_Object[motor_n].WorkSpeed=MotorStep_Object[motor_n].WorkSpeed_set;
 	
 }
 
@@ -195,10 +199,14 @@ MOTOR_STEP_IO_OUTPUT;
 #endif
 	for(i=0;i<MOTOR_STEP_TOTAL_NUM;i++)
 	{
-		MotorStep_Object[MotorStep_Select].WorkEn=0;
-		MotorStep_Object[MotorStep_Select].WorkStep_cnt=0;
-		MotorStep_Object[MotorStep_Select].WorkStepCurrent=0;
-		//MotorStep_Object[MotorStep_Select].Step_Case_Max=(MotorStepTotal-1);
+		MotorStep_Object[i].WorkEn=0;
+		MotorStep_Object[i].WorkStep_cnt=0;
+		MotorStep_Object[i].WorkStepCurrent=0;
+		MotorStep_Object[i].WorkSpeed_cnt=0;
+		MotorStep_Object[i].WorkSpeed_set=MOTORSTEP_SPEED_DEFAULT/MOTOR_STEP_TOTAL_NUM;
+		MotorStep_Object[i].WorkSpeed=MOTORSTEP_SPEED_DEFAULT/MOTOR_STEP_TOTAL_NUM;
+		MotorStep_Object[i].StepSelectCase=0;
+		//MotorStep_Object[i].Step_Case_Max=(MotorStepTotal-1);
 	}
 }
 
