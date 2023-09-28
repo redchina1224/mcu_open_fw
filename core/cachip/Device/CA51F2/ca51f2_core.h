@@ -56,6 +56,8 @@
 	#define MOF_PORT_BIT_TK(p,b) MOF_PORT_BIT_CONFIG(p,b,F)=4
 	#define MOF_PORT_BIT_UART(p,b) MOF_PORT_BIT_CONFIG(p,b,F)=3
 	
+	#define MOF_PORT_BIT_PHRES(p,b) MOF_PORT_BIT_CONFIG(p,b,F)|=0x80
+	#define MOF_PORT_BIT_PDRES(p,b) MOF_PORT_BIT_CONFIG(p,b,F)|=0x40	
 	//TIMER配置
 
 

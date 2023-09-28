@@ -867,7 +867,7 @@ void INT3_ISR (void) interrupt 8
 {
 #ifdef KeyType
 #if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)				
-	#if (McuType==McuType_CaChip_CA51F005||McuType==McuType_CaChip_CA51F3)
+	#if (McuType==McuType_CaChip_CA51F005||McuType==McuType_CaChip_CA51F3||McuType==McuType_CaChip_CA51F2)
 	if(TKIF != 0)
 	{
 		TS_ISR();
@@ -951,7 +951,7 @@ void INT8_ISR (void) interrupt 13
 			TS_HS_ISR();
 		}
 	}
-	#elif (McuType==McuType_CaChip_CA51F3)
+	#elif (McuType==McuType_CaChip_CA51F3||McuType==McuType_CaChip_CA51F2)
 
 	//RTCIF∂®“Â
 	#define RTC_MF		(1<<2)
