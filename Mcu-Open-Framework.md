@@ -10,11 +10,16 @@
 
 <table>
 <tr>
-<td><font size=5>浙江智达电子科技有限公司</font></td>
-<td  rowspan="3"><font size=6>发布</font></td>
+<td><font size=5>嘉兴慕链信息技术有限公司</font></td>
+<td  rowspan="5"><font size=6>发布</font></td>
 </tr>
 <tr></tr>
-<td><font size=5>嘉兴慕链信息技术有限公司</font></td>
+<tr>
+<td><font size=5>浙江智达电子科技有限公司</font></td>
+</tr>
+<tr></tr>
+<tr>
+<td><font size=5>浙江智雄智能科技股份有限公司</font></td>
 </tr>
 </table>
 <div STYLE="page-break-after: always;"></div>
