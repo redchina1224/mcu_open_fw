@@ -4,6 +4,9 @@
 #ifdef BaseTimeType
 #if (BaseTimeType==BaseTimeType_CoreTimer) 
 
+extern bit T_500ms_bit;
+extern bit T_1s_bit;
+
 #if(BaseTimeTargetUs==10000)
 extern bit M_10ms_bit;
 #elif(BaseTimeTargetUs==20000)

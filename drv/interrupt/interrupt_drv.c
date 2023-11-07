@@ -783,6 +783,10 @@ void timer2_Isr() interrupt 5
 			#endif //#if (MotorType==MotorType_Step)
 		#endif //#ifdef MotorType
 		
+		//无刷脉冲速度反馈
+		#ifdef ZXZN_FAN1_SPEEDFB_IO_Channel
+			zxzn_fan_speed_counter_in_isr();
+		#endif
 
 	MOF_T2IF_CLEAN;	//清中断标志位
 		
