@@ -87,7 +87,7 @@ void mof_keyCheck(struct mof_userkey_t* ukey,unsigned long keysnotpress)
 			ukey->KeyVal_Ago=ukey->KeyVal;
 			ukey->UserKeyVal=ukey->KeyVal;
 			ukey->UserKeyDat=ukey->KeyDat;
-
+			ukey->UserKeySource=ukey->KeySource;
 				
 			ukey->KeyValQuick_Ago=ukey->KeyVal;
 			
