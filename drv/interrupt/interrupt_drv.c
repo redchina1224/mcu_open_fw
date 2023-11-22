@@ -829,7 +829,16 @@ void UART1_ISR (void) interrupt 6
 					#endif
 				#endif
 			#endif
-			#if	((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength)
+		
+			#if((CommunicationTypeUartModel&CommunicationType_Uart_Tuya)==CommunicationType_Uart_Tuya)
+				#ifdef UART_TUYA_PORT_NUM
+					#if((UART_TUYA_PORT_NUM==1))
+						uart_tuya_rx_in_isr();
+					#endif
+				#endif
+			#endif
+		
+			#if ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength)
 				#ifdef UART_FIXED_LENGTH_PORT_NUM
 					#if((UART_FIXED_LENGTH_PORT_NUM==1))
 						uart_fixed_length_rx_in_isr();
@@ -854,6 +863,15 @@ void UART1_ISR (void) interrupt 6
 					#endif
 				#endif
 			#endif
+
+			#if((CommunicationTypeUartModel&CommunicationType_Uart_Tuya)==CommunicationType_Uart_Tuya)
+				#ifdef UART_TUYA_PORT_NUM
+					#if((UART_TUYA_PORT_NUM==1))
+						uart_tuya_tx_in_isr();
+					#endif
+				#endif
+			#endif
+		
 			#if ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength)
 				#ifdef UART_FIXED_LENGTH_PORT_NUM
 					#if((UART_FIXED_LENGTH_PORT_NUM==1))
@@ -894,6 +912,15 @@ void INT3_ISR (void) interrupt 8
 					#endif
 				#endif
 			#endif
+		
+			#if((CommunicationTypeUartModel&CommunicationType_Uart_Tuya)==CommunicationType_Uart_Tuya)
+				#ifdef UART_TUYA_PORT_NUM
+					#if((UART_TUYA_PORT_NUM==2))
+						uart_tuya_rx_in_isr();
+					#endif
+				#endif
+			#endif
+		
 			#if ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength)
 				#ifdef UART_FIXED_LENGTH_PORT_NUM
 					#if((UART_FIXED_LENGTH_PORT_NUM==2))
@@ -919,6 +946,15 @@ void INT3_ISR (void) interrupt 8
 					#endif
 				#endif
 			#endif
+
+			#if((CommunicationTypeUartModel&CommunicationType_Uart_Tuya)==CommunicationType_Uart_Tuya)
+				#ifdef UART_TUYA_PORT_NUM
+					#if((UART_TUYA_PORT_NUM==2))
+						uart_tuya_tx_in_isr();
+					#endif
+				#endif
+			#endif
+		
 			#if ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength)
 				#ifdef UART_FIXED_LENGTH_PORT_NUM
 					#if((UART_FIXED_LENGTH_PORT_NUM==2))

@@ -11,8 +11,9 @@
 //Í·ÎÄ¼þ************************************************************************
 #include "..\..\..\com_include_drv.h"
 //******************************************************************************
-
-
+#ifdef CommunicationTypeUartModel
+#if ((CommunicationTypeUartModel&CommunicationType_Uart_HaierUplus)==CommunicationType_Uart_HaierUplus)
+		
 #define UART_UPLUS_TXBUF UART_TXBUF_CH(UART_UPLUS_PORT_NUM)
 #define UART_UPLUS_RXBUF UART_RXBUF_CH(UART_UPLUS_PORT_NUM)
 
@@ -170,3 +171,6 @@ void uart_haier_uplus_rx_in_isr(void)
 	}
 	
 }
+
+#endif
+#endif

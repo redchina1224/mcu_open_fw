@@ -11,7 +11,8 @@
 //Í·ÎÄ¼þ************************************************************************
 #include "..\..\..\com_include_drv.h"
 //******************************************************************************
-
+#ifdef CommunicationTypeUartModel
+#if ((CommunicationTypeUartModel&CommunicationType_Uart_Tuya)==CommunicationType_Uart_Tuya)
 
 #define UART_TUYA_TXBUF UART_TXBUF_CH(UART_TUYA_PORT_NUM)
 #define UART_TUYA_RXBUF UART_RXBUF_CH(UART_TUYA_PORT_NUM)
@@ -144,3 +145,6 @@ void uart_tuya_rx_in_isr(void)
 	}
 	
 }
+
+#endif
+#endif
