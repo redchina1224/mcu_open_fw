@@ -12,9 +12,9 @@
 #define __APPSTDLIB_CHECKSUM_APP_H__
 //******************************************************************
 
-unsigned int GetCheckSum16(unsigned char* database, unsigned char length);
+unsigned int GetCheckSum16(unsigned char* database, unsigned char length,unsigned int checksum);
 
-unsigned char GetCheckSum8(unsigned char* database, unsigned char length);
+unsigned char GetCheckSum8(unsigned char* database, unsigned char length,unsigned char checksum);
 
 void data_char_fix(unsigned char* database,unsigned char length,unsigned char dat);
 

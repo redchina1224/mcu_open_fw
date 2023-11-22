@@ -1,6 +1,6 @@
-unsigned int GetCheckSum16(unsigned char* database, unsigned char length) 
+unsigned int GetCheckSum16(unsigned char* database, unsigned char length,unsigned int checksum) 
 { 
-	unsigned int checksum=0; 
+//	unsigned int checksum=0; 
 	while(length--) 
 	{ 
 		checksum += *database++; 
@@ -8,9 +8,9 @@ unsigned int GetCheckSum16(unsigned char* database, unsigned char length)
 	return checksum;
 } 
 
-unsigned char GetCheckSum8(unsigned char* database, unsigned char length) 
+unsigned char GetCheckSum8(unsigned char* database, unsigned char length,unsigned char checksum) 
 { 
-	unsigned char checksum=0; 
+	//unsigned char checksum=0; 
 	while(length--) 
 	{ 
 		checksum += *database++; 
