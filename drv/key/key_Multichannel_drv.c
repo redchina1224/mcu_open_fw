@@ -71,7 +71,8 @@ void mof_keyCheck(struct mof_userkey_t* ukey,unsigned long keysnotpress)
 			ukey->UserKeyPressed=1;
 			if(ukey->KeyLongPressCount<1000) ukey->KeyLongPressCount++;
 			if(ukey->KeyLongPressCount==5) ukey->UserKeyPressed_down=1;
-			if(ukey->KeyLongPressCount==50) ukey->UserKeyLongPressed=1;			
+			if(ukey->KeyLongPressCount==50) ukey->UserKeyLongPressed=1;
+			if(ukey->KeyLongPressCount>50) ukey->UserKeyDat=ukey->KeyDat;
 		}
 		else
 		{
