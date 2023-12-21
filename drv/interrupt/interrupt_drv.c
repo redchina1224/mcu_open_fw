@@ -773,7 +773,16 @@ void timer2_Isr() interrupt 5
 			#endif //#if(BaseTime_CoreTimer==0)
 		#endif //#if (BaseTimeType==BaseTimeType_CoreTimer) 
 		#endif //#ifdef BaseTimeType
-		
+
+		#ifdef DisplayType
+			#if ((DisplayType&DisplayType_SoftLed)==DisplayType_SoftLed) 
+				#if(BaseTime_CoreTimer==2)
+					mof_softled_run();//软件LED驱动函数
+				#endif //#if(BaseTime_CoreTimer==2)
+			#endif
+		#endif //#ifdef DisplayType
+
+
 		//步进电机脉冲输出
 		#ifdef MotorType
 			#if (MotorType==MotorType_Step)

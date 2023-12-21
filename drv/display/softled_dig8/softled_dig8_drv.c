@@ -23,7 +23,7 @@ unsigned char LedBreathBrightSet=0;
 
 
 //在bsp_run中调用，或在中断中调用
-void zd_softled_run(void)	
+void mof_softled_run(void)	
 {
 	
 	if(++LedBrightCnt>DisplaySoftLedBrightMax)
@@ -75,7 +75,7 @@ SEG_F_PIN=1;
 }
 
 
-void zd_softled_init(void)
+void mof_softled_init(void)
 { 
 	Led_IO_COM_OUTPUT;
 	Led_IO_COM_CTRL_OFF;
@@ -86,7 +86,7 @@ void zd_softled_init(void)
 
 
 
-void zd_softled_set_bright(unsigned char bright)	
+void mof_softled_set_bright(unsigned char bright)	
 {
 	if(bright>DisplaySoftLedBrightMax) bright=DisplaySoftLedBrightMax;
 	if(bright<1) bright=1;
@@ -97,7 +97,7 @@ void zd_softled_set_bright(unsigned char bright)
 
 
 #ifdef DisplaySoftLedBrightBreath
-void zd_softled_set_breathbright(unsigned char bright)	
+void mof_softled_set_breathbright(unsigned char bright)	
 {
 	if(bright>DisplaySoftLedBrightMax) bright=DisplaySoftLedBrightMax;
 	
