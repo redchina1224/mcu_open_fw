@@ -847,6 +847,14 @@ void UART1_ISR (void) interrupt 6
 				#endif
 			#endif
 		
+			#if((CommunicationTypeUartModel&CommunicationType_Uart_MiHome)==CommunicationType_Uart_MiHome)
+				#ifdef UART_MIHOME_PORT_NUM
+					#if((UART_MIHOME_PORT_NUM==1))
+						uart_mihome_rx_in_isr();
+					#endif
+				#endif
+			#endif
+			
 			#if ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength)
 				#ifdef UART_FIXED_LENGTH_PORT_NUM
 					#if((UART_FIXED_LENGTH_PORT_NUM==1))
@@ -880,7 +888,15 @@ void UART1_ISR (void) interrupt 6
 					#endif
 				#endif
 			#endif
-		
+
+			#if((CommunicationTypeUartModel&CommunicationType_Uart_MiHome)==CommunicationType_Uart_MiHome)
+				#ifdef UART_MIHOME_PORT_NUM
+					#if((UART_MIHOME_PORT_NUM==1))
+						uart_mihome_tx_in_isr();
+					#endif
+				#endif
+			#endif
+
 			#if ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength)
 				#ifdef UART_FIXED_LENGTH_PORT_NUM
 					#if((UART_FIXED_LENGTH_PORT_NUM==1))
@@ -930,6 +946,14 @@ void INT3_ISR (void) interrupt 8
 				#endif
 			#endif
 		
+			#if((CommunicationTypeUartModel&CommunicationType_Uart_MiHome)==CommunicationType_Uart_MiHome)
+				#ifdef UART_MIHOME_PORT_NUM
+					#if((UART_MIHOME_PORT_NUM==2))
+						uart_mihome_rx_in_isr();
+					#endif
+				#endif
+			#endif
+			
 			#if ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength)
 				#ifdef UART_FIXED_LENGTH_PORT_NUM
 					#if((UART_FIXED_LENGTH_PORT_NUM==2))
@@ -963,7 +987,15 @@ void INT3_ISR (void) interrupt 8
 					#endif
 				#endif
 			#endif
-		
+
+			#if((CommunicationTypeUartModel&CommunicationType_Uart_MiHome)==CommunicationType_Uart_MiHome)
+				#ifdef UART_MIHOME_PORT_NUM
+					#if((UART_MIHOME_PORT_NUM==2))
+						uart_mihome_tx_in_isr();
+					#endif
+				#endif
+			#endif
+			
 			#if ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength)
 				#ifdef UART_FIXED_LENGTH_PORT_NUM
 					#if((UART_FIXED_LENGTH_PORT_NUM==2))

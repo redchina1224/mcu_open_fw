@@ -1,6 +1,7 @@
 
 #include "..\..\..\com_include_drv.h"
-
+#ifdef CommunicationTypeI2cModel
+#if ((CommunicationTypeI2cModel&CommunicationType_I2C_SoftI2C)==CommunicationType_I2C_SoftI2C)
 
 #define I2C_SDA_High()  SOFTI2C_SDA=1
 #define I2C_SDA_Low()   SOFTI2C_SDA=0
@@ -158,7 +159,8 @@ unsigned char I2C_WaitToAck(void)
 }  
 
 
-
+#endif
+#endif
 
 
 
