@@ -30,6 +30,9 @@
 		#if ((CommunicationTypeUartModel&CommunicationType_Uart_Tuya)==CommunicationType_Uart_Tuya)
 			#include "uart\tuya\uart_tuya_drv.h"
 		#endif
+		#if ((CommunicationTypeUartModel&CommunicationType_Uart_MiHome)==CommunicationType_Uart_MiHome)
+			#include "uart\granwin_mi\uart_granwin_mi_drv.h"
+		#endif
 	#endif
 
 	#if ((CommunicationType&CommunicationType_I2C)==CommunicationType_I2C)

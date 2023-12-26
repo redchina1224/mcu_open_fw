@@ -455,7 +455,7 @@ void onewrite_fixed_length_in_isr(void)
 			switch(fixed_length_onewire_deng[onewire_object_select].Reading)
 			{
 					case 0://检测复位帧,1个数据位宽度高电平(实测不到此宽度,待后期验证),2个数据位低电平
-					{						
+					{
 //						if(fixed_length_onewire_deng[onewire_object_select].Reading_BaseTimerCount==0)
 //						{
 //								if(fixed_length_onewire_deng[onewire_object_select].Read_IO==1) //电平上升沿
@@ -465,8 +465,6 @@ void onewrite_fixed_length_in_isr(void)
 //											fixed_length_onewire_deng[onewire_object_select].Reading_LowTimerCount>=(SEND_BIT_WIDTH_TIME+SEND_BIT_WIDTH_TIME-2)&&fixed_length_onewire_deng[onewire_object_select].Reading_LowTimerCount<=(SEND_BIT_WIDTH_TIME+SEND_BIT_WIDTH_TIME+2)
 //										)
 //										{
-//											fixed_length_onewire_deng[onewire_object_select].Reading_BitCount=0;	
-//											fixed_length_onewire_deng[onewire_object_select].ReadPtr=0;
 //											fixed_length_onewire_deng[onewire_object_select].Reading++;
 //											//mof_buzzer_beep(1,2,3);	
 //										}
@@ -482,8 +480,6 @@ void onewrite_fixed_length_in_isr(void)
 //								}
 //						}
 
-							fixed_length_onewire_deng[onewire_object_select].Reading_BitCount=0;	
-							fixed_length_onewire_deng[onewire_object_select].ReadPtr=0;
 							fixed_length_onewire_deng[onewire_object_select].Reading++;
 					}
 					break;
