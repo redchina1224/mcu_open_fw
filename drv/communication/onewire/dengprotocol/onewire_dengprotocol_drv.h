@@ -8,6 +8,10 @@
 //Description:    全局头文件调用/全局宏定义声明/全局变量声明
 //History:
 //******************************************************************************
+
+#ifdef ONEWIRE_DENG_TOTAL_NUM
+#if(ONEWIRE_DENG_TOTAL_NUM>0)
+
 #ifndef __ONEWIRE_DENG_PROTOCOL_DRV_H__
 #define __ONEWIRE_DENG_PROTOCOL_DRV_H__
 
@@ -48,4 +52,7 @@ extern void onewrite_fixed_length_send(unsigned char i,unsigned char writelength
 
 extern mof_fix_length_onewire_deng_t xdata fixed_length_onewire_deng[ONEWIRE_DENG_TOTAL_NUM];
 
+#endif
+
+#endif
 #endif

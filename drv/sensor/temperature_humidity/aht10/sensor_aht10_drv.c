@@ -1,5 +1,7 @@
 #include "..\..\..\com_include_drv.h"
 
+#ifdef SensorType_Temperature_Humidity_Model 
+#if(SensorType_Temperature_Humidity_Model==SensorType_Temperature_Humidity_Aht10)
 //#define Aht_addr_write 0x38
 //#define Aht_addr_read (Aht_addr_write|0x01)
 //#define Aht_cmd_init 0xBE
@@ -257,3 +259,5 @@ void mof_sensor_aht10_Init(void)
 }
 
 
+#endif
+#endif

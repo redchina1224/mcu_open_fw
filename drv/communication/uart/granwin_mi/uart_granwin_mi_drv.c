@@ -44,7 +44,8 @@ void uart_mihome_send(unsigned char writelength)//,unsigned char readlength)
 	mihome_port.Busy=1;
 	mihome_port.Writing=0;
 	//mihome_port.ReadLength=readlength;
-	mihome_port.WriteLength=writelength;
+	mihome_port.p_WriteBuffer[writelength]=0xfe;
+	mihome_port.WriteLength=writelength+1;
 	//mihome_port.ReadPtr=0;
 	mihome_port.WritePtr=0;//S_WritePtr=1;
 	UART_MIHOME_TXBUF = 0x55;//S_WriteBuffer[0];

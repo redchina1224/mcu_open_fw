@@ -11,7 +11,8 @@
 //Í·ÎÄ¼þ************************************************************************
 #include "..\..\..\com_include_drv.h"
 //******************************************************************************
-
+#ifdef ONEWIRE_DENG_TOTAL_NUM
+#if(ONEWIRE_DENG_TOTAL_NUM>0)
 mof_fix_length_onewire_deng_t xdata fixed_length_onewire_deng[ONEWIRE_DENG_TOTAL_NUM];
 unsigned char xdata onewire_object_select=0;
 
@@ -603,6 +604,6 @@ void onewrite_fixed_length_in_isr(void)
 		
 
 	}
-
-	
 }
+#endif
+#endif
