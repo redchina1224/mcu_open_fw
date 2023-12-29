@@ -118,21 +118,8 @@ void onewrite_fixed_length_send(unsigned char i,unsigned char writelength)//,uns
 	fixed_length_onewire_deng[i].Reading_BitCount=0;	
 	fixed_length_onewire_deng[i].ReadPtr=0;
 }
-
-
-/***********************************************************************************************
-*函数名 		: void onewrite_fixed_length_in_isr(void)
-*函数功能描述 	: 单线通讯邓氏接收服务程序(用于数据连续接收和发送)
-*函数参数 		: unsigned char *RxReg：串口硬件接收缓存地址指针
-*函数返回值 	: 无
-***********************************************************************************************/
-void onewrite_fixed_length_in_isr(void)
+void onewrite_fixed_length_tx_isr(void)
 {
-	for(onewire_object_select=0;onewire_object_select<(ONEWIRE_DENG_TOTAL_NUM);onewire_object_select++)
-	{
-		if(fixed_length_onewire_deng[onewire_object_select].SendEnSw!=0) //发送
-		{
-			
 			fixed_length_onewire_deng[onewire_object_select].Writing_BaseTimerCount++;
 
 			//发送缓存区数据
@@ -365,12 +352,11 @@ void onewrite_fixed_length_in_isr(void)
 
 					}
 
-					
-		}
-		else //接收
-		{
+}
 
-			//切换为输入并接收电平
+void onewrite_fixed_length_rx_isr(void)
+{
+				//切换为输入并接收电平
 			if(onewire_object_select==0)
 			{
 				#ifdef ONEWIRE_DIO
@@ -599,10 +585,33 @@ void onewrite_fixed_length_in_isr(void)
 					}
 					break;
 			}
-			
-		}
-		
+	
+}
 
+/***********************************************************************************************
+*函数名 		: void onewrite_fixed_length_in_isr(void)
+*函数功能描述 	: 单线通讯邓氏接收服务程序(用于数据连续接收和发送)
+*函数参数 		: unsigned char *RxReg：串口硬件接收缓存地址指针
+*函数返回值 	: 无
+***********************************************************************************************/
+void onewrite_fixed_length_in_isr(void)
+{
+
+#if(ONEWIRE_DENG_TOTAL_NUM>1)
+	for(onewire_object_select=0;onewire_object_select<(ONEWIRE_DENG_TOTAL_NUM);onewire_object_select++)
+	{
+#else
+	{
+#endif
+		onewire_object_select=0;
+		if(fixed_length_onewire_deng[onewire_object_select].SendEnSw!=0) //发送
+		{
+			onewrite_fixed_length_tx_isr();
+		}
+		else //接收
+		{
+			onewrite_fixed_length_rx_isr();
+		}
 	}
 }
 #endif
