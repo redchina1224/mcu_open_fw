@@ -602,8 +602,8 @@ void onewrite_fixed_length_in_isr(void)
 	{
 #else
 	{
-#endif
 		onewire_object_select=0;
+#endif
 		if(fixed_length_onewire_deng[onewire_object_select].SendEnSw!=0) //·¢ËÍ
 		{
 			onewrite_fixed_length_tx_isr();
