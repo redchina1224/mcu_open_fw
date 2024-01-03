@@ -452,6 +452,8 @@ void onewrite_fixed_length_rx_isr(void)
 //											fixed_length_onewire_deng[onewire_object_select].Reading_LowTimerCount>=(SEND_BIT_WIDTH_TIME+SEND_BIT_WIDTH_TIME-2)&&fixed_length_onewire_deng[onewire_object_select].Reading_LowTimerCount<=(SEND_BIT_WIDTH_TIME+SEND_BIT_WIDTH_TIME+2)
 //										)
 //										{
+//											fixed_length_onewire_deng[onewire_object_select].Reading_BitCount=0;	
+//											fixed_length_onewire_deng[onewire_object_select].ReadPtr=0;
 //											fixed_length_onewire_deng[onewire_object_select].Reading++;
 //											//mof_buzzer_beep(1,2,3);	
 //										}
@@ -467,6 +469,8 @@ void onewrite_fixed_length_rx_isr(void)
 //								}
 //						}
 
+							fixed_length_onewire_deng[onewire_object_select].Reading_BitCount=0;	
+							fixed_length_onewire_deng[onewire_object_select].ReadPtr=0;
 							fixed_length_onewire_deng[onewire_object_select].Reading++;
 					}
 					break;
