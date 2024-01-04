@@ -13,6 +13,8 @@ unsigned long mof_getUtc_Sec(void);
 
 bit GetSecHalfBit(void);
 
+unsigned char CheckUtcSecNowWithinDayTimeInterval(unsigned long start,unsigned long end);
+	
 void GetHourMinSecByUtcSec(unsigned char* timeval,unsigned long usec);
 
 void SetUtcSecByHourMin(unsigned char hour,unsigned char min);

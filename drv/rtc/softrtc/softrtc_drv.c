@@ -31,6 +31,26 @@ bit GetSecHalfBit(void)
 	return rtc_halfsec_flashbit;
 }
 
+unsigned char CheckUtcSecNowWithinDayTimeInterval(unsigned long start,unsigned long end)
+{
+	unsigned long utcsec_inday=GetUtcSecByHourMin(Rtc_timeNow[2],Rtc_timeNow[1]);//(utcsec%(3600*24));
+	
+	if((start)>(end)) //起始时间比终止时间晚:如 20:00--8:00,21:00--19:00
+	{
+		if(utcsec_inday<(end)||utcsec_inday>(start)) return 1;
+	}
+	else if((start)<(end)) //起始时间比终止时间早:如 8:00--20:00
+	{
+		if(utcsec_inday<(end)&&utcsec_inday>(start)) return 2;
+	}
+	else //起始时间与终止时间相同,一直有效
+	{
+		return 3;
+	}
+	
+	return 0;
+}
+
 void GetHourMinSecByUtcSec(unsigned char* timeval,unsigned long usec)
 {
 	timeval[0]=(usec)%60;
