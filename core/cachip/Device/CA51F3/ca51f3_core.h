@@ -46,6 +46,9 @@
 	//端口定义
 	#define MOF_PORT(p) P##p
 	#define MOF_PORT_BIT(p,b) P##p##b
+
+	//触摸口定义
+	#define MOF_TOUCH_KEY_CH(p) TS_CH##p
 	
 	//端口输入输出配置
 	#define MOF_PORT_BIT_CONFIG(p,b,s) P##p##b##s

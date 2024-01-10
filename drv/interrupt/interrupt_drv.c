@@ -797,6 +797,14 @@ void timer2_Isr() interrupt 5
 			zxzn_fan_speed_counter_in_isr();
 		#endif
 
+		#ifdef ENCODER_KEY_TOTAL_NUM
+		#if(ENCODER_KEY_TOTAL_NUM>0)
+				#if(BaseTime_CoreTimer==2)
+					mof_encoder_key_in_isr();
+				#endif
+		#endif
+		#endif
+
 	MOF_T2IF_CLEAN;	//清中断标志位
 		
 	}
