@@ -245,6 +245,9 @@ unsigned long Value;
 #define 	TRUE  1
 #define 	FALSE  0
 
+#define 	FAIL  1
+#define 	SUCCESS  0
+
 #define 	True		1
 #define 	False		0
 
