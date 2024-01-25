@@ -17,6 +17,10 @@
 	#include "cachip\Device\CA51F3\TS_Lib\Includes\ts_def.h"	
 	#include "cachip\Device\CA51F3\TS_Lib\Includes\ts_service.h"	
 	#include "cachip\Device\CA51F3\TS_Lib\Includes\ts_api.h"
+#elif (McuType==McuType_CaChip_CA51F2)
+	#include "cachip\Device\CA51F2\TS_Lib\Includes\ts_def.h"	
+	#include "cachip\Device\CA51F2\TS_Lib\Includes\ts_service.h"	
+	#include "cachip\Device\CA51F2\TS_Lib\Includes\ts_api.h"
 #elif (McuType==McuType_Unkonw)
 
 #endif
