@@ -35,7 +35,33 @@
 	if((x)&BIT2) MOTOR_STEP_C_IO_Channel=MOTOR_STEP_IO_ON; else MOTOR_STEP_C_IO_Channel=MOTOR_STEP_IO_OFF;\
 	if((x)&BIT3) MOTOR_STEP_D_IO_Channel=MOTOR_STEP_IO_ON; else MOTOR_STEP_D_IO_Channel=MOTOR_STEP_IO_OFF; }
 		
-			
+
+#if(MOTOR_STEP_TOTAL_NUM>1)
+
+//步进电机1端口配置输出
+#define MOTOR_STEP2_IO_OUTPUT	{\
+	MOTOR_STEP2_A_IO_OUTPUT;\
+	MOTOR_STEP2_B_IO_OUTPUT;\
+	MOTOR_STEP2_C_IO_OUTPUT;\
+	MOTOR_STEP2_D_IO_OUTPUT;}	//与MCU芯片对应的引脚，设置为输出
+
+//步进电机1端口全部输出关闭			
+#define MOTOR_STEP2_CTRL_OFF {\	
+	MOTOR_STEP2_A_IO_Channel=MOTOR_STEP_IO_OFF;\
+	MOTOR_STEP2_B_IO_Channel=MOTOR_STEP_IO_OFF;\
+	MOTOR_STEP2_C_IO_Channel=MOTOR_STEP_IO_OFF;\
+	MOTOR_STEP2_D_IO_Channel=MOTOR_STEP_IO_OFF;}
+
+//步进电机1端口步输出	
+#define MOTOR_STEP2_CTRL(x) {\
+	if((x)&BIT0) MOTOR_STEP2_A_IO_Channel=MOTOR_STEP_IO_ON; else MOTOR_STEP2_A_IO_Channel=MOTOR_STEP_IO_OFF;\
+	if((x)&BIT1) MOTOR_STEP2_B_IO_Channel=MOTOR_STEP_IO_ON; else MOTOR_STEP2_B_IO_Channel=MOTOR_STEP_IO_OFF;\
+	if((x)&BIT2) MOTOR_STEP2_C_IO_Channel=MOTOR_STEP_IO_ON; else MOTOR_STEP2_C_IO_Channel=MOTOR_STEP_IO_OFF;\
+	if((x)&BIT3) MOTOR_STEP2_D_IO_Channel=MOTOR_STEP_IO_ON; else MOTOR_STEP2_D_IO_Channel=MOTOR_STEP_IO_OFF; }
+	
+	
+#endif
+					
 typedef struct
 {
 unsigned char WorkEn;

@@ -79,7 +79,7 @@ void mof_motor_step_plus_in_isr(void)
 		#if(MOTOR_STEP_TOTAL_NUM>1)
 					else if(MotorStep_Select==1)
 					{
-						MOTOR2_STEP_CTRL(Motor_Step_Ctrl_List[MotorStep_Object[MotorStep_Select].StepSelectCase]);
+						MOTOR_STEP2_CTRL(Motor_Step_Ctrl_List[MotorStep_Object[MotorStep_Select].StepSelectCase]);
 					}
 		#endif
 
@@ -103,7 +103,7 @@ void mof_motor_step_plus_in_isr(void)
 			else if(MotorStep_Select==1)
 			{
 				//关闭输出,不需要锁定保持
-				MOTOR2_STEP_CTRL_OFF;
+				MOTOR_STEP2_CTRL_OFF;
 			}
 #endif
 		}
@@ -195,7 +195,7 @@ void mof_motorStep_init(void)
 	unsigned char i;
 MOTOR_STEP_IO_OUTPUT;
 #if (MOTOR_STEP_TOTAL_NUM>1)
-	MOTOR2_STEP_IO_OUTPUT;
+	MOTOR_STEP2_IO_OUTPUT;
 #endif
 	for(i=0;i<MOTOR_STEP_TOTAL_NUM;i++)
 	{
