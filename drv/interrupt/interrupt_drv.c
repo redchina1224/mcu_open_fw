@@ -830,7 +830,94 @@ void timer4_Isr() interrupt 20
 
 }
 
+#ifdef MOF_UART0_ENABLE
+void UART0_ISR (void) interrupt 4
+{
+	if(MOF_UART0_RXIF_GRIGGER)
+	{
+		MOF_UART0_RXIF_CLEAN;			 
 
+		#if ((CommunicationType&CommunicationType_Uart)==CommunicationType_Uart)
+		
+			#if((CommunicationTypeUartModel&CommunicationType_Uart_HaierUplus)==CommunicationType_Uart_HaierUplus)
+				#ifdef UART_UPLUS_PORT_NUM
+					#if((UART_UPLUS_PORT_NUM==0))
+						uart_haier_uplus_rx_in_isr();
+					#endif
+				#endif
+			#endif
+		
+			#if((CommunicationTypeUartModel&CommunicationType_Uart_Tuya)==CommunicationType_Uart_Tuya)
+				#ifdef UART_TUYA_PORT_NUM
+					#if((UART_TUYA_PORT_NUM==0))
+						uart_tuya_rx_in_isr();
+					#endif
+				#endif
+			#endif
+		
+			#if((CommunicationTypeUartModel&CommunicationType_Uart_MiHome)==CommunicationType_Uart_MiHome)
+				#ifdef UART_MIHOME_PORT_NUM
+					#if((UART_MIHOME_PORT_NUM==0))
+						uart_mihome_rx_in_isr();
+					#endif
+				#endif
+			#endif
+			
+			#if ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength)
+				#ifdef UART_FIXED_LENGTH_PORT_NUM
+					#if((UART_FIXED_LENGTH_PORT_NUM==0))
+						uart_fixed_length_rx_in_isr();
+					#endif
+				#endif
+			#endif
+		
+		#endif
+	}
+	
+	
+	if(MOF_UART0_TXIF_GRIGGER)
+	{
+		MOF_UART0_TXIF_CLEAN;	
+
+		#if ((CommunicationType&CommunicationType_Uart)==CommunicationType_Uart)
+		
+			#if((CommunicationTypeUartModel&CommunicationType_Uart_HaierUplus)==CommunicationType_Uart_HaierUplus)
+				#ifdef UART_UPLUS_PORT_NUM
+					#if((UART_UPLUS_PORT_NUM==0))
+						uart_haier_uplus_tx_in_isr();
+					#endif
+				#endif
+			#endif
+
+			#if((CommunicationTypeUartModel&CommunicationType_Uart_Tuya)==CommunicationType_Uart_Tuya)
+				#ifdef UART_TUYA_PORT_NUM
+					#if((UART_TUYA_PORT_NUM==0))
+						uart_tuya_tx_in_isr();
+					#endif
+				#endif
+			#endif
+
+			#if((CommunicationTypeUartModel&CommunicationType_Uart_MiHome)==CommunicationType_Uart_MiHome)
+				#ifdef UART_MIHOME_PORT_NUM
+					#if((UART_MIHOME_PORT_NUM==0))
+						uart_mihome_tx_in_isr();
+					#endif
+				#endif
+			#endif
+
+			#if ((CommunicationTypeUartModel&CommunicationType_Uart_FixedLength)==CommunicationType_Uart_FixedLength)
+				#ifdef UART_FIXED_LENGTH_PORT_NUM
+					#if((UART_FIXED_LENGTH_PORT_NUM==0))
+						uart_fixed_length_tx_in_isr();
+					#endif
+				#endif
+			#endif
+		
+		#endif
+	}
+}
+#endif
+#ifdef MOF_UART1_ENABLE
 void UART1_ISR (void) interrupt 6	
 {
 	if(MOF_UART1_RXIF_GRIGGER)
@@ -930,7 +1017,8 @@ void INT3_ISR (void) interrupt 8
 	#endif			
 #endif //#if ((KeyType&KeyType_McuTouch)==KeyType_McuTouch)		
 #endif	//#ifdef KeyType
-
+#endif
+#ifdef MOF_UART2_ENABLE
 #ifdef MOF_UART2_RXIF_GRIGGER
 	if(MOF_UART2_RXIF_GRIGGER)
 	{
@@ -1014,6 +1102,7 @@ void INT3_ISR (void) interrupt 8
 		
 		#endif		
 	}
+#endif
 #endif
 }
 
