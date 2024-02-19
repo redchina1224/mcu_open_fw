@@ -17,9 +17,11 @@
 	#if ((KeyType&KeyType_RF)==KeyType_RF)
 		#include "rfkey\rfkey_drv.h"
 	#endif
-		
-		
-	
+
+	#ifdef ENCODER_KEY_TOTAL_NUM
+		#include "encoderkey\encoderkey_drv.h"
+	#endif		
+
 	#if ((KeyType&KeyType_MultiChannel)==KeyType_MultiChannel)
 		#include "key_Multichannel_drv.h"
 	#else
